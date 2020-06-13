@@ -1,10 +1,10 @@
 <template>
   <el-row class="page">
-    <el-col :span="24" style="position: absolute;" >
+    <el-col :span="24" style="position: absolute;">
       <the-header></the-header>
     </el-col>
     <el-col :span="24" class="page-main">
-      <the-sidebar ></the-sidebar>
+      <the-sidebar></the-sidebar>
       <div class="page-content">
         123
       </div>
@@ -13,26 +13,27 @@
 </template>
 
 <script>
-import Header from '../../components/layout/Header'
-import Aside from '../../components/layout/Aside'
+import Header from "../../components/layout/Header";
+import Aside from "../../components/layout/Aside";
 
 export default {
-  name: 'TheLayout',
-  data () {
+  name: "TheLayout",
+  data() {
     return {
-      openNav: true
-    }
+      openNav: true,
+    };
   },
   methods: {
-    toggleOpen () {
-      this.openNav = !this.openNav
-    }
+    toggleOpen() {
+      this.openNav = !this.openNav;
+    },
+
   },
   components: {
-    'the-header': Header,
-    'the-sidebar': Aside,
+    "the-header": Header,
+    "the-sidebar": Aside
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
@@ -42,7 +43,7 @@ export default {
   top: 0;
   height: 100%;
   width: 100%;
-  background-color: #EFF3F4;
+  background-color: #eff3f4;
 
   .page-main {
     box-sizing: border-box;
@@ -53,7 +54,7 @@ export default {
       overflow: auto;
       margin-left: 390px;
       height: 100%;
-    //   background-color: #EBEEF5;
+      //   background-color: #EBEEF5;
     }
   }
 }

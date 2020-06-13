@@ -1,6 +1,6 @@
 <template>
   <aside class="sidebar">
-    <el-menu class="sidebar-menu" :collapse="!openNav" :collapse-transition="false" :router="true"  background-color="transparent" text-color="white">
+    <el-menu class="sidebar-menu" :collapse="!openNav" :collapse-transition="false" :router="false"  background-color="transparent" text-color="white">
       <template v-for="menu in user.accessMenu">
         <el-menu-item v-if="!menu.children" :key="menu.name" :index="menu.path">
           <i :class="menu.icon" v-if="menu.icon"></i>
@@ -31,85 +31,12 @@ export default {
     return {
       openNav: true,
       user: {
-        accessMenu: [
-          {
-            id:0,
-            path: "/index",
-            name: "index",
-            title: "首页",
-            icon: "el-icon-s-home"
-          },
-          {
-            id:2,
-            path: "/",
-            name: "level1",
-            title: "一级目录",
-            icon: "el-icon-s-operation",
-            children: [
-              {
-                path: "/",
-                name: "level2",
-                title: "二级目录"
-              },
-              {
-                path: "/",
-                name: "level2",
-                title: "二级目录"
-              },
-              {
-                path: "/",
-                name: "level2",
-                title: "二级目录"
-              },
-              {
-                path: "/",
-                name: "level2",
-                title: "二级目录"
-              },
-              {
-                path: "/",
-                name: "level2",
-                title: "二级目录"
-              }
-            ]
-          },
-          {
-            id:1,
-            path: "/",
-            name: "level1",
-            title: "一级目录",
-            icon: "el-icon-s-operation",
-            children: [
-              {
-                path: "/",
-                name: "level2",
-                title: "二级目录"
-              },
-              {
-                path: "/",
-                name: "level2",
-                title: "二级目录"
-              },
-              {
-                path: "/",
-                name: "level2",
-                title: "二级目录"
-              },
-              {
-                path: "/",
-                name: "level2",
-                title: "二级目录"
-              },
-              {
-                path: "/",
-                name: "level2",
-                title: "二级目录"
-              }
-            ]
-          }
-        ]
+        accessMenu:[]
       }
     };
+  },
+  created(){
+    this.user.accessMenu=this.$store.state.accessMenu
   }
 };
 </script>
@@ -127,6 +54,9 @@ export default {
     border: none;
     height: 100%;
     color: white;
+    i {
+      color: white;;
+    }
   }
 }
 

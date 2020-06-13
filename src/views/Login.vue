@@ -1,23 +1,23 @@
 <template>
   <div class='page'>
     <div class="login-box">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left" label-width="0px"
+      <el-form  label-position="left" label-width="0px"
                class="demo-ruleForm login-container" status-icon>
         <h3 class="title">系统登录</h3>
         <el-form-item prop="account">
-          <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"
+          <el-input type="text" v-model="loginInfo.UserID" auto-complete="off" placeholder="用户名"
                     id="loginEmail"></el-input>
         </el-form-item>
         <el-form-item prop="checkPass">
-          <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off" placeholder="密码"
+          <el-input type="password" v-model="loginInfo.password" auto-complete="off" placeholder="密码"
                     id="loginPassword"></el-input>
           <label id="showPasswordToggle">
-            <el-checkbox v-model="checked" id="showPasswordCheck">显示密码</el-checkbox>
+            <el-checkbox  id="showPasswordCheck">显示密码</el-checkbox>
           </label>
           <router-link to="/" style="float: right; color: #bbbbbb">忘记密码？</router-link>
         </el-form-item>
         <el-form-item style="width:100%;">
-          <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit" >
+          <el-button type="primary" style="width:100%;" @click="userLogin" >
             登录
           </el-button>
         </el-form-item>
@@ -32,48 +32,32 @@
 </template>
 
 <script>
+import {login} from "../api/user/user.js"
 export default {
   name: 'app-login',
   data () {
     return {
-      logining: false,
-      fromUrl: '/',
-      ruleForm: {
-        account: 'admin',
-        checkPass: '123456'
+      loginInfo: {
+        UserID: '101001',
+        password: '123'
       },
-      rules: {
-        account: [
-          { required: true, message: '请输入账号', trigger: 'blur' }
-        ],
-        checkPass: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
-        ]
-      },
-      checked: false
     }
   },
   methods: {
-    handleSubmit (ev) {
-      this.$refs.ruleForm.validate((valid) => {
-        if (valid) {
-          this.logining = true
-          const loginParams = { username: this.ruleForm.account, password: this.ruleForm.checkPass }
-          console.log("login")
-        } else {
-          console.log('error submit!!')
-          return false
+    userLogin () {
+      login(this.loginInfo).then(res=>{
+        if(res.data.status=200){
+          localStorage.setItem('token',res.token)
+          console.log(res)
+          this.$router.push('index')
+        }else{
+          this.$message('用户名或密码错误');
         }
+      }).catch(err=>{
+        console.log(err)
       })
     }
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      if (from.fullPath !== '/register' && !from.meta.errorPage) {
-        vm.fromUrl = from.fullPath
-      }
-    })
-  }
 }
 
 </script>
