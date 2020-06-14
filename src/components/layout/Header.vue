@@ -1,23 +1,22 @@
 <template>
-  <el-header class="header" height="80px">
+  <div class="header" height="80px">
     <div class="content">
-      <div class="logo" :class="{'logo-hide': !openNav}">
+      <div class="logo">
         <img src="../../assets/img/logo.png" class="image" />
         <span class="text">远程医疗系统</span>
       </div>
       <div class="user">
         <span class="user-info">
-          欢迎： 
+          欢迎：
           {{ user.name}}
           <a>
-          <i class="el-icon-switch-button" style="margin-left: 10px"></i>
-          退出登录
+            <i class="el-icon-switch-button" style="margin-left: 10px"></i>
+            退出登录
           </a>
-          
         </span>
       </div>
     </div>
-  </el-header>
+  </div>
 </template>
 
 <script>
@@ -31,11 +30,7 @@ export default {
       }
     };
   },
-  methods: {
-    navOpenToggle() {
-      console.log("toggle-open");
-    }
-  }
+  methods: {}
 };
 </script>
 
@@ -47,10 +42,9 @@ export default {
     display: inline-block;
   }
   .content {
-    position: absolute;
-    left: 7%;
+    // position: absolute;
+    width: 100%;
     height: 100%;
-    width: 86%;
     border-bottom: 1px solid #1c7e7c;
   }
 
@@ -58,7 +52,7 @@ export default {
     text-align: center;
     font-size: 24px;
     .image {
-      margin-left: 10px;
+      // margin-left: 10px;
       width: 200px;
       vertical-align: middle;
     }
@@ -73,7 +67,7 @@ export default {
     margin-right: 10px;
     font-size: 18px;
     font-weight: bold;
-    font-family:"Microsoft YaHei" ;
+    font-family: "Microsoft YaHei";
     color: #1c7e7c;
     a {
       margin-left: 10px;

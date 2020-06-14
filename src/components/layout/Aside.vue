@@ -1,6 +1,6 @@
 <template>
   <aside class="sidebar">
-    <el-menu class="sidebar-menu" :collapse="!openNav" :collapse-transition="false" :router="true"  background-color="transparent" text-color="white">
+    <el-menu class="sidebar-menu" :collapse="!openNav" :collapse-transition="false" :router="false"  background-color="transparent" text-color="white">
       <template v-for="menu in user.accessMenu">
         <el-menu-item v-if="!menu.children" :key="menu.functionName" :index="menu.functionAddress">
           <!-- <i :class="menu.icon" v-if="menu.icon"></i> -->
@@ -43,13 +43,12 @@ export default {
 
 <style scoped lang="scss">
 .sidebar {
+  // position: absolute;
   float: left;
-  margin-left: 150px;
   width: 240px;
   height: 100%;
   overflow: auto;
   background-color: #1C7E7C;
-
   .sidebar-menu {
     border: none;
     height: 100%;

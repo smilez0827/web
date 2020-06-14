@@ -1,15 +1,18 @@
 <template>
-  <el-row class="page">
-    <el-col :span="24" style="position: absolute;">
-      <the-header></the-header>
-    </el-col>
-    <el-col :span="24" class="page-main">
-      <the-sidebar></the-sidebar>
-      <div class="page-content">
-        123
+  <div class="page">
+    <div class="thispage">
+      <div class="header">
+        <the-header></the-header>
       </div>
-    </el-col>
-  </el-row>
+      <div class="main">
+        <div class="side">
+          <the-sidebar></the-sidebar>
+        </div>
+        <div class="content">
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -18,17 +21,8 @@ import Aside from "../../components/layout/Aside";
 
 export default {
   name: "TheLayout",
-  data() {
-    return {
-      openNav: true,
-    };
-  },
-  methods: {
-    toggleOpen() {
-      this.openNav = !this.openNav;
-    },
-
-  },
+  data() {},
+  methods: {},
   components: {
     "the-header": Header,
     "the-sidebar": Aside
@@ -41,20 +35,36 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
-  height: 100%;
+  height: 100vh;
   width: 100%;
+  padding-left: 10%;
+  padding-right: 10%;
   background-color: #eff3f4;
-
-  .page-main {
-    box-sizing: border-box;
-    padding-top: 80px;
+  .thispage {
+    position: relative;
     height: 100%;
-
-    .page-content {
-      overflow: auto;
-      margin-left: 390px;
+    width: 100%;
+    .header {
+      width: 100%;
+      height: 80px;
+    }
+    .main {
+      position: absolute;
+      top: 0px;
+      width: 100%;
       height: 100%;
-      //   background-color: #EBEEF5;
+      .side {
+        height: 100%;
+        padding-top: 80px;
+      }
+      .content {
+        position: absolute;
+        top: 80px;
+        right: 0px;
+        width: calc(100% - 240px);
+        height: calc(100% - 80px);
+        background-color:white;
+      }
     }
   }
 }
