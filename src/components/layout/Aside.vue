@@ -1,20 +1,20 @@
 <template>
   <aside class="sidebar">
-    <el-menu class="sidebar-menu" :collapse="!openNav" :collapse-transition="false" :router="false"  background-color="transparent" text-color="white">
+    <el-menu class="sidebar-menu" :collapse="!openNav" :collapse-transition="false" :router="true"  background-color="transparent" text-color="white">
       <template v-for="menu in user.accessMenu">
-        <el-menu-item v-if="!menu.children" :key="menu.name" :index="menu.path">
-          <i :class="menu.icon" v-if="menu.icon"></i>
-          <span slot="title">{{menu.title}}</span>
+        <el-menu-item v-if="!menu.children" :key="menu.functionName" :index="menu.functionAddress">
+          <!-- <i :class="menu.icon" v-if="menu.icon"></i> -->
+          <span slot="title">{{menu.functionName}}</span>
         </el-menu-item>
-        <el-submenu :key="menu.id" :index="menu.path" v-else>
+        <el-submenu :key="menu.functionID" :index="menu.functionAddress"  v-else>
           <template slot="title">
-            <i :class="menu.icon" v-if="menu.icon"></i>
-            <span slot="title">{{menu.title}}</span>
+            <!-- <i :class="menu.icon" v-if="menu.icon"></i> -->
+            <span slot="title">{{menu.functionName}}</span>
           </template>
           <template v-for="item in menu.children">
-            <el-menu-item :key="item.id">
-              <a-icon :type="item.icon" v-if="item.icon" />
-              <span>{{item.title}}</span>
+            <el-menu-item :key="item.functionID" :index="item.functionAddress">
+              <!-- <a-icon :type="item.icon" v-if="item.icon" /> -->
+              <span>{{item.functionName}}</span>
             </el-menu-item>
           </template>
         </el-submenu>
@@ -36,7 +36,7 @@ export default {
     };
   },
   created(){
-    this.user.accessMenu=this.$store.state.accessMenu
+    this.user.accessMenu=this.$store.state.function
   }
 };
 </script>
@@ -53,7 +53,6 @@ export default {
   .sidebar-menu {
     border: none;
     height: 100%;
-    color: white;
     i {
       color: white;;
     }

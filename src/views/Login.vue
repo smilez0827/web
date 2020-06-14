@@ -54,7 +54,7 @@ export default {
           this.$message('用户名或密码错误');
         }
       }).catch(err=>{
-        console.log(err)
+        console.log("err")
       })
     }
   },
