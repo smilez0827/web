@@ -1,6 +1,6 @@
 <template>
   <aside class="sidebar">
-    <el-menu class="sidebar-menu" :collapse="!openNav" :collapse-transition="false" :router="false"  background-color="transparent" text-color="white">
+    <el-menu class="sidebar-menu" :collapse="!openNav" :collapse-transition="false" :router="true"  background-color="transparent" text-color="white">
       <template v-for="menu in user.accessMenu">
         <el-menu-item v-if="!menu.children" :key="menu.functionName" :index="menu.functionAddress">
           <!-- <i :class="menu.icon" v-if="menu.icon"></i> -->

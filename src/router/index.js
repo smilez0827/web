@@ -15,8 +15,16 @@ const routes = [
   },
   {
     path: "/index",
+    redirect:"/more",
     name: "Layout",
-    component: ()=>import('../views/layout/Layout.vue')
+    component: ()=>import('../views/layout/Layout.vue'),
+    children:[
+      {
+        path: '/more',
+        name: '个人信息',
+        component: () => import('../views/more/More.vue')
+      }
+    ]
   },
 ];
 

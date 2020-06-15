@@ -9,6 +9,10 @@
           <the-sidebar></the-sidebar>
         </div>
         <div class="content">
+          <div class="tag">123</div>
+          <div>
+            <router-view />
+          </div>
         </div>
       </div>
     </div>
@@ -63,7 +67,14 @@ export default {
         right: 0px;
         width: calc(100% - 240px);
         height: calc(100% - 80px);
-        background-color:white;
+        background-color: white;
+        overflow:auto;
+        .tag {
+          width: 100%;
+          height: 50px;
+          background-color: #D2E5E5;
+          margin-bottom:20px ;
+        }
       }
     }
   }
