@@ -9,9 +9,11 @@
         <span class="user-info">
           欢迎：
           {{ user.name}}
-          <a>
+          <a @click="logout">
             <i class="el-icon-switch-button" style="margin-left: 10px"></i>
-            退出登录
+            <span click="logout">
+              退出登录
+            </span>
           </a>
         </span>
       </div>
@@ -30,7 +32,13 @@ export default {
       }
     };
   },
-  methods: {}
+  methods: {
+    logout(){
+      // localStorage.removeItem("token");
+      console.log("out")
+      this.$router.push("/login")
+    }
+  }
 };
 </script>
 
@@ -71,6 +79,7 @@ export default {
     color: #1c7e7c;
     a {
       margin-left: 10px;
+      cursor: pointer;
     }
     i {
       vertical-align: middle;

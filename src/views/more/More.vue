@@ -1,7 +1,6 @@
 <template>
   <div>
-    <el-row>
-      <div style="margin-right: 40px;margin-left: 40px">
+      <div class="rollpic">
         <el-carousel :interval="5000" type="card" height="200px">
           <el-carousel-item v-for="item in imgList" :key="item.id">
             <a href="http://www.baidu.com" target="_blank">
@@ -12,10 +11,8 @@
           </el-carousel-item>
         </el-carousel>
       </div>
-    </el-row>
-
     <div class="adContent">
-      <el-collapse v-model="activeNames" @change="handleChange">
+      <el-collapse v-model="activeNames" >
         <el-collapse-item name="1">
           <template slot="title">
             <h3 class="title">热门文章</h3>
@@ -74,14 +71,15 @@ export default {
     };
   },
   methods: {
-    change() {
-      this.isHidden = !this.isHidden;
-    },
   }
 };
 </script >
 
 <style scoped lang="scss">
+.rollpic {
+    width: 90%;
+  margin-left: 5%;
+}
 .adContent {
   width: 90%;
   margin: 10px auto;

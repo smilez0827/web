@@ -92,6 +92,7 @@ export default new Vuex.Store({
         functionID: "1",
         functionName: "个人信息",
         functionAddress: "/personalinfo",
+        icon:"iconfont icon-gerenxinxi",
         children: [
           {
             functionID: "1-1",
@@ -124,6 +125,7 @@ export default new Vuex.Store({
         functionID: "4",
         functionName: "普通会诊",
         functionAddress: "/groupconsultation",
+        icon:"iconfont icon-putonghuizhen",
         children: [
           {
             functionID: "4-1",
@@ -141,6 +143,7 @@ export default new Vuex.Store({
         functionID: "5",
         functionName: "视频会诊",
         functionAddress: "/groupvedioconsultation",
+        icon:"iconfont icon-Icon-shipinhuizhen",
         children: [
           {
             functionID: "5-1",
@@ -157,12 +160,14 @@ export default new Vuex.Store({
       {
         functionID: "11",
         functionName: "出诊管理",
-        functionAddress: "/housecall"
+        functionAddress: "/housecall",
+        icon:"iconfont icon-chuzhenguanli"
       },
       {
         functionID: "7",
         functionName: "即时信息",
         functionAddress: "/instantinfo",
+        icon:"iconfont icon-message",
         children: [
           {
             functionID: "7-1",
@@ -179,12 +184,14 @@ export default new Vuex.Store({
       {
         functionID: "8",
         functionName: "患者信息",
-        functionAddress: "/patientinfo"
+        functionAddress: "/patientinfo",
+        icon:"iconfont icon-huanzhexinxi",
       },
       {
         functionID: "9",
         functionName: "医疗信息",
         functionAddress: "/medicalinfo",
+        icon:"iconfont icon-yiliaoxinxi",
         children: [
           {
             functionID: "9-1",
@@ -206,7 +213,8 @@ export default new Vuex.Store({
       {
         functionID: "10",
         functionName: "更多推荐",
-        functionAddress: "/more"
+        functionAddress: "/more",
+        icon:"iconfont icon-more",
       }
     ]
   },
