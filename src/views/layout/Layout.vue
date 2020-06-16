@@ -37,7 +37,8 @@ export default {
     hide() {
       this.isHide = !this.isHide;
       console.log(this.isHide);
-    }
+    },
+
   },
   components: {
     "the-header": Header,
@@ -64,7 +65,7 @@ export default {
     height: 100%;
     width: 100%;
     .header {
-    position: absolute;
+      position: absolute;
       left: 0px;
       top: 0px;
       width: 100%;

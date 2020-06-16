@@ -1,20 +1,26 @@
 <template>
   <aside class="sidebar">
-    <el-menu class="sidebar-menu" :collapse="!openNav" :collapse-transition="false" :router="false"  background-color="transparent" text-color="white">
+    <el-menu
+      class="sidebar-menu"
+      :collapse="!openNav"
+      :collapse-transition="false"
+      :router="false"
+      background-color="transparent"
+      text-color="white"
+    >
       <template v-for="menu in user.accessMenu">
-        <el-menu-item v-if="!menu.children" :key="menu.functionName" :index="menu.functionAddress">
-          <i :class="menu.icon" v-if="menu.icon"></i>
-          <span slot="title" class="mainTitle">{{menu.functionName}}</span>
+        <el-menu-item v-if="(menu.children.length==0)" :key="menu.FunctionName" :index="menu.FunctionAddress">
+          <i :class="menu.icon" class="iconfont" v-if="menu.icon"></i>
+          <span slot="title" class="mainTitle">{{menu.FunctionName}}</span>
         </el-menu-item>
-        <el-submenu :key="menu.functionID" :index="menu.functionAddress"  v-else>
+        <el-submenu :key="menu.FunctionID" :index="menu.FunctionAddress" v-else>
           <template slot="title">
-            <i :class="menu.icon" v-if="menu.icon"></i>
-            <span slot="title" class="mainTitle">
-              {{menu.functionName}}</span>
+            <i :class="menu.icon" class="iconfont" v-if="menu.icon"></i>
+            <span slot="title" class="mainTitle">{{menu.FunctionName}}</span>
           </template>
           <template v-for="item in menu.children">
-            <el-menu-item :key="item.functionID" :index="item.functionAddress">
-              <span class="subTitle">{{item.functionName}}</span>
+            <el-menu-item :key="item.ChildrenFunctionID" :index="item.ChildrenFunctionAddress">
+              <span class="subTitle">{{item.ChildrenFunctionName}}</span>
             </el-menu-item>
           </template>
         </el-submenu>
@@ -24,19 +30,20 @@
 </template>
 
 <script>
-
 export default {
   name: "Aside",
   data() {
     return {
       openNav: true,
       user: {
-        accessMenu:[]
+        accessMenu: []
       }
     };
   },
-  created(){
-    this.user.accessMenu=this.$store.state.function
+  created() {
+    this.user.accessMenu = this.$store.state.function;
+    // console.log(this.user.accessMenu);
+    // this.$store.state.function=JSON.parse(localStorage.getItem("store"))
   }
 };
 </script>
@@ -48,7 +55,7 @@ export default {
   width: 240px;
   height: 100%;
   overflow: auto;
-  background-color: #1C7E7C;
+  background-color: #1c7e7c;
   .sidebar-menu {
     border: none;
     height: 100%;
@@ -60,11 +67,9 @@ export default {
     }
     i {
       font-size: 24px;
-      color: white;;
-      margin-right:20px ;
+      color: white;
+      margin-right: 20px;
     }
   }
 }
-
-
 </style>

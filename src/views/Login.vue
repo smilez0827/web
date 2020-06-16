@@ -1,30 +1,40 @@
 <template>
-  <div class='page'>
+  <div class="page">
     <div class="login-box">
-      <el-form  label-position="left" label-width="0px"
-               class="demo-ruleForm login-container" status-icon>
+      <el-form
+        label-position="left"
+        label-width="0px"
+        class="demo-ruleForm login-container"
+        status-icon
+      >
         <h3 class="title">系统登录</h3>
         <el-form-item prop="account">
-          <el-input type="text" v-model="loginInfo.UserID" auto-complete="off" placeholder="用户名"
-                    id="loginEmail"></el-input>
+          <el-input
+            type="text"
+            v-model="loginInfo.UserID"
+            auto-complete="off"
+            placeholder="用户名"
+            id="loginEmail"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="checkPass">
-          <el-input type="password" v-model="loginInfo.password" auto-complete="off" placeholder="密码"
-                    id="loginPassword"></el-input>
+          <el-input
+            type="password"
+            v-model="loginInfo.password"
+            auto-complete="off"
+            placeholder="密码"
+            id="loginPassword"
+          ></el-input>
           <label id="showPasswordToggle">
-            <el-checkbox  id="showPasswordCheck">显示密码</el-checkbox>
+            <el-checkbox id="showPasswordCheck">显示密码</el-checkbox>
           </label>
           <router-link to="/" style="float: right; color: #bbbbbb">忘记密码？</router-link>
         </el-form-item>
         <el-form-item style="width:100%;">
-          <el-button type="primary" style="width:100%;" @click="userLogin" >
-            登录
-          </el-button>
+          <el-button type="primary" style="width:100%;" @click="userLogin">登录</el-button>
         </el-form-item>
         <el-form-item style="width:100%;">
-            <el-button style="width:100%;">
-              注册
-            </el-button>
+          <el-button style="width:100%;">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -32,38 +42,39 @@
 </template>
 
 <script>
-import {login} from "../api/user/user.js"
+import { login } from "../api/user/user.js";
 export default {
-  name: 'app-login',
-  data () {
+  name: "app-login",
+  data() {
     return {
       loginInfo: {
-        UserID: '101001',
-        password: '123'
-      },
-    }
+        UserID: "103001",
+        password: "123"
+      }
+    };
   },
   methods: {
-    userLogin () {
-      login(this.loginInfo).then(res=>{
-        if(res.data.status=200){
-          localStorage.setItem('token',res.token)
-          console.log(res)
-          this.$router.push('index')
-        }else{
-          this.$message('用户名或密码错误');
-        }
-      }).catch(err=>{
-        console.log("err")
-      })
+    userLogin() {
+      login(this.loginInfo)
+        .then(res => {
+          if ((res.data.status = 200)) {
+            localStorage.setItem("token", res.data.token);
+            this.$store.state.function = res.data.function;
+            console.log(res.data.function)
+            this.$router.push('/index')
+          } else {
+            this.$message("用户名或密码错误");
+          }
+        })
+        .catch(err => {
+          console.log("err");
+        });
     }
-  },
-}
-
+  }
+};
 </script>
 
 <style scoped>
-
 .title {
   text-align: center;
   margin-bottom: 15px;
@@ -75,7 +86,7 @@ export default {
   width: 100%;
   height: 100%;
   font-size: 16px;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
 }
@@ -89,12 +100,12 @@ export default {
   display: block;
   width: 100%;
   max-width: 400px;
-  background-color: #FFF;
+  background-color: #fff;
   margin: 0;
   padding: 2.25em;
   box-sizing: border-box;
-  border: solid 1px #DDD;
-  border-radius: .5em;
-  font-family: 'Source Sans Pro', sans-serif;
+  border: solid 1px #ddd;
+  border-radius: 0.5em;
+  font-family: "Source Sans Pro", sans-serif;
 }
 </style>
