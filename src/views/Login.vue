@@ -31,7 +31,7 @@
           <router-link to="/" style="float: right; color: #bbbbbb">忘记密码？</router-link>
         </el-form-item>
         <el-form-item style="width:100%;">
-          <el-button type="primary" style="width:100%;" @click="userLogin">登录</el-button>
+          <el-button type="primary" style="width:100%; background-color:#1c7e7c;" @click="userLogin">登录</el-button>
         </el-form-item>
         <el-form-item style="width:100%;">
           <el-button style="width:100%;">注册</el-button>
@@ -58,9 +58,8 @@ export default {
       login(this.loginInfo)
         .then(res => {
           if ((res.data.status = 200)) {
-            localStorage.setItem("token", res.data.token);
-            this.$store.state.function = res.data.function;
-            console.log(res.data.function)
+            // localStorage.setItem("token", res.data.token);
+            // this.$store.state.function = res.data.function;
             this.$router.push('/index')
           } else {
             this.$message("用户名或密码错误");
@@ -78,6 +77,8 @@ export default {
 .title {
   text-align: center;
   margin-bottom: 15px;
+  font-size: 24px;
+  color: #1c7e7c;
 }
 
 .page {

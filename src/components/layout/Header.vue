@@ -11,9 +11,7 @@
           {{ user.name}}
           <a @click="logout">
             <i class="el-icon-switch-button" style="margin-left: 10px"></i>
-            <span click="logout">
-              退出登录
-            </span>
+            <span click="logout">退出登录</span>
           </a>
         </span>
       </div>
@@ -33,11 +31,13 @@ export default {
     };
   },
   methods: {
-    logout(){
-      // localStorage.removeItem("token");
-      console.log("out")
-      this.$router.push("/login")
+    logout() {
+      console.log("out");
+      this.$router.push("/login");
     }
+  },
+  mounted() {
+    this.user.name = this.$store.state.userInfo.name;
   }
 };
 </script>

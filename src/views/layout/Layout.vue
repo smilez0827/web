@@ -11,7 +11,10 @@
         <div :class="this.isHide?'contentHide':'content'">
           <div class="tag">
             <i :class="this.isHide?'el-icon-s-unfold':'el-icon-s-fold'" @click="hide"></i>
-            <span>更多推荐</span>
+            <template v-for="(item,index) in this.path">
+              <span :key="item.id" v-if="(index==0)">{{item}}</span>
+              <span :key="item.id" v-else>{{" > "+item}}</span>
+            </template>
           </div>
           <div>
             <router-view />
@@ -30,19 +33,37 @@ export default {
   name: "TheLayout",
   data() {
     return {
-      isHide: false
+      isHide: false,
+      path: []
     };
+  },
+  watch: {
+    $route() {
+      this.getBreadcrumb();
+    }
   },
   methods: {
     hide() {
       this.isHide = !this.isHide;
-      console.log(this.isHide);
     },
-
+    getBreadcrumb() {
+      let matched = this.$route.matched;
+      this.path = [];
+      matched.forEach((element, index) => {
+        if (index === 0) {
+          this.path.push("首页");
+        } else {
+          this.path.push(element.name);
+        }
+      });
+    }
   },
   components: {
     "the-header": Header,
     "the-sidebar": Aside
+  },
+  mounted() {
+    this.getBreadcrumb();
   }
 };
 </script>
@@ -77,7 +98,6 @@ export default {
       top: 0px;
       width: 100%;
       height: 100%;
-
       .side {
         height: 100%;
         padding-top: 80px;
@@ -96,13 +116,13 @@ export default {
           width: 100%;
           height: 50px;
           background-color: #d2e5e5;
-          margin-bottom: 20px;
           color: #1c7e7c;
           line-height: 50px;
         }
         i {
           font-size: 25px;
           margin-right: 20px;
+          cursor: pointer;
         }
         span {
           font-size: 25px;
@@ -120,7 +140,6 @@ export default {
           width: 100%;
           height: 50px;
           background-color: #d2e5e5;
-          margin-bottom: 20px;
           color: #1c7e7c;
           line-height: 50px;
         }

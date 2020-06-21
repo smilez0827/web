@@ -4,7 +4,7 @@ import axios from 'axios'
 axios.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么
   config.retry = 3;
-  config.retryDelay = 20000;
+  config.retryDelay = 5000;
   if (localStorage.getItem('token')) {
     config.headers.Authorization = localStorage.getItem('token');
   }
@@ -16,7 +16,6 @@ axios.interceptors.request.use(function (config) {
 
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
-  // 对响应数据做点什么
   return response;
 }, function (err) {
   //失败重传
@@ -25,6 +24,7 @@ axios.interceptors.response.use(function (response) {
   if (!config || !config.retry) return Promise.reject(err);
   // 设置当前重传次数
   config.__retryCount = config.__retryCount || 0;
+  console.log(config.__retryCount)
   //检查是否达到最大重传次数
   if (config.__retryCount >= config.retry) {
     //返回错误
@@ -33,6 +33,13 @@ axios.interceptors.response.use(function (response) {
 
   // 重传次数增加
   config.__retryCount += 1;
+
+  // setTimeout(()=> {
+  //     return axios(config);
+  //     }, config.retryDelay || 1);
+
+
+
 
   // 建立重传定时器
   var backoff = new Promise(function (resolve) {
