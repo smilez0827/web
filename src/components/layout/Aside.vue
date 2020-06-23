@@ -7,20 +7,20 @@
       text-color="white"
     >
       <template v-for="menu in user.accessMenu">
-        <el-menu-item v-if="!menu.children" :key="menu.functionName" :index="menu.functionAddress">
+        <el-menu-item v-if="menu.children.length==0" :key="menu.FunctionName" :index="menu.FunctionAddress">
           <i :class="menu.icon" class="iconfont" v-if="menu.icon"></i>
-          <span slot="title" class="mainTitle">{{menu.functionName}}</span>
+          <span slot="title" class="mainTitle">{{menu.FunctionName}}</span>
         </el-menu-item>
-        <el-submenu :key="menu.functionID" :index="menu.functionAddress" v-else>
+        <el-submenu v-else :key="menu.FunctionID" :index="menu.FunctionAddress" >
           <template slot="title">
             <i :class="menu.icon" class="iconfont" v-if="menu.icon"></i>
-            <span slot="title" class="mainTitle">{{menu.functionName}}</span>
+            <span slot="title" class="mainTitle">{{menu.FunctionName}}</span>
           </template>
           <template v-for="item in menu.children">
-            <el-menu-item v-if="!item.children" :key="item.functionID" :index="item.functionAddress">
-              <span class="subTitle">{{item.functionName}}</span>
+            <el-menu-item v-if="item.children.length==0" :key="item.FunctionID" :index="item.FunctionAddress">
+              <span class="subTitle">{{item.FunctionName}}</span>
             </el-menu-item>
-            <the-submenu  :key="item.functionID" :subMenu="item" v-else></the-submenu>
+            <the-submenu  :key="item.FunctionID" :subMenu="item" v-else></the-submenu>
           </template>
         </el-submenu>
       </template>
@@ -44,9 +44,9 @@ export default {
     };
   },
   mounted() {
+    this.$store.state.function=JSON.parse(localStorage.getItem("function"))
     this.user.accessMenu = this.$store.state.function;
-    // console.log(this.user.accessMenu);
-    // this.$store.state.function=JSON.parse(localStorage.getItem("store"))
+    // console.log(this.user.accessMenu)
   },
   methods:{
   }

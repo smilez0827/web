@@ -16,7 +16,7 @@
               <span :key="item.id" v-else>{{" > "+item}}</span>
             </template>
           </div>
-          <div>
+          <div class="mainContent">
             <router-view />
           </div>
         </div>
@@ -75,8 +75,8 @@ export default {
   top: 0;
   height: 100vh;
   width: 100%;
-  padding-left: 10%;
-  padding-right: 10%;
+  // padding-left: 10%;
+  // padding-right: 10%;
   background-color: #eff3f4;
   div {
     transition: 0.5s;
@@ -84,7 +84,8 @@ export default {
   .thispage {
     position: relative;
     height: 100%;
-    width: 100%;
+    width: 1500px;
+    margin: auto;
     .header {
       position: absolute;
       left: 0px;
@@ -111,13 +112,16 @@ export default {
         width: calc(100% - 240px);
         height: calc(100% - 80px);
         background-color: white;
-        overflow: auto;
         .tag {
           width: 100%;
           height: 50px;
           background-color: #d2e5e5;
           color: #1c7e7c;
           line-height: 50px;
+        }
+        .mainContent {
+          overflow: auto;
+          height: calc(100% - 50px);
         }
         i {
           font-size: 25px;
@@ -135,13 +139,16 @@ export default {
         width: 100%;
         height: calc(100% - 80px);
         background-color: white;
-        overflow: auto;
         .tag {
           width: 100%;
           height: 50px;
           background-color: #d2e5e5;
           color: #1c7e7c;
           line-height: 50px;
+        }
+        .mainContent {
+          overflow: auto;
+          height: calc(100% - 50px);
         }
         i {
           font-size: 25px;

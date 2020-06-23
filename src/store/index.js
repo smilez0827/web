@@ -13,68 +13,68 @@ export default new Vuex.Store({
 
     function: [
       {
-        functionID: "1",
-        functionName: "个人信息",
-        functionAddress: "/personalinfo",
+        FunctionID: "1",
+        FunctionName: "个人信息",
+        FunctionAddress: "/personalinfo",
         icon:"icon-gerenxinxi",
         children: [
           {
-            functionID: "1-1",
-            functionName: "基本信息",
-            functionAddress: "/personalinfo/basicinfo",
+            FunctionID: "1-1",
+            FunctionName: "基本信息",
+            FunctionAddress: "/personalinfo/basicinfo",
           },
           {
-            functionID: "1-2",
-            functionName: "个人财务",
-            functionAddress: "/personalinfo/personalfinance"
+            FunctionID: "1-2",
+            FunctionName: "个人财务",
+            FunctionAddress: "/personalinfo/personalfinance"
           },
           {
-            functionID: "1-3",
-            functionName: "银行卡管理",
-            functionAddress: "/personalinfo/bankaccount"
+            FunctionID: "1-3",
+            FunctionName: "银行卡管理",
+            FunctionAddress: "/personalinfo/bankaccount"
           },
           {
-            functionID: "1-4",
-            functionName: "个人设置",
-            functionAddress: "/personalinfo/settings"
+            FunctionID: "1-4",
+            FunctionName: "个人设置",
+            FunctionAddress: "/personalinfo/settings"
           },
           {
-            functionID: "1-5",
-            functionName: "密码修改",
-            functionAddress: "/personalinfo/passwordmodify"
+            FunctionID: "1-5",
+            FunctionName: "密码修改",
+            FunctionAddress: "/personalinfo/passwordmodify"
           }
         ]
       },
       {
-        functionID: "4",
-        functionName: "普通会诊",
-        functionAddress: "/groupconsultation",
+        FunctionID: "4",
+        FunctionName: "普通会诊",
+        FunctionAddress: "/groupconsultation",
         icon:"icon-putonghuizhen",
         children: [
           {
-            functionID: "4-1",
-            functionName: "今日患者",
-            functionAddress: "/groupconsultation/todayconsultation"
+            FunctionID: "4-1",
+            FunctionName: "今日患者",
+            FunctionAddress: "/groupconsultation/todayconsultation"
           },
           {
-            functionID: "4-2",
-            functionName: "历史患者",
-            functionAddress: "/groupconsultation/historyconsultation",
+            FunctionID: "4-2",
+            FunctionName: "历史患者",
+            FunctionAddress: "/groupconsultation/historyconsultation",
             children: [
               {
-                functionID: "1-1-1",
-                functionName: "子项",
-                functionAddress: "/",
+                FunctionID: "1-1-1",
+                FunctionName: "子项",
+                FunctionAddress: "/",
                 children:[
                   {
-                    functionID: "1-1-1-1",
-                    functionName: "次子项1",
-                    functionAddress: "/1",
+                    FunctionID: "1-1-1-1",
+                    FunctionName: "次子项1",
+                    FunctionAddress: "/1",
                   },
                   {
-                    functionID: "1-1-1-2",
-                    functionName: "次子项2",
-                    functionAddress: "/2",
+                    FunctionID: "1-1-1-2",
+                    FunctionName: "次子项2",
+                    FunctionAddress: "/2",
                   }
                 ]
               }
@@ -83,80 +83,80 @@ export default new Vuex.Store({
         ]
       },
       {
-        functionID: "5",
-        functionName: "视频会诊",
-        functionAddress: "/groupvedioconsultation",
+        FunctionID: "5",
+        FunctionName: "视频会诊",
+        FunctionAddress: "/groupvedioconsultation",
         icon:"icon-Icon-shipinhuizhen",
         children: [
           {
-            functionID: "5-1",
-            functionName: "今日患者",
-            functionAddress: "/groupvedioconsultation/todayconsultation"
+            FunctionID: "5-1",
+            FunctionName: "今日患者",
+            FunctionAddress: "/groupvedioconsultation/todayconsultation"
           },
           {
-            functionID: "5-2",
-            functionName: "历史患者",
-            functionAddress: "/groupvedioconsultation/historyconsultation"
+            FunctionID: "5-2",
+            FunctionName: "历史患者",
+            FunctionAddress: "/groupvedioconsultation/historyconsultation"
           }
         ]
       },
       {
-        functionID: "11",
-        functionName: "出诊管理",
-        functionAddress: "/housecall",
+        FunctionID: "11",
+        FunctionName: "出诊管理",
+        FunctionAddress: "/housecall",
         icon:"icon-chuzhenguanli"
       },
       {
-        functionID: "7",
-        functionName: "即时信息",
-        functionAddress: "/instantinfo",
+        FunctionID: "7",
+        FunctionName: "即时信息",
+        FunctionAddress: "/instantinfo",
         icon:"icon-message",
         children: [
           {
-            functionID: "7-1",
-            functionName: "会诊信息",
-            functionAddress: "/instantinfo/groupconsultation"
+            FunctionID: "7-1",
+            FunctionName: "会诊信息",
+            FunctionAddress: "/instantinfo/groupconsultation"
           },
           {
-            functionID: "7-2",
-            functionName: "消息会话",
-            functionAddress: "/instantinfo/message"
+            FunctionID: "7-2",
+            FunctionName: "消息会话",
+            FunctionAddress: "/instantinfo/message"
           }
         ]
       },
       {
-        functionID: "8",
-        functionName: "患者信息",
-        functionAddress: "/patientinfo",
+        FunctionID: "8",
+        FunctionName: "患者信息",
+        FunctionAddress: "/patientinfo",
         icon:"icon-huanzhexinxi",
       },
       {
-        functionID: "9",
-        functionName: "医疗信息",
-        functionAddress: "/medicalinfo",
+        FunctionID: "9",
+        FunctionName: "医疗信息",
+        FunctionAddress: "/medicalinfo",
         icon:"icon-yiliaoxinxi",
         children: [
           {
-            functionID: "9-1",
-            functionName: "医疗机构",
-            functionAddress: "/medicalinfo/organization"
+            FunctionID: "9-1",
+            FunctionName: "医疗机构",
+            FunctionAddress: "/medicalinfo/organization"
           },
           {
-            functionID: "9-2",
-            functionName: "医疗专家",
-            functionAddress: "/medicalinfo/expert"
+            FunctionID: "9-2",
+            FunctionName: "医疗专家",
+            FunctionAddress: "/medicalinfo/expert"
           },
           {
-            functionID: "9-3",
-            functionName: "医疗用品",
-            functionAddress: "/medicalinfo/article"
+            FunctionID: "9-3",
+            FunctionName: "医疗用品",
+            FunctionAddress: "/medicalinfo/article"
           }
         ]
       },
       {
-        functionID: "10",
-        functionName: "更多推荐",
-        functionAddress: "/more",
+        FunctionID: "10",
+        FunctionName: "更多推荐",
+        FunctionAddress: "/more",
         icon:"icon-more",
       }
     ]

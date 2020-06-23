@@ -15,12 +15,12 @@ const routes = [
   },
   {
     path: "/index",
-    redirect: "/more",
+    redirect: "/recommend",
     name: "Layout",
     component: () => import('../views/layout/Layout.vue'),
     children: [
       {
-        path: '/more',
+        path: '/recommend',
         name: '更多推荐',
         component: () => import('../views/more/More.vue')
       },
@@ -36,7 +36,31 @@ const routes = [
             component: () => import('../views/personalInfo/BasicInfo.vue'),
           }
         ]
-      }
+      },
+      {
+        path: '/patientdiag',
+        name: '患者诊断',
+        component: () => import('../views/patientdiag/PatientDiag.vue'),
+      },
+      {
+        path: '/intelligentdiag',
+        name: '智能诊断',
+        component: () => import('../views/intelligentdiag/IntelligentDiag.vue'),
+      },
+      {
+        path: '/groupconsultation',
+        redirect: "/groupconsultation/todayconsultation",
+        name: '普通会诊',
+        component: () => import('../views/groupconsultation/Layout.vue'),
+        children: [
+          {
+            path: "/groupconsultation/todayconsultation",
+            name: "今日患者",
+            component: () => import('../views/groupconsultation/TodayConsultation.vue'),
+          }
+        ]
+      },
+      
     ]
   },
 ];
@@ -46,3 +70,9 @@ const router = new VueRouter({
 });
 
 export default router;
+
+// 解决ElementUI导航栏中的vue-router在3.0版本以上重复点菜单报错问题
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
