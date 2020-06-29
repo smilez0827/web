@@ -34,6 +34,21 @@ const routes = [
             path: "/personalinfo/basicinfo",
             name: "基本信息",
             component: () => import('../views/personalInfo/BasicInfo.vue'),
+          },
+          {
+            path: "/personalinfo/personalfinance",
+            name: "个人财务",
+            component: () => import('../views/personalInfo/Finance.vue'),
+          },
+          {
+            path: "/personalinfo/bankaccount",
+            name: "银行卡管理",
+            component: () => import('../views/personalInfo/BankAccount.vue'),
+          },
+          {
+            path: "/personalinfo/settings",
+            name: "个人设置",
+            component: () => import('../views/personalInfo/Settings.vue'),
           }
         ]
       },
@@ -41,11 +56,6 @@ const routes = [
         path: '/patientdiag',
         name: '患者诊断',
         component: () => import('../views/patientdiag/PatientDiag.vue'),
-      },
-      {
-        path: '/intelligentdiag',
-        name: '智能诊断',
-        component: () => import('../views/intelligentdiag/IntelligentDiag.vue'),
       },
       {
         path: '/groupconsultation',
@@ -60,7 +70,7 @@ const routes = [
           }
         ]
       },
-      
+
     ]
   },
 ];

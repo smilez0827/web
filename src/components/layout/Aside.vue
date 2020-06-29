@@ -60,7 +60,7 @@ export default {
   width: 240px;
   height: 100%;
   overflow: auto;
-  background-color: #1c7e7c;
+  background-image: linear-gradient(to bottom, #1C7E7C, #9ADFBF);
   .sidebar-menu {
     border: none;
     height: 100%;

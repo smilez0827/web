@@ -2,13 +2,13 @@
   <div>
     <div class="filter">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item >
+        <el-form-item>
           <template slot="label">
             <span class="formLabel">姓名：</span>
           </template>
           <el-input v-model="formInline.name" placeholder="请输入姓名" style="width:150px"></el-input>
         </el-form-item>
-        <el-form-item >
+        <el-form-item>
           <template slot="label">
             <span class="formLabel">性别：</span>
           </template>
@@ -17,7 +17,7 @@
             <el-option label="女" value="女"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item >
+        <el-form-item>
           <template slot="label">
             <span class="formLabel">活动时间：</span>
           </template>
@@ -45,28 +45,28 @@
         <el-table-column label="序号" width="80" type="index"></el-table-column>
         <el-table-column label="姓名" width="120">
           <template slot-scope="scope">
-            <span >{{ scope.row.name }}</span>
+            <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="年龄" width="80">
           <template slot-scope="scope">
-            <span >{{ scope.row.age }}</span>
+            <span>{{ scope.row.age }}</span>
           </template>
         </el-table-column>
         <el-table-column label="性别" width="80">
           <template slot-scope="scope">
-            <span >{{ scope.row.gender }}</span>
+            <span>{{ scope.row.gender }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="症状" >
+        <el-table-column label="症状">
           <template slot-scope="scope">
-            <span >{{ scope.row.symptom }}</span>
+            <span>{{ scope.row.symptom }}</span>
           </template>
         </el-table-column>
         <el-table-column label="就诊时间" width="180">
           <template slot-scope="scope">
-            <span >{{ scope.row.date }}</span>
+            <span>{{ scope.row.date }}</span>
           </template>
         </el-table-column>
 
@@ -90,10 +90,12 @@
         ></el-pagination>
       </div>
     </div>
+    <!-- <el-button @click="test">12341234</el-button> -->
   </div>
 </template>
 
 <script>
+import { getTodayPatients } from "../../api/patientdiag/patientdiag.js";
 export default {
   data() {
     return {
@@ -236,9 +238,9 @@ export default {
   },
   methods: {
     reSet() {
-      this.formInline.name='',
-      this.formInline.gender='',
-      this.formInline.dateRange=''
+      (this.formInline.name = ""),
+        (this.formInline.gender = ""),
+        (this.formInline.dateRange = "");
     },
     handleEdit(index, row) {
       console.log(index, row);
@@ -251,21 +253,26 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-    }
+    },
   },
   computed: {
     showTable: function() {
       let result = [];
       let time = 0;
 
-      this.tableData.forEach(data => { 
+      this.tableData.forEach(data => {
         time = Date.parse(data.date);
         if (
           (!this.formInline.name || data.name == this.formInline.name) &&
-          (!this.formInline.gender || data.gender == this.formInline.gender)){
-            if(!this.formInline.dateRange ||(time>this.formInline.dateRange[0].getTime()&&time<this.formInline.dateRange[1].getTime())){
-          result.push(data);
-            }
+          (!this.formInline.gender || data.gender == this.formInline.gender)
+        ) {
+          if (
+            !this.formInline.dateRange ||
+            (time > this.formInline.dateRange[0].getTime() &&
+              time < this.formInline.dateRange[1].getTime())
+          ) {
+            result.push(data);
+          }
         }
       });
       return result;
@@ -291,10 +298,10 @@ export default {
   font-size: 18px;
   font-weight: bold;
   color: #1c7e7c;
-  margin-left:5px ;
+  margin-left: 5px;
 }
 .btn {
   background-color: #1c7e7c;
-  margin-left:30px
+  margin-left: 30px;
 }
 </style>

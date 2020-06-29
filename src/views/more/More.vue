@@ -5,7 +5,7 @@
         <el-carousel-item v-for="item in imgList" :key="item.id">
           <a href="http://www.baidu.com" target="_blank">
             <h3 class="medium">
-              <img :src="item.idView" />
+              <img :src="item.AdvertisingImage" />
             </h3>
           </a>
         </el-carousel-item>
@@ -19,9 +19,12 @@
           </template>
           <div class="cardContainer">
             <div class="cardInfo" v-for="card in item.content" :key="card.id">
-              <img src="../../assets/img/more/p1.jpg" alt />
+              <img
+                :src="card.AdvertisingImage"
+                alt
+              />
               <span>
-                <a href="/">{{card.text}}</a>
+                <a href="/">{{card.AdvertisingContent}}</a>
               </span>
             </div>
             <div></div>
@@ -33,21 +36,24 @@
 </template>
 
 <script type="text/javascript">
+import { getAdvertisement } from "../../api/more/more.js";
 export default {
   name: "More",
   data() {
     return {
       imgList: [
-        { id: 0, idView: require("../../assets/img/more/ad1.jpg") },
         {
-          id: 1,
-          name: "详情",
-          idView: require("../../assets/img/more/ad2.jpg")
+          AdvertisingID: 0,
+          AdvertisingImage:
+            "http://132.232.18.227:8087/downloadfile?url=upload/f3476d00f76ee6baef64a03e1fa4d126.jpg"
         },
         {
-          id: 2,
-          name: "推荐",
-          idView: require("../../assets/img/more/ad3.jpg")
+          AdvertisingID: 1,
+          AdvertisingImage: require("../../assets/img/more/ad2.jpg")
+        },
+        {
+          AdvertisingID: 2,
+          AdvertisingImage: "http://132.232.18.227:8087/downloadfile?url=upload/f3476d00f76ee6baef64a03e1fa4d126.jpg"
         }
       ],
       activeNames: [0, 1],
@@ -56,18 +62,20 @@ export default {
           title: "热门文章",
           content: [
             {
-              pic: "../../assets/img/more/p1.jpg",
-              text: "在界面中一致：所有的元素和结构需保持一致。"
+              AdvertisingImage: "../../assets/img/more/p1.jpg",
+              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
             },
             {
-              pic: "src/assets/img/more/p1.jpg",
-              text: "在界面中一致：所有的元素和结构需保持一致。"
-            },{
-              pic: "img/p1.799d1727.jpg",
-              text: "在界面中一致：所有的元素和结构需保持一致。"
-            },{
-              pic: "img/p1.799d1727.jpg",
-              text: "在界面中一致：所有的元素和结构需保持一致。"
+              AdvertisingImage: "src/assets/img/more/p1.jpg",
+              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
+            },
+            {
+              AdvertisingImage: "img/p1.799d1727.jpg",
+              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
+            },
+            {
+              AdvertisingImage: "img/p1.799d1727.jpg",
+              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
             }
           ]
         },
@@ -75,21 +83,35 @@ export default {
           title: "最新论文",
           content: [
             {
-              pic: "img/p1.799d1727.jpg",
-              text: "在界面中一致：所有的元素和结构需保持一致。"
-            },{
-              pic: "img/p1.799d1727.jpg",
-              text: "在界面中一致：所有的元素和结构需保持一致。"
-            },{
-              pic: "img/p1.799d1727.jpg",
-              text: "在界面中一致：所有的元素和结构需保持一致。"
+              AdvertisingImage: "img/p1.799d1727.jpg",
+              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
             },
+            {
+              AdvertisingImage: "img/p1.799d1727.jpg",
+              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
+            },
+            {
+              AdvertisingImage: "img/p1.799d1727.jpg",
+              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
+            }
           ]
         }
       ]
     };
   },
-  methods: {}
+  methods: {
+    getAd() {
+      getAdvertisement().then(res => {
+        console.log(res);
+      });
+    }
+  },
+  mounted() {
+    getAdvertisement().then(res => {
+        this.imgList=res.data.imgList
+        this.collapseDate=res.data.collapseDate
+      });
+  }
 };
 </script >
 
