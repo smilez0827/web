@@ -34,13 +34,6 @@ axios.interceptors.response.use(function (response) {
   // 重传次数增加
   config.__retryCount += 1;
 
-  // setTimeout(()=> {
-  //     return axios(config);
-  //     }, config.retryDelay || 1);
-
-
-
-
   // 建立重传定时器
   var backoff = new Promise(function (resolve) {
     setTimeout(function () {

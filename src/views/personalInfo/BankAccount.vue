@@ -7,7 +7,7 @@
     </el-row>
     <div class="card">
       <div class="icon">
-        <i class="iconfont icon-huanzhezhenduan"></i>
+        <i class="iconfont icon-bank"></i>
       </div>
       <div class="info">
         <template v-if="formData.bankAccount.account">
@@ -15,6 +15,9 @@
           <span>银行卡号：{{formData.bankAccount.account}}</span>
           <span>持卡人姓名：{{formData.bankAccount.name}}</span>
           <div class="btn">
+            <span v-if="formData.defaultType=='bank'">默认收款方式</span>
+            <el-button v-else type="warning" class="btn-right" @click="setDefault('bank')">设为默认</el-button>
+
             <el-button
               type="primary"
               class="btn-left"
@@ -40,13 +43,16 @@
     </el-row>
     <div class="card">
       <div class="icon">
-        <i class="iconfont icon-huanzhezhenduan"></i>
+        <i class="iconfont icon-zhifubao"></i>
       </div>
       <div class="info">
         <template v-if="formData.alipay.account">
           <span>账户名：{{formData.alipay.account}}</span>
           <span>姓名：{{formData.alipay.name}}</span>
           <div class="btn">
+            <span v-if="formData.defaultType=='alipay'">默认收款方式</span>
+            <el-button v-else type="warning" class="btn-right" @click="setDefault('alipay')">设为默认</el-button>
+
             <el-button
               type="primary"
               class="btn-left"
@@ -71,13 +77,17 @@
     </el-row>
     <div class="card">
       <div class="icon">
-        <i class="iconfont icon-huanzhezhenduan"></i>
+        <i class="iconfont icon-weixin"></i>
       </div>
       <div class="info">
         <template v-if="formData.wechat.account">
           <span>账户名：{{formData.wechat.account}}</span>
           <span>姓名：{{formData.wechat.name}}</span>
+
           <div class="btn">
+            <span v-if="formData.defaultType=='wechat'">默认收款方式</span>
+            <el-button v-else type="warning" class="btn-right" @click="setDefault('wechat')">设为默认</el-button>
+
             <el-button
               type="primary"
               class="btn-left"
@@ -96,6 +106,7 @@
       <div></div>
     </div>
 
+    <!-- 银行卡绑定对话框 -->
     <el-dialog title="银行卡绑定" :visible.sync="bankDialogVisible">
       <el-form>
         <el-form-item label="银行" :label-width="formLabelWidth">
@@ -117,6 +128,7 @@
       </div>
     </el-dialog>
 
+    <!-- 支付宝绑定对话框 -->
     <el-dialog title="支付宝绑定" :visible.sync="alipayDialogVisible">
       <el-form>
         <el-form-item label="支付宝账户" :label-width="formLabelWidth">
@@ -135,6 +147,7 @@
       </div>
     </el-dialog>
 
+    <!-- 微信绑定对话框 -->
     <el-dialog title="微信绑定" :visible.sync="wechatDialogVisible">
       <el-form>
         <el-form-item label="微信账户" :label-width="formLabelWidth">
@@ -153,7 +166,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="提示" :visible.sync="untieDialogVisible" width="30%" >
+    <el-dialog title="提示" :visible.sync="untieDialogVisible" width="30%">
       <span>确定解除绑定？</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="untieDialogVisible = false">取 消</el-button>
@@ -164,6 +177,7 @@
 </template>
 
 <script type="text/javascript">
+import { getAccountInfo } from "../../api/user/user.js";
 // import { getBasicInfo, changeBasicInfo } from "../../api/user/user.js";
 export default {
   name: "More",
@@ -192,20 +206,21 @@ export default {
         cardId: ""
       },
       formData: {
+        defaultType: "",
         bankAccount: {
-          bank: "中国工商银行",
-          account: "1998238738992342",
-          name: "张三"
+          bank: "",
+          account: "",
+          name: ""
         },
         alipay: {
-          account: "GASDFD23",
-          name: "张三"
+          account: "",
+          name: ""
         },
         wechat: {
           account: "",
-          name: "张三"
+          name: ""
         }
-      },
+      }
     };
   },
   methods: {
@@ -247,8 +262,28 @@ export default {
         default:
           console.log("err");
       }
-    this.untieDialogVisible = false
+      this.untieDialogVisible = false;
+    },
+    setDefault(type) {
+      switch (type) {
+        case "bank":
+          this.formData.defaultType = "bank";
+          break;
+        case "alipay":
+          this.formData.defaultType = "alipay";
+          break;
+        case "wechat":
+          this.formData.defaultType = "wechat";
+          break;
+        default:
+          console.log("err");
+      }
     }
+  },
+  mounted() {
+    getAccountInfo().then((res)=>{
+      this.formData=res
+    })
   }
 };
 </script >
@@ -274,6 +309,7 @@ export default {
       margin-left: 3%;
       i {
         font-size: 90px;
+        color: #8a8a8a;
       }
     }
     .info {

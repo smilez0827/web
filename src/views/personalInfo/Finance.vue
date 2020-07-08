@@ -1,11 +1,5 @@
 <template>
   <div>
-    <!-- <el-row class="title">
-      <el-col :span="6" :offset="1">
-        <span>收入明细</span>
-      </el-col>
-    </el-row>-->
-
     <div class="filter">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item>
@@ -28,6 +22,16 @@
           <template slot="label">
             <span class="formLabel">时间：</span>
           </template>
+          <el-select v-model="formInline.recentRange" placeholder="请选择" style="width:300px">
+            <el-option label="近一个月" value="2592000000"></el-option>
+            <el-option label="近三个月" value="7776000000"></el-option>
+            <el-option label="近六个月" value="15552000000"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- <el-form-item>
+          <template slot="label">
+            <span class="formLabel">时间：</span>
+          </template>
           <el-date-picker
             v-model="formInline.dateRange"
             type="daterange"
@@ -35,7 +39,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
           ></el-date-picker>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item>
           <el-button type="primary" @click="reSet" class="btn">重置</el-button>
         </el-form-item>
@@ -50,30 +54,30 @@
         :header-cell-style="{background:'#EFF3F4',color:'#1c7e7c','text-align':'center',  'font-size': '18px','font-weight': 'bold',}"
       >
         <el-table-column label="序号" width="80" type="index"></el-table-column>
-        <el-table-column label="时间" width="120">
+        <el-table-column label="时间">
           <template slot-scope="scope">
             <span>{{ scope.row.date }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="账户" width="180">
+        <el-table-column label="账户">
           <template slot-scope="scope">
             <span>{{ scope.row.account }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="类别" width="80">
+        <el-table-column label="类别">
           <template slot-scope="scope">
             <span>{{ scope.row.type }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="描述">
-          <template slot-scope="scope">
-            <span>{{ scope.row.description }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="金额" width="180">
+        <el-table-column label="金额">
           <template slot-scope="scope">
             <span>{{ scope.row.amount }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button type="success" size="mini" @click="detailVisible=!detailVisible">明细</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -91,11 +95,21 @@
         ></el-pagination>
       </div>
     </div>
+
+    <!-- 明细对话框 -->
+    <el-dialog title="收货地址" :visible.sync="detailVisible">
+      <el-table :data="tableData2">
+        <el-table-column label="序号" width="80" type="index"></el-table-column>
+        <el-table-column property="date" label="日期" width="150"></el-table-column>
+        <el-table-column property="account" label="单号"></el-table-column>
+        <el-table-column property="description" label="描述"></el-table-column>
+        <el-table-column property="amount" label="金额" width="200"></el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
 <script type="text/javascript">
-import { getFinanceInfo } from "../../api/user/user.js";
 export default {
   name: "More",
   data() {
@@ -103,64 +117,88 @@ export default {
       formInline: {
         account: "",
         type: "",
-        dateRange: ""
+        dateRange: "",
+        recentRange: ""
       },
       tableData: [
         {
-          date: "2016-05-02",
-          name: "王小虎",
-          age: "14",
-          gender: "男",
-          symptom: "感冒发烧流鼻涕"
-        }
-      ],
-      tableData2: [
-        {
-          date: "2016-05-02",
+          date: "2020-05",
           account: "19984333897",
           type: "支付宝",
           description: "视频会诊",
           amount: "18"
         },
         {
-          date: "2016-05-02",
+          date: "2020-04",
           account: "19984333897",
           type: "支付宝",
           description: "视频会诊",
           amount: "18"
-        },{
-          date: "2016-05-02",
+        },
+        {
+          date: "2020-03",
           account: "19984333897",
           type: "支付宝",
           description: "视频会诊",
           amount: "18"
-        },{
-          date: "2016-05-02",
+        },
+        {
+          date: "2020-02",
           account: "19984333897",
           type: "支付宝",
           description: "视频会诊",
           amount: "18"
-        },{
-          date: "2016-05-02",
+        },
+        {
+          date: "2020-01",
           account: "19984333897",
           type: "支付宝",
           description: "视频会诊",
           amount: "18"
-        }
-        ,{
-          date: "2016-05-02",
+        },
+        {
+          date: "2019-05",
           account: "19984333897",
           type: "微信",
           description: "视频会诊",
           amount: "18"
-        },{
-          date: "2016-05-02",
+        },
+        {
+          date: "2020-06",
           account: "19984333897",
           type: "银行卡",
           description: "视频会诊",
           amount: "18"
         }
       ],
+            tableData2: [
+        {
+          date: "2020-05-02",
+          account: "19984333897",
+          type: "支付宝",
+          description: "视频会诊",
+          amount: "18"
+        }, {
+          date: "2020-05-03",
+          account: "19984333897",
+          type: "支付宝",
+          description: "视频会诊",
+          amount: "18"
+        }, {
+          date: "2020-05-04",
+          account: "19984333897",
+          type: "支付宝",
+          description: "视频会诊",
+          amount: "18"
+        }, {
+          date: "2020-05-05",
+          account: "19984333897",
+          type: "支付宝",
+          description: "视频会诊",
+          amount: "18"
+        },
+      ],
+      detailVisible: false,
       currentPage: 1,
       pageSize: 10
     };
@@ -169,6 +207,7 @@ export default {
     reSet() {
       (this.formInline.account = ""),
         (this.formInline.type = ""),
+        (this.formInline.recentRange = ""),
         (this.formInline.dateRange = "");
     },
     handleEdit(index, row) {
@@ -185,30 +224,46 @@ export default {
     }
   },
   mounted() {
-    getFinanceInfo().then(res => {
-      console.log(res);
-    });
+
   },
   computed: {
     showTable: function() {
       let result = [];
-      let time = 0;
-      this.tableData2.forEach(data => {
-        time = Date.parse(data.date);
+      let now = parseInt(new Date().getTime());
+      console.log(now);
+      let targetTime = 0;
+      this.tableData.forEach(data => {
+        targetTime = Date.parse(data.date);
         if (
-          (!this.formInline.account || data.account == this.formInline.account) &&
-          (!this.formInline.type || data.type == this.formInline.type)
+          (!this.formInline.account ||
+            data.account == this.formInline.account) &&
+          (!this.formInline.type || data.type == this.formInline.type) &&
+          (!this.formInline.recentRange ||
+            targetTime > now - parseInt(this.formInline.recentRange))
         ) {
-          if (
-            !this.formInline.dateRange ||
-            (time > this.formInline.dateRange[0].getTime() &&
-              time < this.formInline.dateRange[1].getTime())
-          ) {
-            result.push(data);
-          }
+          result.push(data);
         }
+        // if (
+        //   (!this.formInline.account ||
+        //     data.account == this.formInline.account) &&
+        //   (!this.formInline.type || data.type == this.formInline.type)
+        // ) {
+        //   if (
+        //     !this.formInline.dateRange ||
+        //     (time > this.formInline.dateRange[0].getTime() &&
+        //       time < this.formInline.dateRange[1].getTime())
+        //   ) {
+        //     result.push(data);
+        //   }
+        // }
       });
       return result;
+    },
+    monthTable: function() {
+      let result = [];
+      this.tableData.forEach(data => {
+        targetTime = Date.parse(data.date);
+      });
     }
   }
 };

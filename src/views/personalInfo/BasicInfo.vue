@@ -7,7 +7,7 @@
             <h3 class="title">基本信息</h3>
           </template>
 
-          <div>
+          <div class="card">
             <el-row>
               <el-col :span="4" :offset="1">
                 <el-upload
@@ -18,8 +18,12 @@
                   :before-upload="beforeAvatarUpload"
                   :headers="uploadToken"
                 >
-                  <!-- <img v-if="" :src="this.formData.basicInfo.portrait.ImageAddressName" class="avatar" /> -->
-                  <i  class="el-icon-plus avatar-uploader-icon"></i>
+                  <img
+                    v-if="this.formData.basicInfo.portrait"
+                    :src="this.formData.basicInfo.portrait"
+                    class="avatar"
+                  />
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-col>
               <el-col :span="18" :offset="1">
@@ -130,9 +134,7 @@ export default {
       activeNames: ["基本信息", "教育经历", "工作经历", "科研经历", "教学经历"],
       formData: {
         basicInfo: {
-          portrait: {
-            ImageAddressName: ""
-          },
+          portrait: "",
           Name: "张三",
           gender: "男",
           birthday: "19960723",
@@ -168,7 +170,7 @@ export default {
   },
   methods: {
     handleAvatarSuccess(res, file) {
-      this.formData.basicInfo.portrait.ImageAddressName = "http://" + res.url;
+      this.formData.basicInfo.portrait = "http://" + res.url;
       console.log(res.url);
     },
     beforeAvatarUpload(file) {
@@ -183,27 +185,13 @@ export default {
       return isJPG && isLt2M;
     },
     save() {
-      // console.log(this.formData)
-      changeBasicInfo(this.formData)
-        .then(res => {
-          if (res.status == 200) {
-            this.$message({
-              message: "个人信息修改成功",
-              type: "success"
-            });
-          } else {
-            this.$message.error("信息修改失败");
-          }
-        })
-        .catch(() => {
-          this.$message.error("网络中断");
-        });
+      changeBasicInfo(this.formData);
     }
   },
   mounted() {
     getBasicInfo().then(res => {
-      this.formData.basicInfo = res.data.Info.basicInfo;
-      this.formData.exp = res.data.Info.exp;
+      this.formData.basicInfo = res.basicInfo;
+      this.formData.exp = res.exp;
     });
   }
 };
@@ -227,6 +215,11 @@ export default {
   // background-color: #1c7e7c;
   margin-bottom: 50px;
   margin-left: 50px;
+}
+.card {
+  img {
+    height: 200px;
+  }
 }
 </style>
 

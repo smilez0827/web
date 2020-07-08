@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       loginInfo: {
-        UserID: "101001",
+        UserID: "105001",
         password: "123"
       }
     };
@@ -56,20 +56,9 @@ export default {
   methods: {
     userLogin() {
       login(this.loginInfo)
-        .then(res => {
-          if ((res.data.status = 200)) {
-            localStorage.setItem("token", res.data.token);
-            localStorage.setItem("function",JSON.stringify( res.data.function));
-            this.$router.push('/index')
-          } else {
-            this.$message("用户名或密码错误");
-          }
-        })
-        .catch(err => {
-          console.log("err");
-        });
     }
   }
+  
 };
 </script>
 

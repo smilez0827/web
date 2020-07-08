@@ -9,7 +9,7 @@
         <div>
           <span class="userinfo">
             欢迎：
-            {{ user.name}}
+            {{this.$store.getters.userInfo.name}}
             <a @click="logout">
               <i class="el-icon-switch-button" style="margin-left: 10px"></i>
               <span click="logout">退出登录</span>
@@ -25,21 +25,21 @@
 export default {
   name: "Header",
   data() {
-    return {
-      openNav: true,
-      user: {
-        name: "张笑"
-      }
-    };
+    return {};
   },
+  watch: {},
   methods: {
     logout() {
-      console.log("out");
+      localStorage.removeItem("token");
+      // this.$store.commit('resetUser')
       this.$router.push("/login");
+      window.location.reload();
     }
   },
   mounted() {
-    this.user.name = this.$store.state.userInfo.name;
+    if(localStorage.getItem('name')){
+    this.$store.state.user.userInfo.name=localStorage.getItem('name').replace(/\"/g,"")
+    }
   }
 };
 </script>
@@ -51,7 +51,6 @@ export default {
   .content {
     width: 100%;
     height: 100%;
-    border-bottom: 1px solid #1c7e7c;
     .userinfo {
       color: #1c7e7c;
       font-weight: bold;
@@ -60,6 +59,7 @@ export default {
   }
   span {
     line-height: 80px;
+    font-size: 18px;
   }
   .logo {
     height: 80px;
@@ -69,6 +69,7 @@ export default {
     }
   }
   .text {
+    font-size: 24px;
     float: left;
     color: #1c7e7c;
     font-weight: bold;

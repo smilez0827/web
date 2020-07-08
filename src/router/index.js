@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import { Message } from 'element-ui';
 
 Vue.use(VueRouter);
 
@@ -53,6 +54,18 @@ const routes = [
         ]
       },
       {
+        path: '/medicalinfo',
+        name: '医疗信息',
+        component: () => import('../views/medicalInfo/Layout.vue'),
+        children: [
+          {
+            path: "/medicalinfo/organization",
+            name: "医疗机构",
+            component: () => import('../views/medicalInfo/Organization.vue'),
+          },
+        ]
+      },
+      {
         path: '/patientdiag',
         name: '患者诊断',
         component: () => import('../views/patientdiag/PatientDiag.vue'),
@@ -67,7 +80,30 @@ const routes = [
             path: "/groupconsultation/todayconsultation",
             name: "今日患者",
             component: () => import('../views/groupconsultation/TodayConsultation.vue'),
+          },
+          {
+            path: "/groupconsultation/historyconsultation",
+            name: "历史患者",
+            component: () => import('../views/groupconsultation/History.vue'),
           }
+        ]
+      },
+      {
+        path: '/organizationmanage',
+        redirect:'/organizationmanage/orgmanage',
+        name: '/',
+        component: () => import('../views/orgmanage/Layout.vue'),
+        children:[
+          {
+            path: "/organizationmanage/orgdetails",
+            name: "医疗机构详情",
+            component: () => import('../views/orgmanage/Details.vue'),
+          },
+          {
+            path: "/organizationmanage/orgmanage",
+            name: "机构管理",
+            component: () => import('../views/orgmanage/OrgManage.vue'),
+          },
         ]
       },
 
@@ -79,10 +115,26 @@ const router = new VueRouter({
   routes
 });
 
-export default router;
+
+router.beforeEach((to, from, next) => {
+  if (to.path != '/login') {
+    if (localStorage.getItem("token")) {
+      next()
+    } else {
+      Message.error('您尚未登录！');
+      next('/login')
+    }
+  } else {
+    next()
+  }
+
+})
+
 
 // 解决ElementUI导航栏中的vue-router在3.0版本以上重复点菜单报错问题
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
+
+export default router;

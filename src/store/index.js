@@ -5,163 +5,151 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    userInfo: {
-      UserID: '',
-      name: '张三',
-      function: ''
-    },
+    user: {
+      userInfo: {
+        userId: '',
+        name: '',
+        func: [],
+      },
+      personalInfo:
+      {
+        basicinfo:
+        {
+          Name: '',
+          gender: '',
+          birthday: '',
+          post: '',
+          tel: '',
+          address: '',
+        },
+        exp: [],
+        personalfinance: [],
+        financeAccount: {
+          flag:false,
+          defaultType: '',
+          bank: {
+            bankName: '',
+            account: '',
+            name: '',
+          },
+          alipay: {
+            account: '',
+            name: '',
+          },
+          wechat: {
+            account: '',
+            name: '',
+          },
+        },
+        settings: ''
+      },
 
-    function: [
+    },
+    recommend: {
+      collapseDate: [],
+      imgList: []
+    },
+    messageList: [
       {
-        FunctionID: "1",
-        FunctionName: "个人信息",
-        FunctionAddress: "/personalinfo",
-        icon:"icon-gerenxinxi",
-        children: [
-          {
-            FunctionID: "1-1",
-            FunctionName: "基本信息",
-            FunctionAddress: "/personalinfo/basicinfo",
-          },
-          {
-            FunctionID: "1-2",
-            FunctionName: "个人财务",
-            FunctionAddress: "/personalinfo/personalfinance"
-          },
-          {
-            FunctionID: "1-3",
-            FunctionName: "银行卡管理",
-            FunctionAddress: "/personalinfo/bankaccount"
-          },
-          {
-            FunctionID: "1-4",
-            FunctionName: "个人设置",
-            FunctionAddress: "/personalinfo/settings"
-          },
-          {
-            FunctionID: "1-5",
-            FunctionName: "密码修改",
-            FunctionAddress: "/personalinfo/passwordmodify"
-          }
-        ]
+        type: "huizhen",
+        time: "15:30:43",
+        msg: "您有新会诊信息",
+        router: "/recommend"
       },
       {
-        FunctionID: "4",
-        FunctionName: "普通会诊",
-        FunctionAddress: "/groupconsultation",
-        icon:"icon-putonghuizhen",
-        children: [
-          {
-            FunctionID: "4-1",
-            FunctionName: "今日患者",
-            FunctionAddress: "/groupconsultation/todayconsultation"
-          },
-          {
-            FunctionID: "4-2",
-            FunctionName: "历史患者",
-            FunctionAddress: "/groupconsultation/historyconsultation",
-            children: [
-              {
-                FunctionID: "1-1-1",
-                FunctionName: "子项",
-                FunctionAddress: "/",
-                children:[
-                  {
-                    FunctionID: "1-1-1-1",
-                    FunctionName: "次子项1",
-                    FunctionAddress: "/1",
-                  },
-                  {
-                    FunctionID: "1-1-1-2",
-                    FunctionName: "次子项2",
-                    FunctionAddress: "/2",
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+        type: "zhuanzhen",
+        time: "15:34:43",
+        msg: "您有新转诊信息",
+        router: "/personalinfo/basicinfo"
       },
       {
-        FunctionID: "5",
-        FunctionName: "视频会诊",
-        FunctionAddress: "/groupvedioconsultation",
-        icon:"icon-Icon-shipinhuizhen",
-        children: [
-          {
-            FunctionID: "5-1",
-            FunctionName: "今日患者",
-            FunctionAddress: "/groupvedioconsultation/todayconsultation"
-          },
-          {
-            FunctionID: "5-2",
-            FunctionName: "历史患者",
-            FunctionAddress: "/groupvedioconsultation/historyconsultation"
-          }
-        ]
+        type: "huanzhe",
+        time: "15:30:43",
+        msg: "您有新会诊信息",
+        router: "/recommend"
       },
       {
-        FunctionID: "11",
-        FunctionName: "出诊管理",
-        FunctionAddress: "/housecall",
-        icon:"icon-chuzhenguanli"
+        type: "huanzhe",
+        time: "15:30:43",
+        msg: "您有新会诊信息",
+        router: "/recommend"
       },
       {
-        FunctionID: "7",
-        FunctionName: "即时信息",
-        FunctionAddress: "/instantinfo",
-        icon:"icon-message",
-        children: [
-          {
-            FunctionID: "7-1",
-            FunctionName: "会诊信息",
-            FunctionAddress: "/instantinfo/groupconsultation"
-          },
-          {
-            FunctionID: "7-2",
-            FunctionName: "消息会话",
-            FunctionAddress: "/instantinfo/message"
-          }
-        ]
+        type: "huanzhe",
+        time: "15:30:43",
+        msg: "您有新会诊信息",
+        router: "/recommend"
       },
       {
-        FunctionID: "8",
-        FunctionName: "患者信息",
-        FunctionAddress: "/patientinfo",
-        icon:"icon-huanzhexinxi",
+        type: "huanzhe",
+        time: "15:30:43",
+        msg: "您有新会诊信息",
+        router: "/recommend"
       },
       {
-        FunctionID: "9",
-        FunctionName: "医疗信息",
-        FunctionAddress: "/medicalinfo",
-        icon:"icon-yiliaoxinxi",
-        children: [
-          {
-            FunctionID: "9-1",
-            FunctionName: "医疗机构",
-            FunctionAddress: "/medicalinfo/organization"
-          },
-          {
-            FunctionID: "9-2",
-            FunctionName: "医疗专家",
-            FunctionAddress: "/medicalinfo/expert"
-          },
-          {
-            FunctionID: "9-3",
-            FunctionName: "医疗用品",
-            FunctionAddress: "/medicalinfo/article"
-          }
-        ]
+        type: "huanzhe",
+        time: "15:30:43",
+        msg: "您有新会诊信息",
+        router: "/recommend"
       },
       {
-        FunctionID: "10",
-        FunctionName: "更多推荐",
-        FunctionAddress: "/more",
-        icon:"icon-more",
+        type: "huanzhe",
+        time: "15:30:43",
+        msg: "您有新会诊信息",
+        router: "/recommend"
       }
     ]
   },
-  mutations: {},
-  actions: {},
+
+  getters: {
+    recommend: (state) => {
+      return state.recommend
+    },
+    userFunction: (state) => {
+      return state.user.userInfo.func
+    },
+    basicInfo: (state) => {
+      let obj = {};
+      obj.basicInfo = state.user.personalInfo.basicinfo;
+      obj.exp = state.user.personalInfo.exp;
+      return obj;
+    },
+    userInfo: (state) => {
+      return state.user.userInfo
+    },
+    financeAccount:(state)=>{
+      return state.user.personalInfo.financeAccount
+    }
+  },
+  mutations: {
+    userInfo(state, data) {
+      state.user.userInfo.userId = data[0];
+      state.user.userInfo.name = data[1];
+      state.user.userInfo.role = data[2];
+      state.user.userInfo.func = data[3];
+    },
+    recommend(state, data) {
+      state.recommend.imgList = data[0];
+      state.recommend.collapseDate = data[1];
+    },
+    basicInfo(state, data) {
+      localStorage.setItem('name', data[0].Name)
+      state.user.userInfo.name = data[0].Name;
+      state.user.personalInfo.basicinfo = data[0];
+      state.user.personalInfo.exp = data[1];
+    },
+    addMessage(state, msg) {
+      state.messageList.push[msg]
+    },
+    delDessage(state, index) {
+      state.messageList.splice(index, 1)
+    },
+    financeAccount(state,data){
+      state.user.personalInfo.financeAccount=data
+      state.user.personalInfo.financeAccount.flag=true
+    }
+  },
+  actions: {
+  },
   modules: {}
 });

@@ -2,7 +2,7 @@
   <div>
     <div class="rollpic">
       <el-carousel :interval="5000" type="card" height="200px">
-        <el-carousel-item v-for="item in imgList" :key="item.id">
+        <el-carousel-item v-for="item in this.$store.getters.recommend.imgList" :key="item.id">
           <a href="http://www.baidu.com" target="_blank">
             <h3 class="medium">
               <img :src="item.AdvertisingImage" />
@@ -13,16 +13,13 @@
     </div>
     <div class="adContent">
       <el-collapse v-model="activeNames">
-        <el-collapse-item v-for="(item,index) in this.collapseDate" :key="item.id" :name="index">
+        <el-collapse-item v-for="(item,index) in this.$store.getters.recommend.collapseDate" :key="item.id" :name="index">
           <template slot="title">
             <h3 class="title">{{item.title}}</h3>
           </template>
           <div class="cardContainer">
             <div class="cardInfo" v-for="card in item.content" :key="card.id">
-              <img
-                :src="card.AdvertisingImage"
-                alt
-              />
+              <img :src="card.AdvertisingImage" alt />
               <span>
                 <a href="/">{{card.AdvertisingContent}}</a>
               </span>
@@ -41,76 +38,69 @@ export default {
   name: "More",
   data() {
     return {
-      imgList: [
-        {
-          AdvertisingID: 0,
-          AdvertisingImage:
-            "http://132.232.18.227:8087/downloadfile?url=upload/f3476d00f76ee6baef64a03e1fa4d126.jpg"
-        },
-        {
-          AdvertisingID: 1,
-          AdvertisingImage: require("../../assets/img/more/ad2.jpg")
-        },
-        {
-          AdvertisingID: 2,
-          AdvertisingImage: "http://132.232.18.227:8087/downloadfile?url=upload/f3476d00f76ee6baef64a03e1fa4d126.jpg"
-        }
-      ],
+      // imgList: [
+      //   {
+      //     AdvertisingID: 0,
+      //     AdvertisingImage:
+      //       "http://132.232.18.227:8087/downloadfile?url=upload/f3476d00f76ee6baef64a03e1fa4d126.jpg"
+      //   },
+      //   {
+      //     AdvertisingID: 1,
+      //     AdvertisingImage: require("../../assets/img/more/ad2.jpg")
+      //   },
+      //   {
+      //     AdvertisingID: 2,
+      //     AdvertisingImage:
+      //       "http://132.232.18.227:8087/downloadfile?url=upload/f3476d00f76ee6baef64a03e1fa4d126.jpg"
+      //   }
+      // ],
       activeNames: [0, 1],
-      collapseDate: [
-        {
-          title: "热门文章",
-          content: [
-            {
-              AdvertisingImage: "../../assets/img/more/p1.jpg",
-              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
-            },
-            {
-              AdvertisingImage: "src/assets/img/more/p1.jpg",
-              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
-            },
-            {
-              AdvertisingImage: "img/p1.799d1727.jpg",
-              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
-            },
-            {
-              AdvertisingImage: "img/p1.799d1727.jpg",
-              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
-            }
-          ]
-        },
-        {
-          title: "最新论文",
-          content: [
-            {
-              AdvertisingImage: "img/p1.799d1727.jpg",
-              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
-            },
-            {
-              AdvertisingImage: "img/p1.799d1727.jpg",
-              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
-            },
-            {
-              AdvertisingImage: "img/p1.799d1727.jpg",
-              AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
-            }
-          ]
-        }
-      ]
+      // collapseDate: [
+      //   {
+      //     title: "热门文章",
+      //     content: [
+      //       {
+      //         AdvertisingImage: "",
+      //         AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
+      //       },
+      //       {
+      //         AdvertisingImage: "",
+      //         AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
+      //       },
+      //       {
+      //         AdvertisingImage: "",
+      //         AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
+      //       },
+      //       {
+      //         AdvertisingImage: "",
+      //         AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     title: "最新论文",
+      //     content: [
+      //       {
+      //         AdvertisingImage: "",
+      //         AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
+      //       },
+      //       {
+      //         AdvertisingImage: "",
+      //         AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
+      //       },
+      //       {
+      //         AdvertisingImage: "",
+      //         AdvertisingContent: "在界面中一致：所有的元素和结构需保持一致。"
+      //       }
+      //     ]
+      //   }
+      // ]
     };
   },
   methods: {
-    getAd() {
-      getAdvertisement().then(res => {
-        console.log(res);
-      });
-    }
   },
   mounted() {
-    getAdvertisement().then(res => {
-        this.imgList=res.data.imgList
-        this.collapseDate=res.data.collapseDate
-      });
+    getAdvertisement()
   }
 };
 </script >

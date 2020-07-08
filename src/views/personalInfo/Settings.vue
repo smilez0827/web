@@ -25,7 +25,6 @@
       <el-form
         :model="formData"
         status-icon
-        :rules="rules"
         label-width="100px"
         class="demo-formData"
       >
