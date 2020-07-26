@@ -4,46 +4,33 @@
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item>
           <template slot="label">
-            <span class="searchLabel">医院名称：</span>
+            <span class="searchLabel">团队名称：</span>
           </template>
-          <el-input v-model="search.name" placeholder="请输入医院名称"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <template slot="label">
-            <span class="searchLabel">医院等级：</span>
-          </template>
-          <el-select v-model="search.class" placeholder="请选择医院等级">
-            <el-option
-              :label="item"
-              :value="item"
-              v-for="item in showList.classList"
-              :key="item.id"
-            ></el-option>
-          </el-select>
+          <el-input v-model="search.ExpertName" placeholder="请输入团队名称"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="reset">重置</el-button>
+          <el-button type="success" @click="addExpertGroupDialogVisible=true">添加</el-button>
         </el-form-item>
       </el-form>
     </div>
     <el-divider type="primary" class="searchLine"></el-divider>
     <div class="content">
-      <el-row v-for="item in showList.list" :key="item.key">
+      <el-row v-for="item in showTable" :key="item.key">
         <el-col :span="22" :offset="1">
           <div class="card leftLine">
             <el-col :span="5">
               <div class="pic">
-                <img v-if="item.pic" :src="item.pic" alt />
+                <img v-if="item.ExpertImage" :src="item.ExpertImage" alt />
                 <img v-else src="../../assets/img/default/null.png" alt />
               </div>
             </el-col>
             <el-col :span="18">
               <div class="info">
-                <span @click="getDetails(item.orgId)">
-                  <p class="name">{{item.name||"暂无"}}</p>
-                  <p>等级：{{item.class||"暂无"}}</p>
-                  <p>地址：{{item.address||"暂无"}}</p>
-                  <p>简介：{{item.introduction||"暂无"}}</p>
+                <span @click="details(item)">
+                  <p class="name">{{item.ExpertName}}</p>
+                  <p>擅长：{{item.ExpertSpecialty}}</p>
+                  <p>简介：{{item.ExpertIntroduction}}</p>
                 </span>
               </div>
             </el-col>
@@ -55,62 +42,29 @@
     <div class="footer">
       <el-pagination
         :hide-on-single-page="false"
-        :total="showList.list.length"
+        :total="showTable.length"
         layout="prev, pager, next"
       ></el-pagination>
       <div class="clear"></div>
     </div>
+    <!-- 添加专家团队对话框 -->
+    <el-dialog title="添加专家团队" :visible.sync="addExpertGroupDialogVisible" width="30%">
+      <el-form label-position="left">
+        <el-form-item label="专家团队名称：">
+          <el-input v-model="ExpertGroupDialog.ExpertName" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addExpertGroupDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addExpGroup">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getOrgInfo,getOrgDetail } from "../../api/medicalInfo/medicalInfo.js";
-export default {
-  computed: {
-    showList: function() {
-      let list = [];
-      let classList = [];
-      this.listInfo.forEach(element => {
-        if (classList.indexOf(element.class) == -1) {
-          classList.push(element.class);
-        }
-        if (
-          (!this.search.name || element.name == this.search.name) &&
-          (!this.search.class || element.class == this.search.class)
-        ) {
-          list.push(element);
-        }
-      });
-      return { list: list, classList: classList };
-    }
-  },
-  data() {
-    return {
-      searchName: "",
-      search: {
-        name: "",
-        class: ""
-      },
-      listInfo: [],
-    };
-  },
-
-  methods: {
-    reset() {
-      this.search.name = "";
-      this.search.class = "";
-    },
-    getDetails(orgId) {
-      localStorage.setItem("orgId",orgId)
-      this.$router.push("/medicalinfo/orgdetails")
-    }
-  },
-  mounted() {
-    getOrgInfo().then(res => {
-      this.listInfo = res;
-    });
-  }
-};
+import ExpManage from "./js/ExpManage.js";
+export default ExpManage;
 </script>
 <style scoped lang="scss">
 .content {
@@ -139,7 +93,7 @@ export default {
     margin-left: 10px;
     img {
       width: 100%;
-      height: 100%;
+      height: 250px;
     }
   }
   .info {

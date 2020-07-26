@@ -19,8 +19,8 @@
                   :headers="uploadToken"
                 >
                   <img
-                    v-if="this.formData.basicInfo.portrait"
-                    :src="this.formData.basicInfo.portrait"
+                    v-if="this.formData.basicInfo.Portrait"
+                    :src="this.formData.basicInfo.Portrait"
                     class="avatar"
                   />
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -33,22 +33,22 @@
                       <el-input
                         v-model="formData.basicInfo.Name"
                         placeholder="请输入姓名"
-                        style="width:120px"
+                        style="width:70%"
                       ></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col :span="7">
                     <el-form-item label="性别：" prop="gender">
                       <el-input
-                        v-model="formData.basicInfo.gender"
+                        v-model="formData.basicInfo.Gender"
                         placeholder="请输入性别"
-                        style="width:120px"
+                        style="width:70%"
                       ></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col :span="10">
                     <el-form-item label="出生日期：" prop="date">
-                      <el-input v-model="formData.basicInfo.birthday" placeholder="请输入出生日期"></el-input>
+                      <el-input v-model="formData.basicInfo.Birthday" placeholder="请输入出生日期" style="width:70%"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -57,7 +57,7 @@
                   <el-col :span="10">
                     <el-form-item label="邮箱：" prop="post">
                       <el-input
-                        v-model="formData.basicInfo.post"
+                        v-model="formData.basicInfo.Post"
                         placeholder="请输入邮箱"
                         style="width:100%"
                       ></el-input>
@@ -66,7 +66,7 @@
                   <el-col :span="10">
                     <el-form-item label="电话：" prop="tel">
                       <el-input
-                        v-model="formData.basicInfo.tel"
+                        v-model="formData.basicInfo.Tel"
                         placeholder="请输入电话"
                         style="width:100%;"
                       ></el-input>
@@ -78,7 +78,7 @@
                   <el-col>
                     <el-form-item label="工作单位：" prop="job">
                       <el-input
-                        v-model="formData.basicInfo.job"
+                        v-model="formData.basicInfo.Job"
                         placeholder="请输入工作单位"
                         style="width:200%"
                       ></el-input>
@@ -90,7 +90,7 @@
                   <el-col :span="24">
                     <el-form-item label="家庭住址：" prop="address">
                       <el-input
-                        v-model="formData.basicInfo.address"
+                        v-model="formData.basicInfo.Address"
                         placeholder="请输入家庭住址"
                         style="width:200%"
                       ></el-input>
@@ -123,78 +123,8 @@
 </template>
 
 <script type="text/javascript">
-import { getBasicInfo, changeBasicInfo } from "../../api/user/user.js";
-export default {
-  name: "More",
-  data() {
-    return {
-      uploadToken: {
-        Authorization: localStorage.getItem("token")
-      },
-      activeNames: ["基本信息", "教育经历", "工作经历", "科研经历", "教学经历"],
-      formData: {
-        basicInfo: {
-          portrait: "",
-          Name: "张三",
-          gender: "男",
-          birthday: "19960723",
-          address: "成都市郫都区西南交通大学",
-          job: "西南交通大学",
-          post: "111111111@qq.com",
-          tel: "11111111111"
-        },
-        exp: [
-          {
-            title: "教育经历",
-            text:
-              "教育过程开始于一个人的出生并持续终身，对人产生持久而深刻的变化。有些人甚至认为教育可以开始得更早，一些父母通过外部的言语和音乐来影响子宫里成长着的胎儿，进行胎教，希望给孩子以积极的健康的发展。"
-          },
-          {
-            title: "工作经历",
-            text:
-              "教育过程开始于一个人的出生并持续终身，对人产生持久而深刻的变化。有些人甚至认为教育可以开始得更早，一些父母通过外部的言语和音乐来影响子宫里成长着的胎儿，进行胎教，希望给孩子以积极的健康的发展。"
-          },
-          {
-            title: "科研经历",
-            text:
-              "教育过程开始于一个人的出生并持续终身，对人产生持久而深刻的变化。有些人甚至认为教育可以开始得更早，一些父母通过外部的言语和音乐来影响子宫里成长着的胎儿，进行胎教，希望给孩子以积极的健康的发展。"
-          },
-          {
-            title: "教学经历",
-            text:
-              "教育过程开始于一个人的出生并持续终身，对人产生持久而深刻的变化。有些人甚至认为教育可以开始得更早，一些父母通过外部的言语和音乐来影响子宫里成长着的胎儿，进行胎教，希望给孩子以积极的健康的发展。"
-          }
-        ]
-      }
-    };
-  },
-  methods: {
-    handleAvatarSuccess(res, file) {
-      this.formData.basicInfo.portrait = "http://" + res.url;
-      console.log(res.url);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
-    },
-    save() {
-      changeBasicInfo(this.formData);
-    }
-  },
-  mounted() {
-    getBasicInfo().then(res => {
-      this.formData.basicInfo = res.basicInfo;
-      this.formData.exp = res.exp;
-    });
-  }
-};
+import BasicInfo from './js/BasicInfo.js';
+export default BasicInfo;
 </script >
 
 <style scoped lang="scss">

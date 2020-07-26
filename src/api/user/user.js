@@ -63,19 +63,163 @@ export function changeBasicInfo(data) {
         })
 }
 
-//获取财务信息
-export function getAccountInfo() {
-    if (store.getters.financeAccount.flag) {
-        return new Promise(resolve=> {
+//获取绑定的账号信息
+export function getAccountInfo(flash) {
+    let obj = {
+        defaultType: "",
+        bankAccount: {
+            bank: "",
+            account: "",
+            name: ""
+        },
+        alipay: {
+            account: "",
+            name: ""
+        },
+        wechat: {
+            account: "",
+            name: ""
+        }
+    }
+    if (store.getters.financeAccount.flag && !flash) {
+        return new Promise(resolve => {
             resolve(store.getters.financeAccount)
         })
     } else {
         return Get('/api/personalinfo/account').then(res => {
-            let financeAccount = res.data.formdata;
-            financeAccount.defaultType = res.data.defaulttype;
-            store.commit("financeAccount", financeAccount)
-            return financeAccount
+            console.log(res)
+            if (res.status == 200) {
+                if (res.data.status == 200) {
+                    if (res.data.formdata.bankAccount) obj.bankAccount = res.data.formdata.bankAccount
+                    if (res.data.formdata.wechat) obj.wechat = res.data.formdata.wechat
+                    if (res.data.formdata.alipay) obj.alipay = res.data.formdata.alipay
+                    obj.defaultType = res.data.defaulttype
+                    store.commit('financeAccount', obj)
+                    return obj
+                } else {
+                    // store.commit('financeAccount', res.data.formdata)
+                    return obj
+                }
+            } else {
+                return res
+            }
         });
     }
 
+}
+
+//绑定新账号
+export function addAccountInfo(data) {
+    console.log(data)
+    let url = "/api/personalinfo/account/" + data.type;
+    let obj = {}
+    switch (data.type) {
+        case "bankaccount":
+            obj = { bankAccount: data }
+            break;
+        case "alipay":
+            obj = { alipay: data }
+            break;
+        case "wechat":
+            obj = { wechat: data }
+            break;
+    }
+    console.log(obj)
+    return Post(url, obj).then(res => {
+        console.log(res)
+        if (res.status == 200) {
+            if (res.data.status == 200 && res.data.msg == "ok") {
+                Message.success("绑定成功！")
+                return true
+            } else {
+                Message.error(res.data.msg)
+                return false
+            }
+        } else {
+            Message.error("绑定失败！")
+            return false
+        }
+    }).catch(() => {
+        Message.error("绑定失败！")
+        return false
+    });
+}
+
+//修改绑定账号
+export function modifyAccountInfo(data) {
+    let url = "/api/personalinfo/account/" + data.type;
+    return Put(url, data).then(res => {
+        if (res.status == 200) {
+            if (res.data.status == 200) {
+                Message.success("修改成功！")
+                return true
+            } else {
+                Message.error(res.data.msg)
+                return false
+            }
+        } else {
+            Message.error("修改失败！")
+            return false
+        }
+    }).catch(() => {
+        Message.error("修改失败！")
+        return false
+    });
+}
+
+//获取财务信息
+export function getFinanceInfo(data) {
+    return Get('/api/personalinfo/finance').then(res => {
+        if (res.status == 200) {
+            if (res.data.status == 200) {
+                res.data.financInfo.forEach(element => {
+                    console.log(element)
+                    let arr = element.date.split('');
+                    arr.splice(4, 0, '-');
+                    element.date = arr.join('')
+                });
+                return res.data.financInfo
+            } else {
+                Message.success(res.data.msg)
+                return [];
+            }
+        } else {
+            Message.error("网络错误！")
+        }
+        console.log(res)
+    });
+}
+//获取财务月详情信息
+export function getMonthDetails(data) {
+    let date = data.date.replace('-', '')
+    return Post('/api/personalinfo/finance', { date: date }).then(res => {
+        if (res.status == 200) {
+            if (res.data.status == 200) {
+                return res.data.financInfo
+            } else {
+                Message.success(res.data.msg)
+                return [];
+            }
+        } else {
+            Message.error("网络错误！")
+            return [];
+        }
+    });
+}
+
+//修改密码
+export function modifyPassword(data) {
+    return Put('/api/personalinfo/password').then(res => {
+        if(res.status==200){
+            if(res.data.status==200){
+                Message.success(res.data.msg)
+            }else{
+                Message.error(res.data.msg)
+            }
+        }else{
+            Message.error("修改失败！")
+        }
+    }).catch(err=>{
+        Message.error("网络错误！")
+    });
 }

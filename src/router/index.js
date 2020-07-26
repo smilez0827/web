@@ -53,6 +53,7 @@ const routes = [
           }
         ]
       },
+      // 医疗信息
       {
         path: '/medicalinfo',
         name: '医疗信息',
@@ -62,6 +63,26 @@ const routes = [
             path: "/medicalinfo/organization",
             name: "医疗机构",
             component: () => import('../views/medicalInfo/Organization.vue'),
+          },
+          {
+            path: "/medicalinfo/expert",
+            name: "医疗专家",
+            component: () => import('../views/medicalInfo/Expert.vue'),
+          },
+          {
+            path: "/medicalinfo/article",
+            name: "医疗用品",
+            component: () => import('../views/medicalInfo/Article.vue'),
+          },
+          {
+            path: "/medicalinfo/orgdetails",
+            name: "医疗机构详情",
+            component: () => import('../views/medicalInfo/OrgDetails.vue'),
+          },
+          {
+            path: "/medicalinfo/expertdetails",
+            name: "医疗专家详情",
+            component: () => import('../views/medicalInfo/ExpertDetails.vue'),
           },
         ]
       },
@@ -106,7 +127,24 @@ const routes = [
           },
         ]
       },
-
+      {
+        path: '/expertmanage',
+        redirect:'/expertmanage/expmanage',
+        name: '/',
+        component: () => import('../views/expertmanage/Layout.vue'),
+        children:[
+          {
+            path: "/expertmanage/details",
+            name: "专家团队详情",
+            component: () => import('../views/expertmanage/Details.vue'),
+          },
+          {
+            path: "/expertmanage/expmanage",
+            name: "专家管理",
+            component: () => import('../views/expertmanage/ExpManage.vue'),
+          },
+        ]
+      },
     ]
   },
 ];

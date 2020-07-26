@@ -13,9 +13,9 @@
             <span class="formLabel">类型：</span>
           </template>
           <el-select v-model="formInline.type" placeholder="请选择" style="width:100px">
-            <el-option label="银行卡" value="银行卡"></el-option>
-            <el-option label="支付宝" value="支付宝"></el-option>
-            <el-option label="微信" value="微信"></el-option>
+            <el-option label="银行卡" value="bank"></el-option>
+            <el-option label="支付宝" value="alipay"></el-option>
+            <el-option label="微信" value="wechat"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -60,11 +60,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="账户">
+        <!-- <el-table-column label="账户">
           <template slot-scope="scope">
             <span>{{ scope.row.account }}</span>
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column label="类别">
           <template slot-scope="scope">
             <span>{{ scope.row.type }}</span>
@@ -77,7 +77,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="success" size="mini" @click="detailVisible=!detailVisible">明细</el-button>
+            <el-button type="success" size="mini" @click="monthDetails(scope.row)">明细</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -97,11 +97,11 @@
     </div>
 
     <!-- 明细对话框 -->
-    <el-dialog title="收货地址" :visible.sync="detailVisible">
+    <el-dialog title="收入" :visible.sync="detailVisible">
       <el-table :data="tableData2">
         <el-table-column label="序号" width="80" type="index"></el-table-column>
-        <el-table-column property="date" label="日期" width="150"></el-table-column>
-        <el-table-column property="account" label="单号"></el-table-column>
+        <el-table-column property="date" label="日期" width="250"></el-table-column>
+        <!-- <el-table-column property="account" label="单号"></el-table-column> -->
         <el-table-column property="description" label="描述"></el-table-column>
         <el-table-column property="amount" label="金额" width="200"></el-table-column>
       </el-table>
@@ -110,6 +110,7 @@
 </template>
 
 <script type="text/javascript">
+import { getFinanceInfo,getMonthDetails } from "../../api/user/user.js";
 export default {
   name: "More",
   data() {
@@ -120,84 +121,8 @@ export default {
         dateRange: "",
         recentRange: ""
       },
-      tableData: [
-        {
-          date: "2020-05",
-          account: "19984333897",
-          type: "支付宝",
-          description: "视频会诊",
-          amount: "18"
-        },
-        {
-          date: "2020-04",
-          account: "19984333897",
-          type: "支付宝",
-          description: "视频会诊",
-          amount: "18"
-        },
-        {
-          date: "2020-03",
-          account: "19984333897",
-          type: "支付宝",
-          description: "视频会诊",
-          amount: "18"
-        },
-        {
-          date: "2020-02",
-          account: "19984333897",
-          type: "支付宝",
-          description: "视频会诊",
-          amount: "18"
-        },
-        {
-          date: "2020-01",
-          account: "19984333897",
-          type: "支付宝",
-          description: "视频会诊",
-          amount: "18"
-        },
-        {
-          date: "2019-05",
-          account: "19984333897",
-          type: "微信",
-          description: "视频会诊",
-          amount: "18"
-        },
-        {
-          date: "2020-06",
-          account: "19984333897",
-          type: "银行卡",
-          description: "视频会诊",
-          amount: "18"
-        }
-      ],
-            tableData2: [
-        {
-          date: "2020-05-02",
-          account: "19984333897",
-          type: "支付宝",
-          description: "视频会诊",
-          amount: "18"
-        }, {
-          date: "2020-05-03",
-          account: "19984333897",
-          type: "支付宝",
-          description: "视频会诊",
-          amount: "18"
-        }, {
-          date: "2020-05-04",
-          account: "19984333897",
-          type: "支付宝",
-          description: "视频会诊",
-          amount: "18"
-        }, {
-          date: "2020-05-05",
-          account: "19984333897",
-          type: "支付宝",
-          description: "视频会诊",
-          amount: "18"
-        },
-      ],
+      tableData: [],
+      tableData2: [],
       detailVisible: false,
       currentPage: 1,
       pageSize: 10
@@ -221,10 +146,18 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val;
+    },
+    monthDetails(item) {
+      getMonthDetails(item).then(res=>{
+        this.tableData2=res;
+        this.detailVisible=true
+      })
     }
   },
   mounted() {
-
+    getFinanceInfo().then(res => {
+      this.tableData = res;
+    });
   },
   computed: {
     showTable: function() {

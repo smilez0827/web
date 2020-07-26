@@ -16,16 +16,17 @@ export default new Vuex.Store({
         basicinfo:
         {
           Name: '',
-          gender: '',
-          birthday: '',
-          post: '',
-          tel: '',
-          address: '',
+          Gender: '',
+          Birthday: '',
+          Post: '',
+          Tel: '',
+          Address: '',
+          Portrait:''
         },
         exp: [],
         personalfinance: [],
         financeAccount: {
-          flag:false,
+          flag: false,
           defaultType: '',
           bank: {
             bankName: '',
@@ -43,7 +44,6 @@ export default new Vuex.Store({
         },
         settings: ''
       },
-
     },
     recommend: {
       collapseDate: [],
@@ -98,7 +98,14 @@ export default new Vuex.Store({
         msg: "您有新会诊信息",
         router: "/recommend"
       }
-    ]
+    ],
+    medicalInfo: {
+      organization: [],
+      expertGroup: [],
+      ariticle: [],
+    },
+    expertManage:[],
+    orgManage:[],
   },
 
   getters: {
@@ -117,7 +124,7 @@ export default new Vuex.Store({
     userInfo: (state) => {
       return state.user.userInfo
     },
-    financeAccount:(state)=>{
+    financeAccount: (state) => {
       return state.user.personalInfo.financeAccount
     }
   },
@@ -144,10 +151,27 @@ export default new Vuex.Store({
     delDessage(state, index) {
       state.messageList.splice(index, 1)
     },
-    financeAccount(state,data){
-      state.user.personalInfo.financeAccount=data
-      state.user.personalInfo.financeAccount.flag=true
-    }
+    financeAccount(state, data) {
+      state.user.personalInfo.financeAccount = data
+      state.user.personalInfo.financeAccount.flag = true
+    },
+    orgList(state, data) {
+      state.medicalInfo.organization = data
+    },
+    expertGroupList(state, data) {
+      state.medicalInfo.expertGroup = data
+    },
+    ariticleList(state, data) {
+      state.medicalInfo.ariticle = data
+    },
+    expertManage(state,data){
+      state.expertManage = data
+
+    },
+    orgManage(state,data){
+      state.orgaManage = data
+
+    },
   },
   actions: {
   },

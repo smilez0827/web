@@ -49,9 +49,8 @@ export default {
   data() {
     return {
       isHide: false,
-      noticHide: false,
+      noticHide: true,
       path: [],
-    
     };
   },
   watch: {
@@ -99,8 +98,9 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
-  height: 100vh;
+  height: 100%;
   width: 100%;
+  min-width: 1000px;
   background-color: #eff3f4;
   overflow: hidden;
   .pageContainer {
@@ -114,11 +114,10 @@ export default {
   .thispage {
     position: relative;
     height: 100%;
-    width: 1500px;
+    width: 90%;
     margin: auto;
     overflow: auto;
     overflow-y: hidden;
-
     .header {
       width: 100%;
       height: 80px;
@@ -129,7 +128,6 @@ export default {
       height: 100%;
       display: flex;
       padding-bottom: 80px;
-      min-width: 1500px;
       .sideHiden {
         height: 100%;
         width: 0px;
@@ -150,6 +148,7 @@ export default {
           width: 100%;
           height: 50px;
           background-image: linear-gradient(75deg, #9adfbf, #FFD79D);
+          overflow: hidden;
           color: #1c7e7c;
           line-height: 50px;
         }

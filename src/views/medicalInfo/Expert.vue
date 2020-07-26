@@ -4,22 +4,9 @@
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item>
           <template slot="label">
-            <span class="searchLabel">医院名称：</span>
+            <span class="searchLabel">团队名称：</span>
           </template>
-          <el-input v-model="search.name" placeholder="请输入医院名称"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <template slot="label">
-            <span class="searchLabel">医院等级：</span>
-          </template>
-          <el-select v-model="search.class" placeholder="请选择医院等级">
-            <el-option
-              :label="item"
-              :value="item"
-              v-for="item in showList.classList"
-              :key="item.id"
-            ></el-option>
-          </el-select>
+          <el-input v-model="search.name" placeholder="请输入团队名称"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="reset">重置</el-button>
@@ -28,22 +15,21 @@
     </div>
     <el-divider type="primary" class="searchLine"></el-divider>
     <div class="content">
-      <el-row v-for="item in showList.list" :key="item.key">
+      <el-row v-for="item in showTable" :key="item.key">
         <el-col :span="22" :offset="1">
           <div class="card leftLine">
             <el-col :span="5">
               <div class="pic">
-                <img v-if="item.pic" :src="item.pic" alt />
-                <img v-else src="../../assets/img/default/null.png" alt />
+                <img :src="item.pic" alt />
               </div>
             </el-col>
             <el-col :span="18">
               <div class="info">
-                <span @click="getDetails(item.orgId)">
-                  <p class="name">{{item.name||"暂无"}}</p>
-                  <p>等级：{{item.class||"暂无"}}</p>
-                  <p>地址：{{item.address||"暂无"}}</p>
-                  <p>简介：{{item.introduction||"暂无"}}</p>
+                <span @click="details(item.expertGroupId)">
+                  <p class="name">{{item.name}}</p>
+                  <p>人数：{{item.count}}人</p>
+                  <p>擅长：{{item.specialty}}</p>
+                  <p>简介：{{item.introduction}}</p>
                 </span>
               </div>
             </el-col>
@@ -55,7 +41,7 @@
     <div class="footer">
       <el-pagination
         :hide-on-single-page="false"
-        :total="showList.list.length"
+        :total="showTable.length"
         layout="prev, pager, next"
       ></el-pagination>
       <div class="clear"></div>
@@ -64,49 +50,39 @@
 </template>
 
 <script>
-import { getOrgInfo,getOrgDetail } from "../../api/medicalInfo/medicalInfo.js";
+import { getExpertGroupInfo } from "../../api/medicalInfo/medicalInfo.js";
 export default {
   computed: {
-    showList: function() {
+    showTable: function() {
       let list = [];
-      let classList = [];
       this.listInfo.forEach(element => {
-        if (classList.indexOf(element.class) == -1) {
-          classList.push(element.class);
-        }
-        if (
-          (!this.search.name || element.name == this.search.name) &&
-          (!this.search.class || element.class == this.search.class)
-        ) {
+        if (!this.search.name || element.name == this.search.name) {
           list.push(element);
         }
       });
-      return { list: list, classList: classList };
+      return list;
     }
   },
   data() {
     return {
-      searchName: "",
       search: {
-        name: "",
-        class: ""
+        name: ""
       },
-      listInfo: [],
+      listInfo: []
     };
   },
 
   methods: {
     reset() {
       this.search.name = "";
-      this.search.class = "";
     },
-    getDetails(orgId) {
-      localStorage.setItem("orgId",orgId)
-      this.$router.push("/medicalinfo/orgdetails")
+    details(expertGroupId) {
+      localStorage.setItem("expertGroupId", expertGroupId);
+      this.$router.push("/medicalinfo/expertdetails");
     }
   },
   mounted() {
-    getOrgInfo().then(res => {
+    getExpertGroupInfo().then(res => {
       this.listInfo = res;
     });
   }
@@ -139,7 +115,7 @@ export default {
     margin-left: 10px;
     img {
       width: 100%;
-      height: 100%;
+      height: 250px;
     }
   }
   .info {

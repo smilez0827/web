@@ -30,7 +30,7 @@
       >
         <el-col :span="7" :offset="7">
           <el-form-item label="用户名" prop="pass">
-            <el-input type="password" v-model="formData.username" autocomplete="off"></el-input>
+            <el-input  v-model="formData.username" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="原密码" prop="check">
             <el-input type="password" v-model="formData.prepass" autocomplete="off"></el-input>
@@ -39,22 +39,22 @@
             <el-input type="password" v-model="formData.pass" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="确认密码" prop="age">
-            <el-input v-model.number="formData.check"></el-input>
+            <el-input type="password" v-model.number="formData.check"></el-input>
           </el-form-item>
         </el-col>
       </el-form>
     </el-row>
     <el-row>
       <el-col :span="2" :offset="10">
-        <el-button class="btn">提交</el-button>
+        <el-button class="btn" @click="password">提交</el-button>
       </el-col>
     </el-row>
-    <el-divider type="primary" class="line"></el-divider>
+    <el-divider type="primary" class="line" ></el-divider>
   </div>
 </template>
 
 <script type="text/javascript">
-// import { getBasicInfo, changeBasicInfo } from "../../api/user/user.js";
+import { modifyPassword } from "../../api/user/user.js";
 export default {
   name: "More",
   data() {
@@ -68,7 +68,11 @@ export default {
       notice: false
     };
   },
-  methods: {}
+  methods: {
+    password(){
+      modifyPassword(this.formData)
+    }
+  }
 };
 </script >
 

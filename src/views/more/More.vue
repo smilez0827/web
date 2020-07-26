@@ -115,6 +115,7 @@ export default {
   margin: 10px auto;
   a {
     color: #1c7e7c;
+    white-space:no-wrap
   }
   .title {
     font-size: 20px;
@@ -140,12 +141,9 @@ export default {
         width: 60%;
         margin-left: 20px;
         font-size: 18px;
+        overflow: hidden;
       }
     }
-  }
-  .paper {
-    width: 80%;
-    font-size: 18px;
   }
 }
 </style>

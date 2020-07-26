@@ -21,7 +21,7 @@
             <el-button
               type="primary"
               class="btn-left"
-              @click="bankDialogVisible=!bankDialogVisible"
+              @click="modifyBankDialogVisible=!modifyBankDialogVisible"
             >修改</el-button>
             <el-button type="danger" class="btn-right" @click="bankUntie">解绑</el-button>
           </div>
@@ -35,7 +35,6 @@
       </div>
       <div></div>
     </div>
-
     <el-row class="title">
       <el-col :span="6" :offset="1">
         <span>支付宝账户</span>
@@ -56,7 +55,7 @@
             <el-button
               type="primary"
               class="btn-left"
-              @click="alipayDialogVisible=!alipayDialogVisible"
+              @click="modifyAlipayDialogVisible=!modifyAlipayDialogVisible"
             >修改</el-button>
             <el-button type="danger" class="btn-right" @click="alipayUntie">解绑</el-button>
           </div>
@@ -64,7 +63,7 @@
         <template v-else>
           <span>尚未绑定支付宝账户...</span>
           <div class="btn">
-            <el-button type="success" @click="wechatDialogVisible=!wechatDialogVisible">绑定</el-button>
+            <el-button type="success" @click="alipayDialogVisible=!alipayDialogVisible">绑定</el-button>
           </div>
         </template>
       </div>
@@ -91,7 +90,7 @@
             <el-button
               type="primary"
               class="btn-left"
-              @click="wechatDialogVisible=!wechatDialogVisible"
+              @click="modifyWechatDialogVisible=!modifyWechatDialogVisible"
             >修改</el-button>
             <el-button type="danger" class="btn-right" @click="wechatUntie">解绑</el-button>
           </div>
@@ -118,9 +117,9 @@
         <el-form-item label="持卡人姓名" :label-width="formLabelWidth">
           <el-input v-model="newBankAccount.name"></el-input>
         </el-form-item>
-        <el-form-item label="身份证号码" :label-width="formLabelWidth">
+        <!-- <el-form-item label="身份证号码" :label-width="formLabelWidth">
           <el-input v-model="newBankAccount.cardId"></el-input>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="bankDialogVisible = false">取 消</el-button>
@@ -137,9 +136,9 @@
         <el-form-item label="姓名" :label-width="formLabelWidth">
           <el-input v-model="newAlipayAccount.name"></el-input>
         </el-form-item>
-        <el-form-item label="身份证号码" :label-width="formLabelWidth">
+        <!-- <el-form-item label="身份证号码" :label-width="formLabelWidth">
           <el-input v-model="newAlipayAccount.cardId"></el-input>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="alipayDialogVisible = false">取 消</el-button>
@@ -156,13 +155,70 @@
         <el-form-item label="姓名" :label-width="formLabelWidth">
           <el-input v-model="newWechatAccount.name"></el-input>
         </el-form-item>
-        <el-form-item label="身份证号码" :label-width="formLabelWidth">
+        <!-- <el-form-item label="身份证号码" :label-width="formLabelWidth">
           <el-input v-model="newWechatAccount.cardId"></el-input>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="wechatDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addWechatAccount">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 银行卡修改对话框 -->
+    <el-dialog title="银行卡账号修改" :visible.sync="modifyBankDialogVisible">
+      <el-form>
+        <el-form-item label="原银行卡号" :label-width="formLabelWidth">
+          <el-input v-model="modifyDialog.preaccount"></el-input>
+        </el-form-item>
+        <el-form-item label="新银行卡号" :label-width="formLabelWidth">
+          <el-input v-model="modifyDialog.account"></el-input>
+        </el-form-item>
+        <el-form-item label="持卡人姓名" :label-width="formLabelWidth">
+          <el-input v-model="modifyDialog.name"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="bankDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="modifyAccount('bankaccount')">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 支付宝修改对话框 -->
+    <el-dialog title="支付宝账号修改" :visible.sync="modifyAlipayDialogVisible">
+      <el-form>
+        <el-form-item label="原支付宝账户" :label-width="formLabelWidth">
+          <el-input v-model="modifyDialog.preaccount"></el-input>
+        </el-form-item>
+        <el-form-item label="新支付宝账户" :label-width="formLabelWidth">
+          <el-input v-model="modifyDialog.account"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" :label-width="formLabelWidth">
+          <el-input v-model="modifyDialog.name"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="alipayDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="modifyAccount('alipay')">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 微信修改对话框 -->
+    <el-dialog title="微信账号修改" :visible.sync="modifyWechatDialogVisible">
+      <el-form>
+        <el-form-item label="原微信账户" :label-width="formLabelWidth">
+          <el-input v-model="modifyDialog.preaccount"></el-input>
+        </el-form-item>
+        <el-form-item label="新微信账户" :label-width="formLabelWidth">
+          <el-input v-model="modifyDialog.account"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" :label-width="formLabelWidth">
+          <el-input v-model="modifyDialog.name"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="wechatDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="modifyAccount('wechat')">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -177,10 +233,13 @@
 </template>
 
 <script type="text/javascript">
-import { getAccountInfo } from "../../api/user/user.js";
-// import { getBasicInfo, changeBasicInfo } from "../../api/user/user.js";
+import {
+  getAccountInfo,
+  addAccountInfo,
+  modifyAccountInfo
+} from "../../api/user/user.js";
 export default {
-  name: "More",
+  name: "BankAccount",
   data() {
     return {
       untieDialogVisible: false,
@@ -189,6 +248,9 @@ export default {
       bankDialogVisible: false,
       alipayDialogVisible: false,
       wechatDialogVisible: false,
+      modifyBankDialogVisible: false,
+      modifyAlipayDialogVisible: false,
+      modifyWechatDialogVisible: false,
       newBankAccount: {
         bank: "",
         account: "",
@@ -220,21 +282,82 @@ export default {
           account: "",
           name: ""
         }
+      },
+      modifyDialog: {
+        name: "",
+        preaccount: "",
+        account: ""
       }
     };
   },
   methods: {
     addBankAccount() {
-      console.log(this.newBankAccount);
+      this.newBankAccount.type = "bankaccount";
+      addAccountInfo(this.newBankAccount).then(res => {
+        if (res) {
+          getAccountInfo(true).then(res => {
+            if (res) {
+              this.formData = res;
+            }
+          });
+        }
+      });
       this.bankDialogVisible = !this.bankDialogVisible;
     },
     addAlipayAccount() {
-      console.log(this.newAlipayAccount);
+      this.newAlipayAccount.type = "alipay";
+      addAccountInfo(this.newAlipayAccount).then(res => {
+        if (res) {
+          getAccountInfo(true).then(res => {
+            if (res) {
+              this.formData = res;
+            }
+          });
+        }
+      });
       this.alipayDialogVisible = !this.alipayDialogVisible;
     },
     addWechatAccount() {
-      console.log(this.newWechatAccount);
+      this.newWechatAccount.type = "wechat";
+      addAccountInfo(this.newWechatAccount).then(res => {
+        if (res) {
+          getAccountInfo(true).then(res => {
+            if (res) {
+              this.formData = res;
+            }
+          });
+        }
+      });
       this.wechatDialogVisible = !this.wechatDialogVisible;
+    },
+    modifyAccount(type) {
+      let obj = {};
+      switch (type) {
+        case "bankaccount":
+          obj = this.modifyDialog;
+          this.modifyBankDialogVisible = false;
+          break;
+        case "alipay":
+          obj = this.modifyDialog;
+          this.modifyAlipayDialogVisible = false;
+          break;
+        case "wechat":
+          obj = this.modifyDialog;
+          this.modifyWechatDialogVisible = false;
+          break;
+        default:
+          console.log("err");
+      }
+      obj.type = type;
+      modifyAccountInfo(obj).then(res => {
+        if (res) {
+          getAccountInfo(true).then(res => {
+            if (res) {
+              this.formData = res;
+            }
+          });
+        }
+      });
     },
     bankUntie() {
       this.untieDialogVisible = true;
@@ -281,9 +404,12 @@ export default {
     }
   },
   mounted() {
-    getAccountInfo().then((res)=>{
-      this.formData=res
-    })
+    getAccountInfo(false).then(res => {
+      console.log(res);
+      if (res) {
+        this.formData = res;
+      }
+    });
   }
 };
 </script >

@@ -1,22 +1,22 @@
 <template>
   <div class="header" height="80px">
     <div class="content">
-      <el-row>
+      <div class="left">
         <div class="logo">
           <img src="../../assets/img/logo.png" />
         </div>
         <span class="text">远程医疗系统</span>
-        <div>
-          <span class="userinfo">
-            欢迎：
-            {{this.$store.getters.userInfo.name}}
-            <a @click="logout">
-              <i class="el-icon-switch-button" style="margin-left: 10px"></i>
-              <span click="logout">退出登录</span>
-            </a>
-          </span>
-        </div>
-      </el-row>
+      </div>
+      <div class="right">
+        <span class="userinfo">
+          欢迎：
+          {{this.$store.getters.userInfo.name}}
+          <a @click="logout">
+            <i class="el-icon-switch-button" style="margin-left: 10px"></i>
+            <span click="logout">退出登录</span>
+          </a>
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -31,14 +31,15 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem("token");
-      // this.$store.commit('resetUser')
       this.$router.push("/login");
       window.location.reload();
     }
   },
   mounted() {
-    if(localStorage.getItem('name')){
-    this.$store.state.user.userInfo.name=localStorage.getItem('name').replace(/\"/g,"")
+    if (localStorage.getItem("name")) {
+      this.$store.state.user.userInfo.name = localStorage
+        .getItem("name")
+        .replace(/\"/g, "");
     }
   }
 };
@@ -48,13 +49,21 @@ export default {
 .header {
   line-height: 80px;
   color: #1c7e7c;
+  overflow: hidden;
   .content {
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: space-between;
+    .left {
+      flex-shrink: 1;
+    }
+    .right {
+      flex-shrink: 0;
+    }
     .userinfo {
       color: #1c7e7c;
       font-weight: bold;
-      float: right;
     }
   }
   span {
