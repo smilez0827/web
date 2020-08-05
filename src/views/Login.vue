@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       loginInfo: {
-        UserID: "104001",
+        UserID: "101001",
         password: "123"
       }
     };

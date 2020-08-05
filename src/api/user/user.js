@@ -2,16 +2,18 @@ import { Get, Post, Delete, FileLoad, download, Put } from '../../http/request.j
 import { Message } from 'element-ui';
 import router from '../../router/index.js'
 import store from '../../store/index.js';
-
+import socket from '../../socketio/socketio.js'
 //登录
 export function login(data) {
     Post('/api/login', data).then(res => {
         if ((res.data.status == 200)) {
             localStorage.setItem("token", res.data.token);
+            localStorage.setItem("UserID", data.UserID);
             localStorage.setItem("function", JSON.stringify(res.data.function));
             localStorage.setItem("name", JSON.stringify(res.data.name));
             store.commit('userInfo', [data.UserID, res.data.name, res.data.role, res.data.function])
             router.push('/index')
+            socket.emit("login",data.UserID)
         } else {
             Message({
                 showClose: true,

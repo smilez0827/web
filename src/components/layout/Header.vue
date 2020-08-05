@@ -30,8 +30,10 @@ export default {
   watch: {},
   methods: {
     logout() {
+      let UserID=localStorage.getItem("UserID")
       localStorage.removeItem("token");
       this.$router.push("/login");
+      this.$socket.client.emit("offline",UserID)
       window.location.reload();
     }
   },

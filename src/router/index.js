@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import { Message } from 'element-ui';
+import patientDiag from './patientDiag.js'
 
 Vue.use(VueRouter);
 
@@ -86,11 +87,8 @@ const routes = [
           },
         ]
       },
-      {
-        path: '/patientdiag',
-        name: '患者诊断',
-        component: () => import('../views/patientdiag/PatientDiag.vue'),
-      },
+      // 患者诊断
+      patientDiag,
       {
         path: '/groupconsultation',
         redirect: "/groupconsultation/todayconsultation",
@@ -111,10 +109,10 @@ const routes = [
       },
       {
         path: '/organizationmanage',
-        redirect:'/organizationmanage/orgmanage',
+        redirect: '/organizationmanage/orgmanage',
         name: '/',
         component: () => import('../views/orgmanage/Layout.vue'),
-        children:[
+        children: [
           {
             path: "/organizationmanage/orgdetails",
             name: "医疗机构详情",
@@ -129,10 +127,10 @@ const routes = [
       },
       {
         path: '/expertmanage',
-        redirect:'/expertmanage/expmanage',
+        redirect: '/expertmanage/expmanage',
         name: '/',
         component: () => import('../views/expertmanage/Layout.vue'),
-        children:[
+        children: [
           {
             path: "/expertmanage/details",
             name: "专家团队详情",

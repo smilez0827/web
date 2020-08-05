@@ -29,9 +29,7 @@
 
     <div :class="noticHide?'notice noticeUnhide':'notice noticeHide'">
       <div>
-        <p v-for="(item,index) in this.$store.state.messageList" :key="item.id">
-         <span @click="noticeRoute(item.router,index)"> [{{item.time}}]{{item.msg}}</span>
-        </p>
+        <the-msgBox></the-msgBox>
       </div>
     </div>
     <div :class="noticHide?'noticebtn noticebtnHide':'noticebtn noticebtnUnhide'" @click="noticChange">
@@ -43,7 +41,7 @@
 <script>
 import Header from "../../components/layout/Header";
 import Aside from "../../components/layout/Aside";
-
+import MessageBox from "../../components/messageBox/MessageBox";
 export default {
   name: "TheLayout",
   data() {
@@ -78,14 +76,12 @@ export default {
     noticChange() {
       this.noticHide = !this.noticHide;
     },
-    noticeRoute(route,index){
-      this.$router.push(route)
-      this.$store.commit("delDessage",index)
-    }
+
   },
   components: {
     "the-header": Header,
-    "the-sidebar": Aside
+    "the-sidebar": Aside,
+    "the-msgBox": MessageBox
   },
   mounted() {
     this.getBreadcrumb();
@@ -174,23 +170,6 @@ export default {
     position: absolute;
     right: 0;
     bottom: 0;
-    width: 350px;
-    height: 300px;
-    background-color: #ededed;
-    overflow: auto;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 10px 10px 20px 10px rgba(0, 0, 0, 0.5);
-    p {
-      color: #D2691E;
-      margin-top: 15px;
-      font-size: 18px;
-      :hover {
-        text-decoration: underline;
-        cursor: pointer;
-      }
-    }
-    
   }
   .noticeHide {
     right: 0;

@@ -8,13 +8,23 @@
           </template>
           <el-input v-model="formInline.API_name" placeholder="请输入姓名" style="width:150px"></el-input>
         </el-form-item>
-        <el-form-item>
+        <!-- <el-form-item>
           <template slot="label">
             <span class="formLabel">就诊状态：</span>
           </template>
           <el-select v-model="formInline.API_state" placeholder="请选择就诊状态">
             <el-option label="未就诊" value="未就诊"></el-option>
             <el-option label="已完成" value="已完成"></el-option>
+          </el-select>
+        </el-form-item> -->
+        <el-form-item>
+          <template slot="label">
+            <span class="formLabel">时间：</span>
+          </template>
+          <el-select v-model="formInline.API_recentRange" placeholder="请选择" style="width:300px">
+            <el-option label="近一个月" value="2592000000"></el-option>
+            <el-option label="近三个月" value="7776000000"></el-option>
+            <el-option label="近六个月" value="15552000000"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -37,20 +47,19 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="症状">``
+        <el-table-column label="症状">
           <template slot-scope="scope">
             <span>{{ scope.row.API_symptom }}</span>
           </template>
         </el-table-column>
         <el-table-column label="就诊时间" width="180">
           <template slot-scope="scope">
-            <span>{{ new Date(scope.row.API_date).toLocaleTimeString('zh-CN') }}</span>
+            <span>{{ scope.row.API_date }}</span>
           </template>
         </el-table-column>
         <el-table-column label="就诊状态" width="180">
           <template slot-scope="scope">
-            <span>{{"未诊断"}}</span>
-            <!-- <span>{{ scope.row.API_state }}</span> -->
+            <span>{{ scope.row.API_state }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180">
@@ -77,13 +86,13 @@
 </template>
 
 <script>
-import { getTodayPatients } from "../../api/patientdiag/patientdiag.js";
 export default {
   data() {
     return {
       formInline: {
         API_name: "",
-        API_state: ""
+        API_state: "",
+        API_recentRange:""
       },
       tableData: [],
       currentPage: 1,
@@ -119,18 +128,8 @@ export default {
           result.push(data);
         }
       });
-      result = result.sort((a, b) => {
-        //按照时间排序
-        var time1 = Date.parse(a.API_date);
-        var time2 = Date.parse(b.API_date);
-        return time2 - time1;
-      });
-      console.log(result);
       return result;
     }
-  },
-  mounted() {
-    getTodayPatients();
   }
 };
 </script>
