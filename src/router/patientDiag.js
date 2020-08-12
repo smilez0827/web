@@ -17,6 +17,10 @@ const patientDiag = {
             path: "/patientdiag/historydiagnosis",
             name: "历史患者",
             component: () => import('../views/patientdiag/HistoryPatient.vue'),
+        }, {
+            path: "/patientdiag/historydetails",
+            name: "历史患者详情",
+            component: () => import('../views/patientdiag/HistoryPatientDetails.vue'),
         },
     ]
 }

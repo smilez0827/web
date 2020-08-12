@@ -106,7 +106,7 @@ export default {
     patientDetails(index, row) {
       console.log(index, row);
       localStorage.setItem("pid", row.API_pid);
-      this.$router.push("/patientdiag/details");
+      this.$router.push("/patientdiag/historydetails");
     },
     handleSizeChange(val) {
       this.pageSize = val;
