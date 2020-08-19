@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import { Message } from 'element-ui';
 import patientDiag from './patientDiag.js'
+import patientTreatment from './patientTreatment.js'
 
 Vue.use(VueRouter);
 
@@ -89,6 +90,7 @@ const routes = [
       },
       // 患者诊断
       patientDiag,
+      patientTreatment,
       {
         path: '/groupconsultation',
         redirect: "/groupconsultation/todayconsultation",

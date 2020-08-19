@@ -43,7 +43,7 @@ export default {
     pages: function() {
       let target = [];
       this.options.forEach(element => {
-        if (element.pinyin.includes(this.str)) {
+        if (element.pinyin.toUpperCase().includes(this.str.toUpperCase())) {
           target.push(element.value);
         }
       });

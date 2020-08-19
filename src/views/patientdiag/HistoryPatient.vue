@@ -16,7 +16,7 @@
             <el-option label="未就诊" value="未就诊"></el-option>
             <el-option label="已完成" value="已完成"></el-option>
           </el-select>
-        </el-form-item> -->
+        </el-form-item>-->
         <el-form-item>
           <template slot="label">
             <span class="formLabel">时间：</span>
@@ -54,11 +54,12 @@
         </el-table-column>
         <el-table-column label="就诊时间" width="180">
           <template slot-scope="scope">
-            <span>{{ scope.row.API_date }}</span>
+            <span>{{ new Date(scope.row.API_date).toLocaleDateString() }}</span>
           </template>
         </el-table-column>
         <el-table-column label="就诊状态" width="180">
           <template slot-scope="scope">
+            <!-- <span>{{ scope.row.API_state||"已完成" }}</span> -->
             <span>{{ scope.row.API_state }}</span>
           </template>
         </el-table-column>
@@ -86,13 +87,14 @@
 </template>
 
 <script>
+import { getHistoryPatients } from "../../api/patientdiag/patientdiag.js";
 export default {
   data() {
     return {
       formInline: {
         API_name: "",
         API_state: "",
-        API_recentRange:""
+        API_recentRange: ""
       },
       tableData: [],
       currentPage: 1,
@@ -118,18 +120,30 @@ export default {
   computed: {
     showTable: function() {
       let result = [];
-      this.$store.state.patientDiag.todayPatientsList.forEach(data => {
+      this.tableData.forEach(data => {
         if (
           (!this.formInline.API_name ||
-            data.API_name == this.formInline.API_name) &&
+            data.API_name.includes(this.formInline.API_name)) &&
           (!this.formInline.API_state ||
             data.API_state == this.formInline.API_state)
         ) {
           result.push(data);
         }
       });
+      result = result.sort((a, b) => {
+        //按照时间排序
+        var time1 = Date.parse(a.API_date);
+        var time2 = Date.parse(b.API_date);
+        return time2 - time1;
+      });
       return result;
     }
+  },
+  mounted() {
+    getHistoryPatients().then(res => {
+      this.tableData = res;
+      console.log(res);
+    });
   }
 };
 </script>

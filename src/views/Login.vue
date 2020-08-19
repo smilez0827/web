@@ -26,16 +26,20 @@
             id="loginPassword"
           ></el-input>
           <label id="showPasswordToggle">
-            <el-checkbox id="showPasswordCheck">显示密码</el-checkbox>
+            <!-- <el-checkbox id="showPasswordCheck">显示密码</el-checkbox> -->
           </label>
-          <router-link to="/" style="float: right; color: #bbbbbb">忘记密码？</router-link>
+          <!-- <router-link to="/" style="float: right; color: #bbbbbb">忘记密码？</router-link> -->
         </el-form-item>
         <el-form-item style="width:100%;">
-          <el-button type="primary" style="width:100%; background-color:#1c7e7c;" @click="userLogin">登录</el-button>
+          <el-button
+            type="primary"
+            style="width:100%; background-color:#1c7e7c;"
+            @click="userLogin"
+          >登录</el-button>
         </el-form-item>
-        <el-form-item style="width:100%;">
+        <!-- <el-form-item style="width:100%;">
           <el-button style="width:100%;">注册</el-button>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
     </div>
   </div>
@@ -55,10 +59,12 @@ export default {
   },
   methods: {
     userLogin() {
-      login(this.loginInfo)
+      login(this.loginInfo);
     }
+  },
+  mounted() {
+    localStorage.clear();
   }
-  
 };
 </script>
 

@@ -43,6 +43,7 @@ export function getBasicInfo() {
 
 //修改个人信息
 export function changeBasicInfo(data) {
+    console.log(data    )
     return Put('/api/personalInfo', { Info: data }).then(res => {
         console.log(res)
         if (res.status == 200) {
@@ -211,7 +212,8 @@ export function getMonthDetails(data) {
 
 //修改密码
 export function modifyPassword(data) {
-    return Put('/api/personalinfo/password').then(res => {
+    // console.log(data)
+    return Put('/api/personalinfo/password',data).then(res => {
         if(res.status==200){
             if(res.data.status==200){
                 Message.success(res.data.msg)

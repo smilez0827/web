@@ -58,6 +58,7 @@ export default {
   mounted() {
     getOrgInfo().then(res => {
       this.listInfo = res;
+      console.log(res)
     });
   }
 };

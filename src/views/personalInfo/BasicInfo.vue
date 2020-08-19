@@ -48,7 +48,8 @@
                   </el-col>
                   <el-col :span="10">
                     <el-form-item label="出生日期：" prop="date">
-                      <el-input v-model="formData.basicInfo.Birthday" placeholder="请输入出生日期" style="width:70%"></el-input>
+                      <!-- <el-input v-model="formData.basicInfo.Birthday" placeholder="请输入出生日期" style="width:70%"></el-input> -->
+                      <el-date-picker value-format="yyyy-MM-dd" v-model="formData.basicInfo.Birthday" type="date" placeholder="选择日期"></el-date-picker>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -123,7 +124,7 @@
 </template>
 
 <script type="text/javascript">
-import BasicInfo from './js/BasicInfo.js';
+import BasicInfo from "./js/BasicInfo.js";
 export default BasicInfo;
 </script >
 

@@ -8,7 +8,7 @@
           </template>
           <div class="basicInfo clearfix">
             <div class="pic">
-              <img src="../../assets/img/default/person.png" alt />
+              <img :src="patientInfo.API_basicInfo.API_pic" alt />
             </div>
             <div class="info">
               <div>
@@ -23,7 +23,7 @@
                 <div>联系方式：{{patientInfo.API_basicInfo.API_tel}}</div>
                 <div>就诊时间：{{patientInfo.API_basicInfo.API_date}}</div>
                 <div>
-                  <el-link type="primary" @click="searchHistory">查看病历</el-link>
+                  <!-- <el-link type="primary" @click="searchHistory">查看病历</el-link> -->
                 </div>
               </div>
             </div>
@@ -39,7 +39,7 @@
                 <p>{{this.patientInfo.API_illState.API_description.length>0?this.patientInfo.API_illState.API_description.join("，"):"暂无"}}</p>
               </div>
               <div>
-                <el-link @click="illStateModify" type="success" style="float:right">修改</el-link>
+                <!-- <el-link @click="illStateModify" type="success" style="float:right">修改</el-link> -->
               </div>
             </div>
             <div
@@ -86,15 +86,17 @@
                 v-if="patientInfo.API_illState.API_video.length>0"
                 v-show="this.pages.AVshow=='video'"
               >
-                <video
+                <!-- <video
                   :src="patientInfo.API_illState.API_video[0].API_video"
                   preload="auto"
                   controls="controls"
                   style="width:100%"
-                ></video>
-                <!-- <div v-for="(item,index) in patientInfo.API_illState.API_video" :key="item.id">
-                  <el-link @click="videoPlay(item)">{{index+1}}.{{item.API_name}}</el-link>
-                </div>-->
+                ></video>-->
+                <div v-for="(item,index) in patientInfo.API_illState.API_video" :key="item.id">
+                  <el-link
+                    @click="videoPlay(item)"
+                  >{{index+1}}.{{item.API_name}}({{Math.floor(item.API_time)}}s)</el-link>
+                </div>
               </div>
             </div>
           </div>
@@ -104,9 +106,9 @@
             <h3 class="title">患者病史</h3>
           </template>
           <div class="history">
-            <p>既往史：{{this.patientInfo.API_history}}</p>
-            <p>家族史：{{this.patientInfo.API_history}}</p>
-            <p>过敏史：{{this.patientInfo.API_history}}</p>
+            <p>既往史：{{this.patientInfo.API_history.API_patientHistory}}</p>
+            <p>家族史：{{this.patientInfo.API_history.API_familyHistory}}</p>
+            <p>过敏史：{{this.patientInfo.API_history.API_allergyHistory}}</p>
           </div>
         </el-collapse-item>
         <el-collapse-item name="4">
@@ -189,7 +191,7 @@
             <h3 class="title">诊断结论</h3>
           </template>
           <div class="diagResult">
-            <div class="head clearfix">
+            <!-- <div class="head clearfix">
               <div class="checkBox">
                 <el-checkbox-group v-model="API_diagInfo.API_diagResult">
                   <el-checkbox
@@ -207,9 +209,9 @@
                   type="success"
                 >+导入诊断结论</el-link>
               </div>
-            </div>
+            </div>-->
             <div class="text">
-              <div class="box" @click="diagResultModify">
+              <div class="box">
                 <p>{{API_diagInfo.API_diagResult.join("，")}}</p>
               </div>
             </div>
@@ -220,7 +222,7 @@
             <h3 class="title">治疗方案</h3>
           </template>
           <div class="diagResult">
-            <div class="head clearfix">
+            <!-- <div class="head clearfix">
               <div class="checkBox">
                 <el-checkbox-group v-model="API_diagInfo.API_treatment.API_description">
                   <el-checkbox
@@ -243,15 +245,15 @@
                   type="success"
                 >+导入治疗方案</el-link>
               </div>
-            </div>
+            </div>-->
             <div class="text">
-              <div @click="treatmentModify" class="box">
+              <div class="box">
                 <p>{{API_diagInfo.API_treatment.API_description.join("，")}}</p>
               </div>
             </div>
             <div v-show="API_diagInfo.API_treatment.API_prescription.length>0" class="prescription">
               <span class="label">处方</span>
-              <el-link type="danger" @click="delPrescription" style="float:right">删除</el-link>
+              <!-- <el-link type="danger" @click="delPrescription" style="float:right">删除</el-link> -->
               <PrescriptionTable :prescription="API_diagInfo.API_treatment.API_prescription"></PrescriptionTable>
             </div>
           </div>
@@ -263,33 +265,33 @@
           <div class="after">
             <div>
               <span class="label">推荐医疗机构：{{API_diagInfo.API_after.API_org.API_orgName||"未选择"}}</span>
-              <div class="box">
+              <!-- <div class="box">
                 <choose-radio v-model="pages.choosedOrg" :options="pages.medicalInfo" type="org"></choose-radio>
-              </div>
+              </div>-->
             </div>
             <div>
-              <span class="label">推荐主管医师：{{API_diagInfo.API_after.API_doc.docName||"未选择"}}</span>
-              <div v-if="pages.choosedOrg.doctors.length>0" class="box">
+              <span class="label">推荐主管医师：{{API_diagInfo.API_after.API_doc.API_docName||"未选择"}}</span>
+              <!-- <div v-if="pages.choosedOrg.doctors.length>0" class="box">
                 <choose-radio
                   v-model="API_diagInfo.API_after.API_doc"
                   :options="pages.choosedOrg.doctors"
                   type="doc"
                 ></choose-radio>
-              </div>
+              </div>-->
             </div>
             <div>
-              <span class="label">推荐主管护士：{{API_diagInfo.API_after.API_nur.nurName||"未选择"}}</span>
-              <div v-if="pages.choosedOrg.nurses.length>0" class="box">
+              <span class="label">推荐主管护士：{{API_diagInfo.API_after.API_nur.API_nurName||"未选择"}}</span>
+              <!-- <div v-if="pages.choosedOrg.nurses.length>0" class="box">
                 <choose-radio
                   v-model="API_diagInfo.API_after.API_nur"
                   :options="pages.choosedOrg.nurses"
                   type="nur"
                 ></choose-radio>
-              </div>
+              </div>-->
             </div>
           </div>
         </el-collapse-item>
-        <el-button @click="save" size="medium" type="primary" class="btn">保存</el-button>
+        <el-button @click="save" size="medium" type="primary" class="btn">返回</el-button>
       </el-collapse>
     </div>
     <!-- 病情描述对话框 -->
@@ -476,7 +478,13 @@
 import { arrSubtraction } from "../../utils/common.js";
 import {
   getPatientDetails,
-  savePatientDiagInfo
+  savePatientDiagInfo,
+  getStateOptions,
+  getResultOptions,
+  getTreatmentOptions,
+  getDiagHistory,
+  getTreatHistory,
+  getMedicalInfo
 } from "../../api/patientdiag/patientdiag.js";
 import message from "../../store/message/message.js";
 import CheckBox from "../../components/common/CheckBox.vue";
@@ -497,38 +505,12 @@ export default {
         videoDialogSrc: "", //视频播放框中vedio标签的源
         illStateDialog: false, //病情描述对话框是否可见标志
         checkList: [], //病情描述选中的项目数组
-        stateOptions: [
-          { pinyin: "dx", value: "担心" },
-          { pinyin: "dy", value: "担忧" },
-          { pinyin: "gdba", value: "感到不安" },
-          { pinyin: "hpha", value: "害怕黑暗" },
-          { pinyin: "hpmsr", value: "害怕陌生人" },
-          { pinyin: "hprddch", value: "害怕人多的场合" },
-          { pinyin: "yx", value: "易醒" },
-          { pinyin: "sdbs", value: "睡得不深" },
-          { pinyin: "jylbjz", value: "注意力不能集中" },
-          { pinyin: "jylc", value: "记忆力差" },
-          { pinyin: "ssxq", value: "丧失兴趣" },
-          { pinyin: "zzyq", value: "昼重夜轻" },
-          { pinyin: "syfd", value: "声音发抖" },
-          { pinyin: "frfl", value: "发冷发热" },
-          { pinyin: "rrwlg", value: "软弱无力感" },
-          { pinyin: "xj", value: "心悸" }
-        ], //可以选择的病情描述项目，每一项由首字母组成的pinyin和项目名组成
+        stateOptions: [{ pinyin: "dx", value: "担心" }], //可以选择的病情描述项目，每一项由首字母组成的pinyin和项目名组成
         diagResultCheckReconmendList: [
-          {
-            pinyin: "zlzdxtxshzhyaezhmz",
-            value: "智能诊断系统显示患者患有阿尔兹海默症"
-          },
-          { pinyin: "sjss", value: "神经损伤" },
-          { pinyin: "dnxwss", value: "大脑纤维束受损" },
           { pinyin: "aezhmzzq", value: "阿尔兹海默症中期" }
         ], //可以选择的诊断结论描述项目，每一项由首字母组成的pinyin和项目名组成
         diagResultCheckList: [], //诊断结论选中的项目数组
         treatmentCheckReconmendList: [
-          { pinyin: "jyjxbszl", value: "建议进行保守治疗" },
-          { pinyin: "jyjxzyzl", value: "建议采用中药治疗" },
-          { pinyin: "yjdyyjxjc", value: "推荐到医院进行检查" },
           { pinyin: "yjjxsszl", value: "建议到医院进行手术治疗" }
         ], //可以选择的治疗方案描述项目，每一项由首字母组成的pinyin和项目名组成
         treatmentCheckList: [], //治疗方案选中的项目数组
@@ -623,20 +605,6 @@ export default {
               { nurId: "2", nurName: "王二" },
               { nurId: "3", nurName: "王大" }
             ]
-          },
-          {
-            orgId: "2",
-            orgName: "成都市第一人民医院",
-            doctors: [
-              { docId: "1", docName: "李大" },
-              { docId: "2", docName: "李二" },
-              { docId: "3", docName: "李三" }
-            ],
-            nurses: [
-              { nurId: "4", nurName: "孙一" },
-              { nurId: "5", nurName: "孙二" },
-              { nurId: "6", nurName: "孙三" }
-            ]
           }
         ], //可选的医疗机构、医师、护士信息
         choosedOrg: {
@@ -660,30 +628,48 @@ export default {
         },
         // 患者病情描述
         API_illState: {
-          API_description: ["头疼", "四肢无力"],
-          API_audio: [],
+          API_description: [],
+          API_audio: [
+            {
+              API_date: "",
+              API_name: "",
+              API_text: "",
+              API_time: "",
+              API_type: "",
+              API_voice: ""
+            }
+          ],
           API_video: [
-            require("../../assets/video/movie.mp4"),
-            require("../../assets/video/movie.mp4"),
-            require("../../assets/video/movie.mp4")
+            {
+              API_date: "",
+              API_name: "",
+              API_text: "",
+              API_time: "",
+              API_type: "",
+              API_video: ""
+            }
           ] //视频的地址，以数组的形式发过来
         },
-        API_history: "xxxxx",
+        API_history: {
+          API_allergyHistory: "",
+          API_familyHistory: "",
+          API_patientHistory: ""
+        },
         API_examResult: [
           {
-            API_type: "img",
-            API_title: "CT",
-            API_img: require("../../assets/img/patienDia/ct.png"), //图片文件
-            API_aiResult: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" //智能诊断结论
+            API_type: "",
+            API_title: "",
+            API_img: "", //图片文件
+            API_aiResult: "" //智能诊断结论
           }
         ]
       },
       API_diagInfo: {
         //诊断结论
-        API_diagResult: ["阿尔兹海默症中期", "神经损伤"],
+        API_diagResult: ["", ""],
         //治疗方案
         API_treatment: {
-          API_description: ["保守治疗", "中药治疗"],
+          API_description: ["", ""],
           API_prescription: [
             // {
             //   API_drugsName: "含曲林片",
@@ -779,7 +765,12 @@ export default {
       this.pages.prescription.splice(index, 1);
     },
     save() {
-      savePatientDiagInfo(this.patientInfo, this.API_diagInfo);
+      this.$router.push("/patientdiag/historydiagnosis");
+      // savePatientDiagInfo(
+      //   this.API_state,
+      //   this.patientInfo.API_illState.API_description,
+      //   this.API_diagInfo
+      // );
     },
     illStateModify() {
       this.pages.checkList = JSON.parse(
@@ -894,13 +885,14 @@ export default {
     },
     "pages.choosedOrg": function(value) {
       this.API_diagInfo.API_after.API_doc = {
-        docName: "",
-        docId: ""
+        API_docName: "",
+        API_docId: ""
       };
       this.API_diagInfo.API_after.API_nur = {
-        nurName: "",
-        nurId: ""
+        API_nurName: "",
+        API_nurId: ""
       };
+      console.log(this.API_diagInfo.API_after);
       this.API_diagInfo.API_after.API_org.API_orgName = value.orgName;
       this.API_diagInfo.API_after.API_org.API_orgId = value.orgId;
     }
@@ -908,9 +900,28 @@ export default {
   mounted() {
     let pid = localStorage.getItem("pid");
     getPatientDetails(pid).then(res => {
-      // this.patientInfo = res.patientInfo;
-      // this.API_diagInfo = res.API_diagInfo;
+      this.patientInfo = res.patientInfo;
+      this.API_diagInfo = res.API_diagInfo;
+      this.API_state = res.API_state;
+    });
+    getStateOptions().then(res => {
+      this.pages.stateOptions = res;
+    });
+    getResultOptions().then(res => {
+      this.pages.diagResultCheckReconmendList = res;
+    });
+    getTreatmentOptions().then(res => {
+      this.pages.treatmentCheckReconmendList = res;
+    });
+    getDiagHistory().then(res => {
+      this.pages.diagHistory = res;
       console.log(res);
+    });
+    getTreatHistory().then(res => {
+      this.pages.treatHistory = res;
+    });
+    getMedicalInfo().then(res => {
+      this.pages.medicalInfo = res;
     });
   }
 };

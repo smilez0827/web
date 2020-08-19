@@ -18,7 +18,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="reset">重置</el-button>
-          <el-button type="success" @click="addOrgDialogVisible=true">添加</el-button>
+          <!-- <el-button type="success" @click="addOrgDialogVisible=true">添加</el-button> -->
         </el-form-item>
       </el-form>
     </div>
@@ -58,9 +58,9 @@
     </div>
 
     <!-- 添加医疗机构对话框 -->
-    <el-dialog title="添加专家团队" :visible.sync="addOrgDialogVisible" width="30%">
+    <el-dialog title="添加医疗机构" :visible.sync="addOrgDialogVisible" width="30%">
       <el-form label-position="left">
-        <el-form-item label="专家团队名称：">
+        <el-form-item label="医疗机构名称：">
           <el-input v-model="newOrganization.HospitalName" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>

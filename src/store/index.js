@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import msg from "./message/message.js"
 import patientDiag from "./patientDiag/patientDiag.js"
+import patientTreatment from "./patientTreatment/patientTreatment.js"
 
 
 Vue.use(Vuex);
@@ -125,5 +126,6 @@ export default new Vuex.Store({
   modules: {
     msg,
     patientDiag,
+    patientTreatment,
   }
 });

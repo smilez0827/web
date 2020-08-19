@@ -19,21 +19,29 @@
       </div>
       <div class="info">
         <div class="form">
-          <el-form status-icon label-width="100px" size="small">
-            <el-form-item label="名称：">
+          <el-form
+            ref="introduction"
+            :model="expertGroupInfo.expertdetails"
+            :rules="rules3"
+            status-icon
+            label-width="100px"
+            size="small"
+          >
+            <el-form-item label="名称：" prop="ExpertName">
               <el-input v-model="expertGroupInfo.expertdetails.ExpertName" style="width:50%"></el-input>
             </el-form-item>
-            <el-form-item label="联系方式：">
+            <el-form-item label="联系方式：" prop="ExpertTel">
               <el-input v-model="expertGroupInfo.expertdetails.ExpertTel" style="width:50%"></el-input>
             </el-form-item>
-            <el-form-item label="团队特长：">
+            <el-form-item label="团队特长：" prop="ExpertSpecialty">
               <el-input v-model="expertGroupInfo.expertdetails.ExpertSpecialty"></el-input>
             </el-form-item>
-            <el-form-item label="团队简介：">
+            <el-form-item label="团队简介：" prop="ExpertIntroduction">
               <el-input
                 type="textarea"
                 v-model="expertGroupInfo.expertdetails.ExpertIntroduction"
-                :autosize="{minRows:2,maxRows: 6}"
+                :autosize="{minRows:4,maxRows: 6}"
+                style="max-height:200px"
               ></el-input>
             </el-form-item>
             <el-form-item>
@@ -56,7 +64,7 @@
                   </template>
                   <el-input v-model="exp.searchRule.Name" placeholder="请输入姓名" style="width:150px"></el-input>
                 </el-form-item>
-                <el-form-item>
+                <!-- <el-form-item>
                   <template slot="label">
                     <span class="formLabel">科室：</span>
                   </template>
@@ -72,7 +80,7 @@
                       :value="item"
                     ></el-option>
                   </el-select>
-                </el-form-item>
+                </el-form-item>-->
                 <el-form-item>
                   <el-button type="primary" @click="expReSet" style="margin-left:30px">重置</el-button>
                   <el-button
@@ -93,7 +101,7 @@
                   <img v-if="item.Image" :src="item.Image" class="image" />
                   <img v-else src="../../assets/img/default/null.png" class="image" alt />
                   <div style="padding: 14px;">
-                    <p>姓名：{{item.Name}}</p>
+                    <p>姓名：{{item.Name||'暂无'}}</p>
                     <p>账号：{{item.UserID}}</p>
                     <div class="bottom clearfix">
                       <!-- <span class="time">{{ item.department }}</span> -->
@@ -126,20 +134,19 @@
     <el-dialog title="添加专家" :visible.sync="exp.addDialogVisible" width="700px">
       <el-form :model="exp.addDialog" :rules="rules" ref="addDialog">
         <el-form-item label="姓名：" label-width="100px" prop="Name">
-          <el-input v-model="exp.addDialog.Name"></el-input>
+          <el-input v-model="exp.addDialog.Name" placeholder="请输入姓名"></el-input>
         </el-form-item>
         <el-form-item label="账号：" label-width="100px" prop="UserID">
-          <el-input v-model="exp.addDialog.UserID"></el-input>
+          <el-input v-model="exp.addDialog.UserID" placeholder="请输入账号(6-12位数字)"></el-input>
         </el-form-item>
         <el-form-item label="密码：" label-width="100px" prop="Password">
-          <el-input v-model="exp.addDialog.Password"></el-input>
+          <el-input v-model="exp.addDialog.Password" placeholder="请输入密码"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="exp.addDialogVisible = false">取 消</el-button>
+        <!-- <el-button @click="exp.addDialogVisible = false">取 消</el-button> -->
         <el-button type="primary" @click="addExpert">确 定</el-button>
       </div>
-      
     </el-dialog>
 
     <!-- 删除专家对话框 -->
@@ -152,27 +159,31 @@
     </el-dialog>
 
     <!-- 修改专家对话框 -->
-    <el-dialog title="添加专家" :visible.sync="exp.modifyDialogVisible" width="700px">
-      <el-form>
-        <el-form-item label="姓名：" label-width="100px">
-          <el-input v-model="exp.modifyDialog.Name"></el-input>
+    <el-dialog title="修改密码" :visible.sync="exp.modifyDialogVisible" width="700px">
+      <el-form :model="exp.modifyDialog" :rules="rules2" ref="modifyDialog">
+        <el-form-item label="姓名：" label-width="100px" prop="Name">
+          <span>{{exp.modifyDialog.Name||"暂无"}}</span>
         </el-form-item>
-        <el-form-item label="账号：" label-width="100px">
-          <el-input v-model="exp.modifyDialog.UserID"></el-input>
+        <el-form-item label="账号：" label-width="100px" prop="UserID">
+          <span>{{exp.modifyDialog.UserID}}</span>
         </el-form-item>
-        <el-form-item label="密码：" label-width="100px">
+        <el-form-item label="密码：" label-width="100px" prop="Password">
+          <el-input v-model="exp.modifyDialog.Password" placeholder="请输入密码"></el-input>
+          <!-- <el-input v-model="exp.modifyDialog.Password"></el-input> -->
+        </el-form-item>
+        <!-- <el-form-item label="密码：" label-width="100px" prop="Password">
           <el-input v-model="exp.modifyDialog.Password"></el-input>
-        </el-form-item>
-        <el-form-item label="科室：" label-width="100px">
+        </el-form-item>-->
+        <!-- <el-form-item label="科室：" label-width="100px">
           <el-select v-model="exp.modifyDialog.department" placeholder="请选择所属科室" style="width:100%">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="exp.modifyDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="exp.modifyDialogVisible = false">确 定</el-button>
+        <!-- <el-button @click="exp.modifyDialogVisible = false">取 消</el-button> -->
+        <el-button type="primary" @click="confirmExpmodify">确 定</el-button>
       </div>
     </el-dialog>
   </div>

@@ -1,29 +1,7 @@
 export default {
     namespace: true,
     state: {
-        todayPatientsList: [
-            {
-                API_date: "14:50",
-                API_name: "王小虎",
-                API_pid: "1",
-                API_symptom: "感冒发烧流鼻涕",
-                API_state: "已完成"
-            },
-            {
-                API_date: "14:50",
-                API_name: "王小虎",
-                API_pid: "1",
-                API_symptom: "感冒发烧流鼻涕",
-                API_state: "已完成"
-            },
-            {
-                API_date: "14:50",
-                API_name: "王小虎",
-                API_pid: "1",
-                API_symptom: "感冒发烧流鼻涕",
-                API_state: "已完成"
-            },
-        ],
+        todayPatientsList: [],
     },
     getters: {
     },
@@ -34,13 +12,16 @@ export default {
         },
         //来新病人后添加到列表中
         addTodayPatient(state, newPatient) {
+            console.log("11")
             state.todayPatientsList.push(newPatient)
         },
         // 完成病人诊断后改变其就诊状态
-        changeTodayPatient(state, pid) {
+        changeTodayPatient(state, data) {
+            console.log(data)
             state.todayPatientsList.forEach(e => {
-                if (e.API_pid == pid) {
+                if (e.API_pid == data.pid) {
                     e.API_state = "已完成"
+                    e.API_symptom = data.API_symptom.join(',')
                 }
             });
         }

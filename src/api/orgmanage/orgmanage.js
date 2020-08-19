@@ -52,8 +52,9 @@ export function modifyBadicInfo(HospitalID, data) {
     })
 }
 // 添加成员
-export function addMember(HospitalID,data) {
-    return Post("/api/organizationmanage/orgdetails/" + HospitalID,data).then(res => {
+export function addMember(HospitalID, data) {
+    data.DepartmentIName = "脑科"
+    return Post("/api/organizationmanage/orgdetails/" + HospitalID, data).then(res => {
         console.log(res)
         if (res.status == 200) {
             if (res.data.status == 200) {
@@ -67,14 +68,14 @@ export function addMember(HospitalID,data) {
             Message.error("添加失败")
             return false;
         }
-    }).catch(()=>{
+    }).catch(() => {
         Message.error("添加失败")
     })
 }
 
 // 删除成员
-export function delMember(HospitalID,UserID) {
-    return Delete("/api/organizationmanage/orgdetails/" + HospitalID,{UserID:UserID}).then(res => {
+export function delMember(HospitalID, UserID) {
+    return Delete("/api/organizationmanage/orgdetails/" + HospitalID, { UserID: UserID }).then(res => {
         console.log(res)
         if (res.status == 200) {
             if (res.data.status == 200) {
@@ -88,7 +89,7 @@ export function delMember(HospitalID,UserID) {
             Message.error("删除失败")
             return false;
         }
-    }).catch(()=>{
+    }).catch(() => {
         Message.error("删除失败")
     })
 
@@ -96,10 +97,10 @@ export function delMember(HospitalID,UserID) {
 
 // 修改成员密码
 export function modifyMember(data) {
-    let obj={}
-    obj.UserID=data.UserID
-    obj.Password=data.Password
-    Put("/api/organizationmanage/userinfomodify",obj).then(res => {
+    let obj = {}
+    obj.UserID = data.UserID
+    obj.Password = data.Password
+    Put("/api/organizationmanage/userinfomodify", obj).then(res => {
         if (res.status == 200) {
             if (res.data.status == 200) {
                 Message.success("修改成功")
@@ -109,7 +110,7 @@ export function modifyMember(data) {
         } else {
             Message.error("修改失败")
         }
-    }).catch(()=>{
+    }).catch(() => {
         Message.error("修改失败")
     })
 }

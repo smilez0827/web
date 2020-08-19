@@ -45,8 +45,26 @@ export default {
   },
   watch: {
     radio: function(newRadio) {
-      this.checked = JSON.parse(newRadio);
-      this.$emit("input", this.checked);
+      if (newRadio) {
+        this.checked = JSON.parse(newRadio);
+      }
+      if (this.type == "doc") {
+        let obj = {};
+        obj.API_docId = this.checked.docId;
+        obj.API_docName = this.checked.docName;
+        // console.log(obj);
+        this.$emit("input", obj);
+      } else if (this.type == "nur") {
+        let obj = {};
+        obj.API_nurId = this.checked.nurId;
+        obj.API_nurName = this.checked.nurName;
+        this.$emit("input", obj);
+      } else {
+        this.$emit("input", this.checked);
+      }
+    },
+    options: function() {
+      this.radio = "";
     }
   },
   data() {
@@ -65,7 +83,8 @@ export default {
     nextPage() {
       this.currentPage = this.currentPage + 1;
     }
-  }
+  },
+  mounted() {}
 };
 </script>
 

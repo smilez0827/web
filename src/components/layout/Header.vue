@@ -11,7 +11,7 @@
         <span class="userinfo">
           欢迎：
           {{this.$store.getters.userInfo.name}}
-          <a @click="logout">
+          <a class="logout" @click="logout">
             <i class="el-icon-switch-button" style="margin-left: 10px"></i>
             <span click="logout">退出登录</span>
           </a>
@@ -30,10 +30,11 @@ export default {
   watch: {},
   methods: {
     logout() {
-      let UserID=localStorage.getItem("UserID")
+      let UserID = localStorage.getItem("UserID");
       localStorage.removeItem("token");
+      localStorage.clear();
       this.$router.push("/login");
-      this.$socket.client.emit("offline",UserID)
+      this.$socket.client.emit("offline", UserID);
       window.location.reload();
     }
   },
@@ -66,6 +67,9 @@ export default {
     .userinfo {
       color: #1c7e7c;
       font-weight: bold;
+      a {
+        cursor: pointer;
+      }
     }
   }
   span {

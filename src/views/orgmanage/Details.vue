@@ -9,26 +9,37 @@
           :on-success="handleAvatarSuccess"
           :headers="uploadToken"
         >
-          <img v-if="this.orgInfo.HospitalOrgDetails.Image" :src="this.orgInfo.HospitalOrgDetails.Image" class="avatar" />
+          <img
+            v-if="this.orgInfo.HospitalOrgDetails.Image"
+            :src="this.orgInfo.HospitalOrgDetails.Image"
+            class="avatar"
+          />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </div>
       <div class="info">
         <div class="form">
-          <el-form status-icon label-width="100px" size="small">
-            <el-form-item label="名称：">
+          <el-form
+            :model="orgInfo.HospitalOrgDetails"
+            ref="introduction"
+            :rules="rules3"
+            status-icon
+            label-width="100px"
+            size="small"
+          >
+            <el-form-item label="名称：" prop="HospitalName">
               <el-input v-model="orgInfo.HospitalOrgDetails.HospitalName" style="width:50%"></el-input>
             </el-form-item>
-            <el-form-item label="等级：">
+            <el-form-item label="等级：" prop="HospitalLeve">
               <el-input v-model="orgInfo.HospitalOrgDetails.HospitalLeve" style="width:50%"></el-input>
             </el-form-item>
-            <el-form-item label="类型：">
+            <el-form-item label="类型：" prop="HospitalType">
               <el-input v-model="orgInfo.HospitalOrgDetails.HospitalType" style="width:50%"></el-input>
             </el-form-item>
-            <el-form-item label="医院地址：">
+            <el-form-item prop="Address" label="医院地址：">
               <el-input v-model="orgInfo.HospitalOrgDetails.Address"></el-input>
             </el-form-item>
-            <el-form-item label="联系方式：">
+            <el-form-item prop="ContactPhone" label="联系方式：">
               <el-input v-model="orgInfo.HospitalOrgDetails.ContactPhone"></el-input>
             </el-form-item>
             <el-form-item>
@@ -66,7 +77,7 @@
                   </template>
                   <el-input v-model="doc.searchRule.Name" placeholder="请输入姓名" style="width:150px"></el-input>
                 </el-form-item>
-                <el-form-item>
+                <!-- <el-form-item>
                   <template slot="label">
                     <span class="formLabel">科室：</span>
                   </template>
@@ -82,7 +93,7 @@
                       :value="item"
                     ></el-option>
                   </el-select>
-                </el-form-item>
+                </el-form-item>-->
                 <el-form-item>
                   <el-button type="primary" @click="docReSet" style="margin-left:30px">重置</el-button>
                   <el-button
@@ -94,6 +105,9 @@
               </el-form>
             </div>
             <div class="cardContainer" style="overflow:auto">
+              <div v-if="docShowTable.result.slice(0,this.doc.count).length==0">
+                <span>暂无数据</span>
+              </div>
               <div
                 v-for="(item,index) in docShowTable.result.slice(0,this.doc.count)"
                 :key="index"
@@ -106,7 +120,7 @@
                     <p>姓名：{{item.Name||"暂无"}}</p>
                     <p>账号：{{item.UserID||"暂无"}}</p>
                     <div class="bottom clearfix">
-                      <span class="time">{{ item.DepartmentIName||"暂无"}}</span>
+                      <!-- <span class="time">{{ item.Research||"暂无"}}</span> -->
                       <div>
                         <el-button
                           type="text"
@@ -140,7 +154,7 @@
                   </template>
                   <el-input v-model="nur.searchRule.Name" placeholder="请输入姓名" style="width:150px"></el-input>
                 </el-form-item>
-                <el-form-item>
+                <!-- <el-form-item>
                   <template slot="label">
                     <span class="formLabel">科室：</span>
                   </template>
@@ -156,7 +170,7 @@
                       :value="item"
                     ></el-option>
                   </el-select>
-                </el-form-item>
+                </el-form-item>-->
                 <el-form-item>
                   <el-button type="primary" @click="nurReSet" style="margin-left:30px">重置</el-button>
                   <el-button
@@ -168,6 +182,9 @@
               </el-form>
             </div>
             <div class="cardContainer" style="overflow:auto">
+              <div v-if="nurShowTable.result.slice(0,this.nur.count).length==0">
+                <span>暂无数据</span>
+              </div>
               <div
                 v-for="(item) in nurShowTable.result.slice(0,this.nur.count)"
                 :key="item.id"
@@ -180,7 +197,7 @@
                     <p>姓名：{{item.Name||"暂无"}}</p>
                     <p>账号：{{item.UserID||"暂无"}}</p>
                     <div class="bottom clearfix">
-                      <span class="time">{{ item.DepartmentIName||"暂无" }}</span>
+                      <!-- <span class="time">{{ item.DepartmentIName||"暂无" }}</span> -->
                       <div>
                         <el-button
                           type="text"
@@ -207,17 +224,17 @@
 
     <!-- 添加医师对话框 -->
     <el-dialog title="添加医师" :visible.sync="doc.addDialogVisible" width="700px">
-      <el-form>
-        <el-form-item label="姓名：" label-width="100px">
-          <el-input v-model="doc.addDialog.Name"></el-input>
+      <el-form :model="doc.addDialog" :rules="rule1" ref="docAddDialog">
+        <el-form-item label="姓名：" label-width="100px" prop="Name">
+          <el-input v-model="doc.addDialog.Name" placeholder="请输入姓名"></el-input>
         </el-form-item>
-        <el-form-item label="账号：" label-width="100px">
-          <el-input v-model="doc.addDialog.UserID"></el-input>
+        <el-form-item label="账号：" label-width="100px" prop="UserID">
+          <el-input v-model="doc.addDialog.UserID" placeholder="请输入账号(6-12位数字)"></el-input>
         </el-form-item>
-        <el-form-item label="密码：" label-width="100px">
-          <el-input v-model="doc.addDialog.Password"></el-input>
+        <el-form-item label="密码：" label-width="100px" prop="Password">
+          <el-input v-model="doc.addDialog.Password" placeholder="请输入密码"></el-input>
         </el-form-item>
-        <el-form-item label="科室：" label-width="100px">
+        <!-- <el-form-item label="科室：" label-width="100px">
           <el-select
             v-model="doc.addDialog.DepartmentIName"
             placeholder="请选择所属科室"
@@ -227,10 +244,9 @@
             <el-option label="神经内科" value="神经内科"></el-option>
             <el-option label="放射科" value="放射科"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="doc.addDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addDoctor">确 定</el-button>
       </div>
     </el-dialog>
@@ -239,29 +255,21 @@
     <el-dialog title="删除医师" :visible.sync="doc.delDialogVisible" width="30%">
       <span>您确定要删除吗？</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="doc.delDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirmDocDel">确 定</el-button>
       </span>
     </el-dialog>
 
     <!-- 修改医师对话框 -->
     <el-dialog title="修改医师" :visible.sync="doc.modifyDialogVisible" width="500px">
-      <el-form>
-        <!-- <el-form-item label="姓名：" label-width="100px">
-          <el-input v-model="doc.modifyDialog.Name"></el-input>
-        </el-form-item>-->
+      <el-form :model="doc.modifyDialog" :rules="rules2" ref="docModifyDialog">
         <el-form-item label="姓名：" label-width="100px">
-          <span>{{doc.modifyDialog.Name}}</span>
+          <span>{{doc.modifyDialog.Name||"暂无"}}</span>
         </el-form-item>
-
-        <!-- <el-form-item label="账号：" label-width="100px">
-          <el-input v-model="doc.modifyDialog.UserID"></el-input>
-        </el-form-item>-->
         <el-form-item label="账号：" label-width="100px">
           <span>{{doc.modifyDialog.UserID}}</span>
         </el-form-item>
-        <el-form-item label="密码：" label-width="100px">
-          <el-input v-model="doc.modifyDialog.Password"></el-input>
+        <el-form-item label="密码：" label-width="100px" prop="Password">
+          <el-input v-model="doc.modifyDialog.Password" placeholder="请输入密码"></el-input>
         </el-form-item>
         <!-- <el-form-item label="科室：" label-width="100px">
           <el-select
@@ -276,23 +284,22 @@
         </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="doc.modifyDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirmDocmodify">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 添加护士对话框 -->
     <el-dialog title="添加护士" :visible.sync="nur.addDialogVisible" width="700px">
-      <el-form>
-        <el-form-item label="姓名：" label-width="100px">
-          <el-input v-model="nur.addDialog.Name"></el-input>
+      <el-form :model="nur.addDialog" :rules="rule1" ref="nurAddDialog">
+        <el-form-item label="姓名：" label-width="100px" prop="Name">
+          <el-input v-model="nur.addDialog.Name" placeholder="请输入姓名"></el-input>
         </el-form-item>
-        <el-form-item label="账号：" label-width="100px">
-          <el-input v-model="nur.addDialog.UserID"></el-input>
+        <el-form-item label="账号：" label-width="100px" prop="UserID">
+          <el-input v-model="nur.addDialog.UserID" placeholder="请输入账号(6-12位数字)"></el-input>
         </el-form-item>
-        <el-form-item label="密码：" label-width="100px">
-          <el-input v-model="nur.addDialog.Password"></el-input>
+        <el-form-item label="密码：" label-width="100px" prop="Password">
+          <el-input v-model="nur.addDialog.Password" placeholder="请输入密码"></el-input>
         </el-form-item>
-        <el-form-item label="科室：" label-width="100px">
+        <!-- <el-form-item label="科室：" label-width="100px">
           <el-select
             v-model="nur.addDialog.DepartmentIName"
             placeholder="请选择所属科室"
@@ -302,10 +309,9 @@
             <el-option label="神经内科" value="神经内科"></el-option>
             <el-option label="放射科" value="放射科"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="nur.addDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addNurse">确 定</el-button>
       </div>
     </el-dialog>
@@ -314,16 +320,15 @@
     <el-dialog title="删除护士" :visible.sync="nur.delDialogVisible" width="30%">
       <span>您确定要删除吗？</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="nur.delDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirmNusDel">确 定</el-button>
       </span>
     </el-dialog>
 
     <!-- 修改护士对话框 -->
     <el-dialog title="修改护士" :visible.sync="nur.modifyDialogVisible" width="500px">
-      <el-form>
+      <el-form :model="nur.modifyDialog" :rules="rules2" ref="nurModifyDialog">
         <el-form-item label="姓名：" label-width="100px">
-          <span>{{nur.modifyDialog.Name}}</span>
+          <span>{{nur.modifyDialog.Name||'暂无'}}</span>
         </el-form-item>
         <el-form-item label="账号：" label-width="100px">
           <span>{{nur.modifyDialog.UserID}}</span>
@@ -334,7 +339,7 @@
         <el-form-item label="账号：" label-width="100px">
           <el-input v-model="nur.modifyDialog.UserID"></el-input>
         </el-form-item>-->
-        <el-form-item label="密码：" label-width="100px">
+        <el-form-item label="密码：" label-width="100px" prop="Password">
           <el-input v-model="nur.modifyDialog.Password"></el-input>
         </el-form-item>
         <!-- <el-form-item label="科室：" label-width="100px">
@@ -350,7 +355,6 @@
         </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="nur.modifyDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirmNurmodify">确 定</el-button>
       </div>
     </el-dialog>

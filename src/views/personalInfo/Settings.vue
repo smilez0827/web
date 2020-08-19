@@ -22,24 +22,19 @@
     </el-row>
 
     <el-row class="password">
-      <el-form
-        :model="formData"
-        status-icon
-        label-width="100px"
-        class="demo-formData"
-      >
+      <el-form :model="formData" :rules="rules" label-width="100px" ref="passwordModigy">
         <el-col :span="7" :offset="7">
-          <el-form-item label="用户名" prop="pass">
-            <el-input  v-model="formData.username" autocomplete="off"></el-input>
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="formData.username" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="原密码" prop="check">
+          <el-form-item label="原密码" prop="prepass">
             <el-input type="password" v-model="formData.prepass" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="新密码" prop="check">
-            <el-input type="password" v-model="formData.pass" autocomplete="off"></el-input>
+          <el-form-item label="新密码" prop="newpass">
+            <el-input type="password" v-model="formData.newpass" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码" prop="age">
-            <el-input type="password" v-model.number="formData.check"></el-input>
+          <el-form-item label="确认密码" prop="check">
+            <el-input type="password" v-model="formData.check" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-form>
@@ -49,28 +44,58 @@
         <el-button class="btn" @click="password">提交</el-button>
       </el-col>
     </el-row>
-    <el-divider type="primary" class="line" ></el-divider>
+    <el-divider type="primary" class="line"></el-divider>
   </div>
 </template>
 
 <script type="text/javascript">
 import { modifyPassword } from "../../api/user/user.js";
+import {
+  validateAccount,
+  validatePass,
+  validateName
+} from "../../utils/validator.js";
 export default {
   name: "More",
   data() {
+    var validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.formData.newpass) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+
     return {
       formData: {
         username: "",
         prepass: "",
-        pass: "",
+        newpass: "",
         check: ""
       },
-      notice: false
+      notice: false,
+      rules: {
+        username: [{ validator: validateAccount, trigger: "blur" }],
+        prepass: [{ validator: validatePass, trigger: "blur" }],
+        check: [{ validator: validatePass2, trigger: "blur" }],
+        newpass: [{ validator: validatePass, trigger: "blur" }]
+      }
     };
   },
   methods: {
-    password(){
-      modifyPassword(this.formData)
+    password() {
+      this.$refs.passwordModigy.validate(valid => {
+        if (valid) {
+          modifyPassword(this.formData);
+        } else {
+          this.$message.error("请按格式输入！");
+          return false;
+        }
+      });
+
+      // console.log(this.$refs.passwordModigy);
     }
   }
 };

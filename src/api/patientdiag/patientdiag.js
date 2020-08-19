@@ -1,60 +1,195 @@
 import { Get, Post, Delete, FileLoad, download, Put } from '../../http/request.js'
 import store from '../../store/index.js';
 import { Message } from 'element-ui';
+import router from '../../router/index.js'
 // 获取今日患者列表
-export function getTodayPatients(pid) {
-    Get("http://132.232.18.227:3000/patientdiag/todaypatients").then((res)=>{
-        if(res.data.seekmedicaladvicedata.length>0){
-            res.data.seekmedicaladvicedata.forEach(item=>{
+export function getTodayPatients() {
+    if (store.state.patientDiag.todayPatientsList.length == 0) {
+        Get("http://132.232.18.227:3000/patientdiag/todaypatients").then((res) => {
+            if (res.data.seekmedicaladvicedata.length > 0) {
+                res.data.seekmedicaladvicedata.forEach(item => {
+                    item.API_pid = item.pid
+                })
+            }
+            console.log(res.data.seekmedicaladvicedata)
+            store.commit("todayPatientsList", res.data.seekmedicaladvicedata)
+        })
+    }
+}
+
+// 获取历史者列表
+export function getHistoryPatients(pid) {
+    return Get("http://132.232.18.227:3000/patientdiag/historypatients").then((res) => {
+        if (res.data.seekmedicaladvicedata.length > 0) {
+            res.data.seekmedicaladvicedata.forEach(item => {
                 item.API_pid = item.pid
             })
         }
-        store.commit("todayPatientsList", res.data.seekmedicaladvicedata)
+        return res.data.seekmedicaladvicedata
+        console.log(res)
+        // store.commit("todayPatientsList", res.data.seekmedicaladvicedata)
     })
 }
 
+
 // 获取患者详情信息
 export function getPatientDetails(pid) {
+    return Get("http://132.232.18.227:3000/patientdiag/patient/" + pid).then((res) => {
+        if (res.status == 200) {
+            console.log(res.data)
+            let obj = {};
+            obj.patientInfo = {};
+            obj.API_diagInfo = {};
+            obj.patientInfo.API_basicInfo = res.data.API_basicInfo;
+            obj.patientInfo.API_illState = res.data.API_illState;
+            obj.patientInfo.API_history = res.data.API_history;
+            obj.patientInfo.API_examResult = res.data.API_examResult;
+            obj.API_diagInfo = res.data.API_diagInfo;
+            obj.API_state = res.data.API_state;
+            return obj
+        } else {
+            new Promise((resolve) => {
+                resolve(res)
+                router.push("/patientdiag/todaydiagnosis")
 
-    return Get("http://132.232.18.227:3000/patientdiag/2").then((res) => {
-        console.log(res)
-        let obj = {};
-        obj.API_basicInfo = res.data.API_basicInfo;
-        obj.API_illState = res.data.API_illState;
-        obj.API_history = res.data.API_history;
-        obj.API_examResult = res.data.API_examResult;
-        let obj2 = {};
-        obj2.API_diagResult =
-            res.data.API_diagInfo.API_diagResult[0].API_diagDescription;
-        obj2.API_treatment = {};
-        obj2.API_treatment.API_description =
-            res.data.API_diagInfo.API_treatment[0].API_treatmentdescription;
-        obj2.API_treatment.API_prescription = res.data.API_diagInfo.API_drugs;
-        obj2.API_after = res.data.API_diagInfo.API_after;
-        return {
-            patientInfo: obj,
-            API_diagInfo: obj2
+
+            })
         }
+
     })
 }
 
 // 保存患者诊断信息
-export function savePatientDiagInfo(data1, data2) {
-    let obj = JSON.parse(JSON.stringify(data2))
-    obj.API_illState = {}
-    obj.API_illState.API_description = data1.API_illState.API_description
-    obj.API_drugs = obj.API_treatment.API_prescription
-    let str = obj.API_diagResult
-    obj.API_diagResult = [{ API_diagDescription: str }];
-    str = obj.API_treatment.API_description
-    obj.API_treatment = [{ API_treatmentdescription: str }];
-    console.log(obj)
-    Post("http://132.232.18.227:3000/patientdiag/2",obj).then(res=>{
-        if(res.status==200){
-            Message.success(res.data.msg)
-        }else{
-            Message.error("保存失败")
-        }
-    })
+export function savePatientDiagInfo(pid, API_state, API_description, API_diagInfo) {
+    let errList = [];
+    let flag = true;
+    // if (API_state) {
+    if (API_description.length == 0) {
+        errList.push("病情描述")
+        flag = false
+    }
+    if (API_diagInfo.API_diagResult.length == 0) {
+        errList.push("诊断结论描述")
+        flag = false
+    }
+    if (API_diagInfo.API_treatment.API_description.length == 0) {
+        errList.push("治疗方案描述")
+        flag = false
+    }
+    // }
+    if (flag) {
+        let obj = {};
+        obj.API_state = API_state;
+        obj.API_illState = {};
+        obj.API_illState.API_description = API_description
+        obj.API_diagInfo = API_diagInfo
+        console.log(obj)
+        Post("http://132.232.18.227:3000/patientdiag/patient/" + pid, obj).then(res => {
+            if (res.status == 200) {
+                Message.success(res.data.msg)
+                store.commit("changeTodayPatient", { pid: pid, API_symptom: obj.API_illState.API_description })
+            } else {
+                Message.error("保存失败")
+            }
+        })
+        router.push("/patientdiag/todaydiagnosis")
+    } else {
+        Message.error("请完善以下部分：" + errList.join('、'))
+    }
 
+}
+
+//获取患者状态描述选项
+export function getStateOptions() {
+    if (localStorage.getItem("stateopt")) {
+        return new Promise(resolve => {
+            let obj = JSON.parse(localStorage.getItem("stateopt"))
+            resolve(obj)
+        })
+    } else {
+        return Get("http://132.232.18.227:3000/patientdiag/stateoptions").then(res => {
+            localStorage.setItem("stateopt", JSON.stringify(res.data.stateOptions))
+            return res.data.stateOptions
+        })
+    }
+
+}
+
+//获取诊断结论描述选项
+export function getResultOptions() {
+    if (localStorage.getItem("resultopt")) {
+        return new Promise(resolve => {
+            let obj = JSON.parse(localStorage.getItem("resultopt"))
+            resolve(obj)
+        })
+    } else {
+        return Get("http://132.232.18.227:3000/patientdiag/resultoptions").then(res => {
+            localStorage.setItem("resultopt", JSON.stringify(res.data.resultoptions1))
+            return res.data.resultoptions1
+        })
+    }
+}
+
+//获取治疗方案描述选项
+export function getTreatmentOptions() {
+    if (localStorage.getItem("treatmentopts")) {
+        return new Promise(resolve => {
+            let obj = JSON.parse(localStorage.getItem("treatmentopts"))
+            resolve(obj)
+        })
+    } else {
+        return Get("http://132.232.18.227:3000/patientdiag/treatmentoptions").then(res => {
+            console.log(res.data.treatmentOptions)
+            localStorage.setItem("treatmentopts", JSON.stringify(res.data.treatmentOptions))
+            return res.data.treatmentOptions
+        })
+        // }
+    }
+}
+//获取历史诊断结论
+export function getDiagHistory() {
+    if (localStorage.getItem("diaghistoryopts")) {
+        return new Promise(resolve => {
+            console.log(localStorage.getItem("diaghistoryopt"))
+            let obj = JSON.parse(localStorage.getItem("diaghistoryopt"))
+            resolve(obj)
+        })
+    } else {
+        return Get("http://132.232.18.227:3000/patientdiag/diaghistory").then(res => {
+            // console.log(res)
+            localStorage.setItem("diaghistoryopt", JSON.stringify(res.data.diagHistory))
+            return res.data.diagHistory
+        })
+    }
+
+}
+//获取历史治疗方案
+export function getTreatHistory() {
+    if (localStorage.getItem("treathistoryopts")) {
+        return new Promise(resolve => {
+            let obj = JSON.parse(localStorage.getItem("treathistoryopts"))
+            resolve(obj)
+        })
+    } else {
+        return Get("http://132.232.18.227:3000/patientdiag/treathistory").then(res => {
+            localStorage.setItem("treathistoryopts", JSON.stringify(res.data.treatHistory))
+            return res.data.treatHistory
+        })
+    }
+}
+
+//获取医疗机构信息
+export function getMedicalInfo() {
+    if (localStorage.getItem("medicalinfoopt")) {
+        return new Promise(resolve => {
+            let obj = JSON.parse(localStorage.getItem("medicalinfoopt"))
+            resolve(obj)
+        })
+    } else {
+        return Get("http://132.232.18.227:3000/patientdiag/medicalinfo").then(res => {
+            localStorage.setItem("medicalinfoopt", JSON.stringify(res.data.medicalinfo))
+            console.log(res.data.medicalinfo)
+            return res.data.medicalinfo
+        })
+    }
 }

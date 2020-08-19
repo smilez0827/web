@@ -5,30 +5,16 @@ import {
   delMember,
   modifyMember
 } from "../../../api/expertmanage/expertmanage.js";
-import { checkUserName, checkPassword ,regIsNumber} from "../../../utils/verify.js"
+import {
+  validateAccount,
+  validatePass,
+  validateName,
+  spaceValidate,
+
+} from "../../../utils/validator.js"
 export default {
   name: "Deatails",
   data() {
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
-      } else {
-        if (!regIsNumber(this.exp.addDialog.UserID)) {
-          callback(new Error('只能包含字母数字'));
-        }
-        callback();
-      }
-    };
-    var validateUsername = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入账号'));
-      } else {
-        if (!regIsNumber(this.exp.addDialog.UserID)) {
-          callback(new Error('以字母开头，只能包含字母数字下划线和减号，4到16位'));
-        }
-        callback();
-      }
-    };
     return {
       uploadToken: {
         Authorization: localStorage.getItem("token")
@@ -79,32 +65,41 @@ export default {
         ]
       },
       rules: {
-        Password: [
-          { validator: validatePass, trigger: 'blur' },
-        ],
-        UserID: [
-          { validator: validateUsername, trigger: 'blur' }
-        ]
-      }
+        Name: [{ validator: validateName, trigger: "blur" }],
+        Password: [{ validator: validatePass, trigger: "blur" }],
+        UserID: [{ validator: validateAccount, trigger: "blur" }]
+      },
+      rules2: {
+        Password: [{ validator: validatePass, trigger: "blur" }]
+      },
+      rules3: {
+        ExpertName: [{ validator: spaceValidate, trigger: "blur" }],
+        ExpertTel: [{ validator: spaceValidate, trigger: "blur" }],
+        ExpertSpecialty: [{ validator: spaceValidate, trigger: "blur" }],
+      },
     };
   },
   computed: {
     expShowTable: function () {
       let result = [];
       let departmentList = [];
-      this.expertGroupInfo.TeamDoctor.forEach(data => {
-        if (departmentList.indexOf(data.department) == -1) {
-          departmentList.push(data.department);
-        }
-        if (
-          (!this.exp.searchRule.Name ||
-            data.Name == this.exp.searchRule.Name) &&
-          (!this.exp.searchRule.department ||
-            data.department == this.exp.searchRule.department)
-        ) {
-          result.push(data);
-        }
-      });
+      if (this.expertGroupInfo.TeamDoctor.length > 0) {
+        this.expertGroupInfo.TeamDoctor.forEach(data => {
+          if (departmentList.indexOf(data.department) == -1) {
+            departmentList.push(data.department);
+          }
+          if (
+            (!this.exp.searchRule.Name ||
+              data.Name.includes(this.exp.searchRule.Name)) &&
+            (!this.exp.searchRule.department ||
+              data.department == this.exp.searchRule.department)
+          ) {
+            result.push(data);
+          }
+        });
+      } else {
+        this.expertGroupInfo.TeamDoctor = []
+      }
       return { result: result, departmentList: departmentList };
     }
   },
@@ -117,7 +112,12 @@ export default {
       this.exp.searchRule.department = "";
     },
     basicInfo() {
-      modifyBadicInfo(this.ExpertID, this.expertGroupInfo.expertdetails);
+      this.$refs.introduction.validate((valid) => {
+        if (valid) {
+          modifyBadicInfo(this.ExpertID, this.expertGroupInfo.expertdetails);
+        }
+      });
+
     },
 
     addExpert() {
@@ -131,7 +131,10 @@ export default {
               this.exp.addDialogVisible = false;
             }
           });
+        } else {
+          this.$message.error("请按照格式输入！")
         }
+        console.log(valid)
       })
 
     },
@@ -141,6 +144,7 @@ export default {
     },
     //确认删除医师
     confirmExpDel() {
+      console.log(this.ExpertID, this.exp.targetRow.UserID)
       delMember(this.ExpertID, this.exp.targetRow.UserID).then(res => {
         if (res) {
           this.expertGroupInfo.TeamDoctor.forEach((item, index) => {
@@ -154,18 +158,39 @@ export default {
     },
     modifyExpert(data) {
       this.exp.modifyDialogVisible = true;
+      console.log(data)
+      console.log(this.exp.modifyDialog)
+
       this.exp.targetRow = data;
-      this.exp.modifyDialog = data;
+      this.exp.modifyDialog.Name = data.Name;
+      this.exp.modifyDialog.UserID = data.UserID;
+      this.exp.modifyDialog.Password = ""
     },
-    //医生修改确认
+    //专家修改确认
     confirmExpmodify() {
-      modifyMember(this.exp.modifyDialog);
-      this.exp.modifyDialogVisible = false;
+      this.$refs.modifyDialog.validate(valid => {
+        if (valid) {
+          modifyMember(this.exp.modifyDialog);
+          this.exp.modifyDialogVisible = false;
+
+        } else {
+          this.$message.error("请按照格式输入！")
+
+        }
+      })
+
+    },
+    test() {
+      getExpertDetails(this.ExpertID).then(res => {
+        console.log(res)
+      })
     }
   },
   mounted() {
     this.ExpertID = localStorage.getItem("ExpertID");
+    console.log(this.ExpertID)
     getExpertDetails(this.ExpertID).then(res => {
+      console.log(res)
       this.expertGroupInfo = res;
     });
   }

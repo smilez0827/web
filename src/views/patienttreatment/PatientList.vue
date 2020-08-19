@@ -13,7 +13,7 @@
             <span class="formLabel">就诊状态：</span>
           </template>
           <el-select v-model="formInline.API_state" placeholder="请选择就诊状态">
-            <el-option label="未完成" value="未完成"></el-option>
+            <el-option label="未就诊" value="未就诊"></el-option>
             <el-option label="已完成" value="已完成"></el-option>
           </el-select>
         </el-form-item>
@@ -31,31 +31,25 @@
         :header-cell-style="{background:'#EFF3F4',color:'#1c7e7c','text-align':'center',  'font-size': '18px','font-weight': 'bold',}"
       >
         <el-table-column label="序号" width="80" type="index"></el-table-column>
-        <el-table-column label="姓名" width="120">
+        <el-table-column label="姓名">
           <template slot-scope="scope">
             <span>{{ scope.row.API_name }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="症状">
+        <el-table-column label="诊断专家">
+          ``
           <template slot-scope="scope">
-            <span>{{ scope.row.API_symptom ||"暂无"}}</span>
+            <span>{{ scope.row.API_expert}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="就诊时间" width="180">
-          <template slot-scope="scope">
-            <span>{{ scope.row.API_date }}</span>
-            <!-- <span>{{ new Date(scope.row.API_date).toLocaleTimeString('zh-CN') }}</span> -->
-          </template>
-        </el-table-column>
-        <el-table-column label="就诊状态" width="180">
+        <el-table-column label="状态">
           <template slot-scope="scope">
             <!-- <span>{{"未诊断"}}</span> -->
-            <span>{{scope.row.API_state }}</span>
-            <!-- <span>{{ scope.row.API_state }}</span> -->
+            <span>{{ scope.row.API_state }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini" @click="patientDetails(scope.$index, scope.row)">查看</el-button>
           </template>
@@ -99,7 +93,7 @@ export default {
     patientDetails(index, row) {
       console.log(index, row);
       localStorage.setItem("pid", row.API_pid);
-      this.$router.push("/patientdiag/details");
+      this.$router.push("/treatment/treatmentdetails");
     },
     handleSizeChange(val) {
       this.pageSize = val;
@@ -111,10 +105,10 @@ export default {
   computed: {
     showTable: function() {
       let result = [];
-      this.$store.state.patientDiag.todayPatientsList.forEach(data => {
+      this.$store.state.patientTreatment.patientsList.forEach(data => {
         if (
           (!this.formInline.API_name ||
-            data.API_name.includes(this.formInline.API_name)) &&
+            data.API_name == this.formInline.API_name) &&
           (!this.formInline.API_state ||
             data.API_state == this.formInline.API_state)
         ) {
@@ -127,11 +121,12 @@ export default {
         var time2 = Date.parse(b.API_date);
         return time2 - time1;
       });
+      console.log(result);
       return result;
     }
   },
   mounted() {
-    getTodayPatients();
+    // getTodayPatients();
   }
 };
 </script>

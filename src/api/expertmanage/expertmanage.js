@@ -28,10 +28,12 @@ export function addExpertInfo(data) {
 }
 // 获得专家团队详细信息
 export function getExpertDetails(ExpertID) {
+    console.log(ExpertID)
     return Get('/api/expertmanage/expertdetails/' + ExpertID).then(res => {
         let obj = {};
-        obj.TeamDoctor=res.data.TeamDoctor;
-        obj.expertdetails=res.data.expertdetails[0];
+        console.log("res")
+        obj.TeamDoctor = res.data.TeamDoctor;
+        obj.expertdetails = res.data.expertdetails[0];
         return obj
     })
 }
@@ -50,8 +52,8 @@ export function modifyBadicInfo(ExpertID, data) {
     })
 }
 // 添加成员
-export function addMember(HospitalID,data) {
-    return Post("/api/expertmanage/expertdetails/member/" + HospitalID,data).then(res => {
+export function addMember(HospitalID, data) {
+    return Post("/api/expertmanage/expertdetails/member/" + HospitalID, data).then(res => {
         console.log(res)
         if (res.status == 200) {
             if (res.data.status == 200) {
@@ -65,14 +67,14 @@ export function addMember(HospitalID,data) {
             Message.error("添加失败")
             return false;
         }
-    }).catch(()=>{
+    }).catch(() => {
         Message.error("添加失败")
     })
 }
 
 // 删除成员
-export function delMember(HospitalID,UserID) {
-    return Delete("/api/expertmanage/orgdetails/" + HospitalID,{UserID:UserID}).then(res => {
+export function delMember(HospitalID, UserID) {
+    return Delete("/api/expertmanage/expertdetails/member/" + UserID, { UserID, UserID }).then(res => {
         console.log(res)
         if (res.status == 200) {
             if (res.data.status == 200) {
@@ -86,7 +88,7 @@ export function delMember(HospitalID,UserID) {
             Message.error("删除失败")
             return false;
         }
-    }).catch(()=>{
+    }).catch(() => {
         Message.error("删除失败")
     })
 
@@ -94,24 +96,24 @@ export function delMember(HospitalID,UserID) {
 
 // 修改成员密码
 export function modifyMember(data) {
-    let obj={}
-    obj.UserID=data.UserID
-    obj.Password=data.Password
+    let obj = {}
+    obj.UserID = data.UserID
+    obj.Password = data.Password
     console.log(obj)
-    // Put("/api/expertmanage/userinfomodify",obj).then(res => {
-    //     console.log(res)
-    //     if (res.status == 200) {
-    //         if (res.data.status == 200) {
-    //             Message.success("修改成功")
-    //         } else {
-    //             Message.error(res.data.msg)
-    //         }
-    //     } else {
-    //         Message.error("修改失败")
-    //     }
-    // }).catch(()=>{
-    //     Message.error("修改失败")
-    // })
+    Put("/api/expertmanage/userinfomodify", obj).then(res => {
+        console.log(res)
+        if (res.status == 200) {
+            if (res.data.status == 200) {
+                Message.success("修改成功")
+            } else {
+                Message.error(res.data.msg)
+            }
+        } else {
+            Message.error("修改失败")
+        }
+    }).catch(() => {
+        Message.error("修改失败")
+    })
 }
 
 
