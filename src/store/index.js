@@ -9,6 +9,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    pageState: true,//功能栏是否收缩，true表示没有收缩
     user: {
       userInfo: {
         userId: '',
@@ -25,7 +26,7 @@ export default new Vuex.Store({
           Post: '',
           Tel: '',
           Address: '',
-          Portrait:''
+          Portrait: ''
         },
         exp: [],
         personalfinance: [],
@@ -58,8 +59,8 @@ export default new Vuex.Store({
       expertGroup: [],
       ariticle: [],
     },
-    expertManage:[],
-    orgManage:[],
+    expertManage: [],
+    orgManage: [],
   },
 
   getters: {
@@ -83,6 +84,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    pageState(state) {
+      state.pageState = !state.pageState
+    },
     userInfo(state, data) {
       state.user.userInfo.userId = data[0];
       state.user.userInfo.name = data[1];
@@ -112,11 +116,11 @@ export default new Vuex.Store({
     ariticleList(state, data) {
       state.medicalInfo.ariticle = data
     },
-    expertManage(state,data){
+    expertManage(state, data) {
       state.expertManage = data
 
     },
-    orgManage(state,data){
+    orgManage(state, data) {
       state.orgaManage = data
 
     },

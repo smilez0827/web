@@ -39,7 +39,7 @@
                 <p>{{this.patientInfo.API_illState.API_description.length>0?this.patientInfo.API_illState.API_description.join("，"):"暂无"}}</p>
               </div>
               <div>
-                <el-link @click="illStateModify" type="success" style="float:right">修改</el-link>
+                <el-link @click="inputBoxShow('illState')" type="success" style="float:right">修改</el-link>
               </div>
             </div>
             <div
@@ -193,7 +193,7 @@
           </template>
           <div class="diagResult">
             <div class="head clearfix">
-              <div class="checkBox">
+              <!-- <div class="checkBox">
                 <el-checkbox-group v-model="API_diagInfo.API_diagResult">
                   <el-checkbox
                     v-for="item in pages.diagResultCheckReconmendList.slice(0,2)"
@@ -201,9 +201,9 @@
                     :label="item.value"
                   ></el-checkbox>
                 </el-checkbox-group>
-              </div>
+              </div>-->
               <div class="more">
-                <el-link @click="diagResultModify" class="link" type="success">更多选项</el-link>
+                <!-- <el-link @click="diagResultModify" class="link" type="success">更多选项</el-link> -->
                 <el-link
                   @click="pages.HistoryDialogVisable=true"
                   class="link"
@@ -212,8 +212,8 @@
               </div>
             </div>
             <div class="text">
-              <div class="box" @click="diagResultModify">
-                <p>{{API_diagInfo.API_diagResult.join("，")}}</p>
+              <div class="box" @click="inputBoxShow('diagResult')">
+                <p>{{API_diagInfo.API_diagResult.join("，")||"暂无"}}</p>
               </div>
             </div>
           </div>
@@ -224,7 +224,7 @@
           </template>
           <div class="diagResult">
             <div class="head clearfix">
-              <div class="checkBox">
+              <!-- <div class="checkBox">
                 <el-checkbox-group v-model="API_diagInfo.API_treatment.API_description">
                   <el-checkbox
                     v-for="item in pages.treatmentCheckReconmendList.slice(0,2)"
@@ -232,9 +232,9 @@
                     :label="item.value"
                   ></el-checkbox>
                 </el-checkbox-group>
-              </div>
+              </div>-->
               <div class="more">
-                <el-link @click="treatmentModify" class="link" type="success">更多选项</el-link>
+                <!-- <el-link @click="treatmentModify" class="link" type="success">更多选项</el-link> -->
                 <el-link
                   @click="prescriptionModify"
                   class="link"
@@ -248,8 +248,8 @@
               </div>
             </div>
             <div class="text">
-              <div @click="treatmentModify" class="box">
-                <p>{{API_diagInfo.API_treatment.API_description.join("，")}}</p>
+              <div @click="inputBoxShow('treatment')" class="box">
+                <p>{{API_diagInfo.API_treatment.API_description.join("，")||"暂无"}}</p>
               </div>
             </div>
             <div v-show="API_diagInfo.API_treatment.API_prescription.length>0" class="prescription">
@@ -265,13 +265,17 @@
           </template>
           <div class="after">
             <div>
-              <span class="label">推荐医疗机构：{{API_diagInfo.API_after.API_org.API_orgName||"未选择"}}</span>
+              <span
+                class="label"
+              >推荐医疗机构：{{API_diagInfo.API_after.API_org.API_orgName||API_diagInfo.API_after.API_org.API_orgName=='null'?"未选择":API_diagInfo.API_after.API_org.API_orgName}}</span>
               <div class="box">
                 <choose-radio v-model="pages.choosedOrg" :options="pages.medicalInfo" type="org"></choose-radio>
               </div>
             </div>
             <div>
-              <span class="label">推荐主管医师：{{API_diagInfo.API_after.API_doc.API_docName||"未选择"}}</span>
+              <span
+                class="label"
+              >推荐主管医师：{{API_diagInfo.API_after.API_doc.API_docName||API_diagInfo.API_after.API_doc.API_docName=='null'?"未选择":API_diagInfo.API_after.API_doc.API_docName}}</span>
               <div v-if="pages.choosedOrg.doctors.length>0" class="box">
                 <choose-radio
                   v-model="API_diagInfo.API_after.API_doc"
@@ -281,7 +285,9 @@
               </div>
             </div>
             <div>
-              <span class="label">推荐主管护士：{{API_diagInfo.API_after.API_nur.API_nurName||"未选择"}}</span>
+              <span
+                class="label"
+              >推荐主管护士：{{API_diagInfo.API_after.API_nur.API_nurName||API_diagInfo.API_after.API_nur.API_nurName=='null'?"未选择":API_diagInfo.API_after.API_nur.API_nurName}}</span>
               <div v-if="pages.choosedOrg.nurses.length>0" class="box">
                 <choose-radio
                   v-model="API_diagInfo.API_after.API_nur"
@@ -294,6 +300,37 @@
         </el-collapse-item>
         <el-button @click="save" size="medium" type="primary" class="btn">保存</el-button>
       </el-collapse>
+    </div>
+    <div :class="this.$store.state.pageState?'inputBox':'inputBox2'">
+      <!-- 病情描述输入 -->
+      <special-input
+        :data="pages.stateOptions"
+        :flag="pages.inputBoxVisible.illState"
+        :preValue="patientInfo.API_illState.API_description"
+        @blur="inputBoxBlur('illState')"
+        @select="inputBoxSelect($event,'illState')"
+        @delete="inputBoxDelete($event,'illState')"
+      ></special-input>
+
+      <!-- 诊断结论描述输入 -->
+      <special-input
+        :data="pages.diagResultCheckReconmendList"
+        :flag="pages.inputBoxVisible.diagResult"
+        :preValue="API_diagInfo.API_diagResult"
+        @blur="inputBoxBlur('diagResult')"
+        @select="inputBoxSelect($event,'diagResult')"
+        @delete="inputBoxDelete($event,'diagResult')"
+      ></special-input>
+
+      <!-- 治疗方案输入框 -->
+      <special-input
+        :data="pages.treatmentCheckReconmendList"
+        :flag="pages.inputBoxVisible.treatment"
+        :preValue="API_diagInfo.API_treatment.API_description"
+        @blur="inputBoxBlur('treatment')"
+        @select="inputBoxSelect($event,'treatment')"
+        @delete="inputBoxDelete($event,'treatment')"
+      ></special-input>
     </div>
     <!-- 病情描述对话框 -->
     <el-dialog title="病情概况" :visible.sync="pages.illStateDialog" width="40%">
@@ -440,7 +477,7 @@
         </el-table-column>
         <el-table-column prop="address" width="100" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="danger" @click="importResult(scope.row)">导入</el-button>
+            <el-button size="mini" type="danger" @click="importResult(scope.row)">选择</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -470,7 +507,7 @@
         </el-table-column>
         <el-table-column prop="address" width="100" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="danger" @click="importTreatment(scope.row)">导入</el-button>
+            <el-button size="mini" type="danger" @click="importTreatment(scope.row)">选择</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -496,11 +533,13 @@ import message from "../../store/message/message.js";
 import CheckBox from "../../components/common/CheckBox.vue";
 import Prescription from "../../components/common/Prescription.vue";
 import Radio from "../../components/common/Radio.vue";
+import SpecialInput from "../../components/common/SpecialInput.vue";
 export default {
   components: {
     CheckBox: CheckBox,
     PrescriptionTable: Prescription,
-    ChooseRadio: Radio
+    ChooseRadio: Radio,
+    SpecialInput: SpecialInput
   },
   data() {
     return {
@@ -618,6 +657,11 @@ export default {
           orgName: "",
           doctors: [],
           nurses: []
+        },
+        inputBoxVisible: {
+          illState: false,
+          diagResult: false,
+          treatment: false
         }
       },
       //患者相关信息
@@ -672,10 +716,10 @@ export default {
       },
       API_diagInfo: {
         //诊断结论
-        API_diagResult: ["", ""],
+        API_diagResult: [],
         //治疗方案
         API_treatment: {
-          API_description: ["", ""],
+          API_description: [],
           API_prescription: [
             // {
             //   API_drugsName: "含曲林片",
@@ -839,6 +883,64 @@ export default {
       console.log(row);
       let $table = this.$refs.historyTreatment;
       $table.toggleRowExpansion(row);
+    },
+    inputBoxShow(type) {
+      switch (type) {
+        case "illState":
+          this.inputBoxBlur("diagResult");
+          this.inputBoxBlur("treatment");
+          this.pages.inputBoxVisible.illState = true;
+          break;
+        case "diagResult":
+          this.inputBoxBlur("illState");
+          this.inputBoxBlur("treatment");
+          this.pages.inputBoxVisible.diagResult = true;
+          break;
+        case "treatment":
+          this.inputBoxBlur("illState");
+          this.inputBoxBlur("diagResult");
+          this.pages.inputBoxVisible.treatment = true;
+          break;
+      }
+    },
+    inputBoxBlur(type) {
+      switch (type) {
+        case "illState":
+          this.pages.inputBoxVisible.illState = false;
+          break;
+        case "diagResult":
+          this.pages.inputBoxVisible.diagResult = false;
+          break;
+        case "treatment":
+          this.pages.inputBoxVisible.treatment = false;
+          break;
+      }
+    },
+    inputBoxDelete(index, type) {
+      switch (type) {
+        case "illState":
+          this.patientInfo.API_illState.API_description.splice(index, 1);
+          break;
+        case "diagResult":
+          this.API_diagInfo.API_diagResult.splice(index, 1);
+          break;
+        case "treatment":
+          this.API_diagInfo.API_treatment.API_description.splice(index, 1);
+          break;
+      }
+    },
+    inputBoxSelect(data, type) {
+      switch (type) {
+        case "illState":
+          this.patientInfo.API_illState.API_description.push(data);
+          break;
+        case "diagResult":
+          this.API_diagInfo.API_diagResult.push(data);
+          break;
+        case "treatment":
+          this.API_diagInfo.API_treatment.API_description.push(data);
+          break;
+      }
     }
   },
   directives: {
@@ -1136,6 +1238,20 @@ export default {
     color: white;
     cursor: pointer;
   }
+}
+.inputBox {
+  position: fixed;
+  bottom: 0px;
+  width: calc(89% - 240px);
+  z-index: 100;
+  transition: 0.5s;
+}
+
+.inputBox2 {
+  position: fixed;
+  bottom: 0px;
+  width: calc(89%);
+  transition: 0.5s;
 }
 </style>
 

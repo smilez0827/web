@@ -224,7 +224,7 @@ export default {
           API_dateRange: ""
         },
         prescriptionDialogVisible: false,
-        addTreatmentLogDialogVisible: true,
+        addTreatmentLogDialogVisible: false,
         treatmentCheckReconmendList: [
           { pinyin: "jyjxbszl", value: "建议进行保守治疗" },
           { pinyin: "jyjxzyzl", value: "建议采用中药治疗" },

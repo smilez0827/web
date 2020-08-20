@@ -26,11 +26,14 @@
     <div class="selectArea">
       <template>
         <span
-          v-for="(item,index) in options.slice(currentPage*5,5)"
+          v-for="(item,index) in options.slice(currentPage*5,currentPage*5+5)"
           :key="item.id"
         >{{index +1}}、{{item}}</span>
       </template>
       <span v-if="options.length==0">无</span>
+      <span v-if="currentPage*5+5<options.length">
+        <i class="el-icon-more"></i>
+      </span>
     </div>
   </div>
 </template>
@@ -59,7 +62,7 @@ export default {
   },
   watch: {
     choosed: function(newValue) {
-      if (newValue.length > 0) {
+      if (this.choosed && this.choosed != "") {
         this.$emit("select", newValue);
         this.choosed = "";
       }
@@ -70,6 +73,9 @@ export default {
           this.$refs.input.focus();
         }, 100);
       }
+    },
+    value: function() {
+      this.currentPage = 0;
     }
   },
   computed: {
@@ -102,6 +108,17 @@ export default {
       }, 200);
     },
     select(e) {
+      console.log(e);
+      if (e.keyCode == 187 && this.currentPage * 5 + 5 < this.options.length) {
+        console.log("+");
+        console.log(this.currentPage);
+        console.log(this.options.length);
+        this.currentPage++;
+      }
+      if (e.keyCode == 189 && this.currentPage > 0) {
+        console.log("-");
+        this.currentPage--;
+      }
       if (e.keyCode == 13 || e.keyCode == 27) {
         this.inputBlur();
       }
@@ -132,7 +149,7 @@ export default {
   display: fixed;
   bottom: 0px;
   box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.2);
-  padding:5px 5px 20px 5px ;
+  padding: 5px 5px 20px 5px;
   background-color: #fff;
 }
 .showArea {

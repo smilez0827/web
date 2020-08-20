@@ -1,30 +1,30 @@
 <template>
   <div class="page">
-    <div class="pageContainer" > 
-    <div class="thispage">
-      <div class="header">
-        <the-header></the-header>
-      </div>
-      <div class="main">
-        <div :class="this.isHide?'sideHiden':'side'">
-          <the-sidebar></the-sidebar>
+    <div class="pageContainer">
+      <div class="thispage">
+        <div class="header">
+          <the-header></the-header>
         </div>
-        <div class="content">
-          <div class="tag">
-            <i :class="this.isHide?'el-icon-s-unfold':'el-icon-s-fold'" @click="hide"></i>
-            <template v-for="(item,index) in this.path">
-              <span :key="item.id" v-if="(index==0)">{{item}}</span>
-              <span :key="item.id" v-else>{{" > "+item}}</span>
-            </template>
+        <div class="main">
+          <div :class="this.isHide?'sideHiden':'side'">
+            <the-sidebar></the-sidebar>
           </div>
-          <div class="mainContent">
-            <div class="xLimit">
-              <router-view />
+          <div class="content">
+            <div class="tag">
+              <i :class="this.isHide?'el-icon-s-unfold':'el-icon-s-fold'" @click="hide"></i>
+              <template v-for="(item,index) in this.path">
+                <span :key="item.id" v-if="(index==0)">{{item}}</span>
+                <span :key="item.id" v-else>{{" > "+item}}</span>
+              </template>
+            </div>
+            <div class="mainContent">
+              <div class="xLimit">
+                <router-view />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
 
     <div :class="noticHide?'notice noticeUnhide':'notice noticeHide'">
@@ -32,7 +32,10 @@
         <the-msgBox></the-msgBox>
       </div>
     </div>
-    <div :class="noticHide?'noticebtn noticebtnHide':'noticebtn noticebtnUnhide'" @click="noticChange">
+    <div
+      :class="noticHide?'noticebtn noticebtnHide':'noticebtn noticebtnUnhide'"
+      @click="noticChange"
+    >
       <i :class="noticHide?'el-icon-caret-left':'el-icon-caret-right'"></i>
     </div>
   </div>
@@ -48,7 +51,7 @@ export default {
     return {
       isHide: false,
       noticHide: true,
-      path: [],
+      path: []
     };
   },
   watch: {
@@ -59,6 +62,7 @@ export default {
   methods: {
     hide() {
       this.isHide = !this.isHide;
+      this.$store.commit("pageState");
     },
     getBreadcrumb() {
       let matched = this.$route.matched;
@@ -75,8 +79,7 @@ export default {
     },
     noticChange() {
       this.noticHide = !this.noticHide;
-    },
-
+    }
   },
   components: {
     "the-header": Header,
@@ -143,7 +146,7 @@ export default {
         .tag {
           width: 100%;
           height: 50px;
-          background-image: linear-gradient(75deg, #9adfbf, #FFD79D);
+          background-image: linear-gradient(75deg, #9adfbf, #ffd79d);
           overflow: hidden;
           color: #1c7e7c;
           line-height: 50px;
@@ -186,13 +189,13 @@ export default {
     cursor: pointer;
     color: #409eff;
   }
-.noticebtnHide {
+  .noticebtnHide {
     right: 10px;
-    color: #F56C6C;
-}
-.noticebtnUnhide {
-      right: 350px;
-      color: #409eff;
-}
+    color: #f56c6c;
+  }
+  .noticebtnUnhide {
+    right: 350px;
+    color: #409eff;
+  }
 }
 </style>
