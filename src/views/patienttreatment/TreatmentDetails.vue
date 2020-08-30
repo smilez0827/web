@@ -1,6 +1,17 @@
 <template>
   <div>
     <div class="mainContent">
+      <div class="inputBox">
+        <!-- 治疗方案输入框 -->
+        <special-input
+          :data="pages.treatmentCheckReconmendList"
+          :flag="pages.inputBoxVisible.treatment"
+          :preValue="newTreatmentLog.API_treatment"
+          @blur="inputBoxBlur('treatment')"
+          @select="inputBoxSelect($event,'treatment')"
+          @delete="inputBoxDelete($event,'treatment')"
+        ></special-input>
+      </div>
       <el-collapse v-model="pages.collapse_activeNames">
         <el-collapse-item name="1">
           <template slot="title">
@@ -12,19 +23,19 @@
             </div>
             <div class="info">
               <div>
-                <div>姓名：{{patientInfo.API_basicInfo.API_name}}</div>
-                <div>性别：{{patientInfo.API_basicInfo.API_gender}}</div>
-                <div>出生日期：{{new Date(patientInfo.API_basicInfo.API_birthday).toLocaleDateString()}}</div>
+                <div>姓名：{{patientInfo.API_basicInfo.API_name||"无"}}</div>
+                <div>性别：{{patientInfo.API_basicInfo.API_gender||"无"}}</div>
+                <div>出生日期：{{new Date(patientInfo.API_basicInfo.API_birthday||"无").toLocaleDateString()}}</div>
               </div>
               <div>
-                <div>家庭住址：{{patientInfo.API_basicInfo.API_address}}</div>
+                <div>家庭住址：{{patientInfo.API_basicInfo.API_address||"无"}}</div>
               </div>
               <div>
-                <div>联系方式：{{patientInfo.API_basicInfo.API_tel}}</div>
-                <div>就诊时间：{{patientInfo.API_basicInfo.API_date}}</div>
+                <div>联系方式：{{patientInfo.API_basicInfo.API_tel||"无"}}</div>
+                <div>就诊时间：{{patientInfo.API_basicInfo.API_date||"无"}}</div>
                 <div>
-                  <el-link type="primary" style="margin-right:20px">诊断记录</el-link>
-                  <el-link type="primary" style="margin-right:20px">查房记录</el-link>
+                  <!-- <el-link type="primary" style="margin-right:20px">诊断记录</el-link>
+                  <el-link type="primary" style="margin-right:20px">查房记录</el-link>-->
                 </div>
               </div>
             </div>
@@ -52,15 +63,19 @@
               >新增</el-button>
             </div>
             <div class="treatmentLog">
-              <div v-for="item in API_treatmentLog" :key="item.id" class="card">
+              <div v-show="API_treatmentLog.length==0" class="tips">暂无治疗记录</div>
+              <div
+                v-for="item in showTable.slice((pages.currentPage-1)*pages.pageSize,(pages.currentPage-1)*pages.pageSize+pages.pageSize)"
+                :key="item.id"
+                class="card"
+              >
                 <div class="date">
-                  <p>2020/7/7</p>
+                  <p>{{ new Date(item.API_date).toLocaleDateString()}}</p>
                 </div>
                 <div class="treatmentLog">
-                  <p>患者症状：{{item.API_state}}</p>
-                  <p>患者治疗：{{item.API_treatment}}</p>
+                  <p>患者治疗：{{item.API_description.join(',')||"暂无"}}</p>
                   <div v-if="item.API_prescription.length>0">
-                    <el-link @click="pages.prescriptionDialogVisible = true" type="primary">查看处方</el-link>
+                    <el-link @click="lookPrescription(item.API_prescription)" type="primary">查看处方</el-link>
                   </div>
                 </div>
               </div>
@@ -84,138 +99,46 @@
     </div>
     <!-- 查看处方对话框 -->
     <el-dialog title="处方" :visible.sync="pages.prescriptionDialogVisible" width="700px">
-      <PrescriptionTable :prescription="API_treatmentLog[0].API_prescription"></PrescriptionTable>
+      <PrescriptionTable :prescription="pages.tempPrescription"></PrescriptionTable>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="pages.prescriptionDialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 新增治疗记录对话框 -->
     <el-dialog title="新增治疗记录" :visible.sync="pages.addTreatmentLogDialogVisible" width="1000px">
-      <!-- <PrescriptionTable :prescription="API_treatmentLog[0].API_prescription"></PrescriptionTable> -->
-      <check-box
-        :options="pages.treatmentCheckReconmendList"
-        :checked="pages.checkList"
-        v-model="pages.checkList"
-      ></check-box>
-      <div>
-        <el-link
-          v-if="this.pages.tempPrescription==0"
-          @click="addMedical"
-          class="addprescription"
-          type="success"
-        >+添加处方</el-link>
-        <div v-else>
-          <el-table size="mini" :data="pages.tempPrescription" style="width: 100%">
-            <el-table-column label="名称">
-              <template slot-scope="scope">
-                <el-input
-                  v-if="scope.row.isEditable"
-                  v-model="scope.row.API_drugsName"
-                  style="width:100%;hight:100%"
-                ></el-input>
-                <span v-else>{{ scope.row.API_drugsName }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="数量">
-              <template slot-scope="scope">
-                <el-input
-                  v-if="scope.row.isEditable"
-                  v-model="scope.row.API_drugsNumber"
-                  style="width:100%;hight:100%"
-                ></el-input>
-                <span v-else>{{ scope.row.API_drugsNumber }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="单位">
-              <template slot-scope="scope">
-                <el-input
-                  v-if="scope.row.isEditable"
-                  v-model="scope.row.API_drugsNumberUnits"
-                  style="width:100%;hight:100%"
-                ></el-input>
-                <span v-else>{{ scope.row.API_drugsNumberUnits }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="用法">
-              <template slot-scope="scope">
-                <el-select
-                  v-if="scope.row.isEditable"
-                  v-model="scope.row.API_drugsUsage"
-                  placeholder="请选择"
-                >
-                  <el-option value="口服"></el-option>
-                  <el-option value="外用"></el-option>
-                </el-select>
-                <span v-else>{{ scope.row.API_drugsUsage }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="频率">
-              <template slot-scope="scope">
-                <el-select
-                  v-if="scope.row.isEditable"
-                  v-model="scope.row.API_useFrequency"
-                  placeholder="请选择"
-                >
-                  <el-option value="一天一次"></el-option>
-                  <el-option value="一天两次"></el-option>
-                  <el-option value="一天三次"></el-option>
-                </el-select>
-                <span v-else>{{ scope.row.API_useFrequency }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="使用时间">
-              <template slot-scope="scope">
-                <el-select
-                  v-if="scope.row.isEditable"
-                  v-model="scope.row.API_useTime"
-                  placeholder="请选择"
-                >
-                  <el-option value="饭前"></el-option>
-                  <el-option value="饭后"></el-option>
-                  <el-option value="均可"></el-option>
-                </el-select>
-                <span v-else>{{ scope.row.API_useTime }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" width="150px">
-              <template slot-scope="scope">
-                <el-button
-                  v-if="!scope.row.isEditable"
-                  size="mini"
-                  @click="handleEdit(scope.$index, scope.row)"
-                >编辑</el-button>
-                <el-button v-else size="mini" @click="handleSave(scope.$index, scope.row)">确定</el-button>
-                <el-button size="mini" type="danger" @click="delMedical(scope.$index, scope.row)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div style="width:100px ;margin:20px auto">
-            <el-link @click="addMedical" type="primary">+添加药品</el-link>
-          </div>
-        </div>
+      <div class="box" @click="inputBoxShow()">
+        <p>{{newTreatmentLog.API_treatment.join('，')||"暂无"}}</p>
       </div>
-
+      <div>
+        <prescription-edit @flagChange="flagChange" v-model="newTreatmentLog.API_prescription"></prescription-edit>
+      </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="pages.addTreatmentLogDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="postNewLog">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getTodayPatients } from "../../api/patientdiag/patientdiag.js";
+import {
+  getPatientsDetails,
+  newTreatmentLog
+} from "../../api/patienttreatment/patienttreatment.js";
 import Prescription from "../../components/common/Prescription.vue";
 import CheckBox from "../../components/common/CheckBox.vue";
-
+import SpecialInput from "../../components/common/SpecialInput.vue";
+import PrescriptionEdit from "../../components/common/PrescriptionEdit.vue";
 export default {
   components: {
     PrescriptionTable: Prescription,
-    CheckBox: CheckBox
+    CheckBox: CheckBox,
+    SpecialInput: SpecialInput,
+    PrescriptionEdit: PrescriptionEdit
   },
   data() {
     return {
       pages: {
-        pageSize: 10,
+        pageSize: 5,
         currentPage: 1,
         collapse_activeNames: ["1", "2"],
         search: {
@@ -232,73 +155,97 @@ export default {
           { pinyin: "yjjxsszl", value: "建议到医院进行手术治疗" }
         ],
         checkList: [],
-        tempPrescription: []
+        tempPrescription: [],
+        inputBoxVisible: {
+          treatment: false
+        }
       },
       patientInfo: {
-        // 患者基本信息
-        API_basicInfo: {
-          API_pic: require("../../assets/img/default/person.png"),
-          API_name: "王小虎",
-          API_gender: "男",
-          API_birthday: "1996-07-23",
-          API_address: "四川省成都市",
-          API_tel: "19999999999",
-          API_date: "2020-06-24"
-        }
+        API_basicInfo: {}
       },
-      API_treatmentLog: [
-        {
-          API_state: "记忆力下降，语言混乱",
-          API_treatment: "西药治疗",
-          API_prescription: [
-            {
-              API_drugsName: "含曲林片",
-              API_drugsNumberUnits: "盒",
-              API_drugsNumber: "2",
-              API_drugsUsage: "一次两粒",
-              API_useFrequency: "一天一次",
-              API_useTime: "饭后",
-              API_isEditable: false,
-              API_days: "7"
-            }
-          ]
-        },
-        {
-          API_state: "1",
-          API_treatment: "2",
-          API_prescription: []
-        },
-        {
-          API_state: "1",
-          API_treatment: "2",
-          API_prescription: []
-        }
-      ]
+      API_treatmentLog: [],
+      newTreatmentLog: {
+        API_treatment: [],
+        API_prescription: [],
+        API_prescriptionFlag: true
+      }
     };
   },
   computed: {
     showTable() {
-      return this.API_treatmentLog;
+      let result = [];
+      this.API_treatmentLog.forEach(item => {
+        if (
+          !this.pages.search.API_dateRange ||
+          (item.API_date > this.pages.search.API_dateRange[0] &&
+            item.API_date < this.pages.search.API_dateRange[1])
+        ) {
+          result.push(item);
+        }
+      });
+      return result;
     }
   },
   methods: {
+    flagChange(flag) {
+      this.newTreatmentLog.API_prescriptionFlag = flag;
+    },
     handleSizeChange(val) {
       this.pages.pageSize = val;
     },
     handleCurrentChange(val) {
       this.pages.currentPage = val;
     },
-    addMedical() {
-      this.pages.tempPrescription.push({
-        name: "",
-        specification: "",
-        number: "",
-        usage: "",
-        frequency: "",
-        isEditable: true,
-        days: ""
-      });
+    inputBoxShow() {
+      this.pages.inputBoxVisible.treatment = true;
+    },
+    inputBoxBlur() {
+      this.pages.inputBoxVisible.treatment = false;
+    },
+    inputBoxDelete(index) {
+      this.newTreatmentLog.API_treatment.splice(index, 1);
+    },
+    inputBoxSelect(data) {
+      this.newTreatmentLog.API_treatment.push(data);
+    },
+    postNewLog() {
+      if (
+        this.newTreatmentLog.API_treatment.length > 0 &&
+        this.newTreatmentLog.API_prescriptionFlag
+      ) {
+        newTreatmentLog(localStorage.getItem("pid"), this.newTreatmentLog).then(
+          res => {
+            if (res) {
+              this.$message.success("成功");
+              getPatientsDetails(localStorage.getItem("pid")).then(res => {
+                this.patientInfo.API_basicInfo = res.API_basicInfo;
+                this.API_treatmentLog = res.API_treatmentLog;
+                console.log(this.API_treatmentLog);
+              });
+            }
+          }
+        );
+        this.pages.addTreatmentLogDialogVisible = false;
+        this.newTreatmentLog = {
+          API_treatment: [],
+          API_prescription: []
+        };
+      } else {
+        this.$message.error("请完善治疗记录");
+      }
+    },
+    lookPrescription(data) {
+      this.pages.prescriptionDialogVisible = true;
+      this.pages.tempPrescription = data;
     }
+  },
+  mounted() {
+    let pid = localStorage.getItem("pid");
+    getPatientsDetails(pid).then(res => {
+      this.patientInfo.API_basicInfo = res.API_basicInfo;
+      this.API_treatmentLog = res.API_treatmentLog;
+      console.log(this.patientInfo);
+    });
   }
 };
 </script>
@@ -411,6 +358,29 @@ export default {
   }
 }
 .addprescription {
+  margin-top: 20px;
+  font-size: 18px;
+}
+.box {
+  width: 100%;
+  min-height: 80px;
+  margin-top: 5px;
+  border: 1px solid #e4e7ed;
+  p {
+    margin-top: 5px;
+    font-size: 18px;
+    text-indent: 20px;
+  }
+}
+.inputBox {
+  position: fixed;
+  bottom: 0px;
+  left: calc(50% - 500px);
+  width: 1000px;
+  z-index: 3000;
+  transition: 0.5s;
+}
+.tips {
   margin-top: 20px;
   font-size: 18px;
 }

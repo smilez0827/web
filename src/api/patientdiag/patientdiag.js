@@ -76,6 +76,10 @@ export function savePatientDiagInfo(pid, API_state, API_description, API_diagInf
         errList.push("治疗方案描述")
         flag = false
     }
+    if (API_diagInfo.API_treatment.API_prescription.length != 0 && !API_diagInfo.API_treatment.API_prescriptionFlag) {
+        errList.push("处方")
+        flag = false
+    }
     // }
     if (flag) {
         let obj = {};
@@ -192,4 +196,11 @@ export function getMedicalInfo() {
             return res.data.medicalinfo
         })
     }
+}
+
+// 获取药品信息
+export function getDurgsInfo(page, name) {
+    return Get("http://132.232.18.227:3000/patientdiag/drugsinfo", { page, name }).then(res => {
+        return res.data
+    })
 }

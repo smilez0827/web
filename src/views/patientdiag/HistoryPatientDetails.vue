@@ -222,30 +222,6 @@
             <h3 class="title">治疗方案</h3>
           </template>
           <div class="diagResult">
-            <!-- <div class="head clearfix">
-              <div class="checkBox">
-                <el-checkbox-group v-model="API_diagInfo.API_treatment.API_description">
-                  <el-checkbox
-                    v-for="item in pages.treatmentCheckReconmendList.slice(0,2)"
-                    :key="item.id"
-                    :label="item.value"
-                  ></el-checkbox>
-                </el-checkbox-group>
-              </div>
-              <div class="more">
-                <el-link @click="treatmentModify" class="link" type="success">更多选项</el-link>
-                <el-link
-                  @click="prescriptionModify"
-                  class="link"
-                  type="success"
-                >{{API_diagInfo.API_treatment.API_prescription.length>0?"修改处方":"添加处方"}}</el-link>
-                <el-link
-                  @click="pages.HistoryTreatmentDialogVisable=true"
-                  class="link"
-                  type="success"
-                >+导入治疗方案</el-link>
-              </div>
-            </div>-->
             <div class="text">
               <div class="box">
                 <p>{{API_diagInfo.API_treatment.API_description.join("，")}}</p>
@@ -265,212 +241,23 @@
           <div class="after">
             <div>
               <span class="label">推荐医疗机构：{{API_diagInfo.API_after.API_org.API_orgName||"未选择"}}</span>
-              <!-- <div class="box">
-                <choose-radio v-model="pages.choosedOrg" :options="pages.medicalInfo" type="org"></choose-radio>
-              </div>-->
             </div>
             <div>
               <span class="label">推荐主管医师：{{API_diagInfo.API_after.API_doc.API_docName||"未选择"}}</span>
-              <!-- <div v-if="pages.choosedOrg.doctors.length>0" class="box">
-                <choose-radio
-                  v-model="API_diagInfo.API_after.API_doc"
-                  :options="pages.choosedOrg.doctors"
-                  type="doc"
-                ></choose-radio>
-              </div>-->
             </div>
             <div>
               <span class="label">推荐主管护士：{{API_diagInfo.API_after.API_nur.API_nurName||"未选择"}}</span>
-              <!-- <div v-if="pages.choosedOrg.nurses.length>0" class="box">
-                <choose-radio
-                  v-model="API_diagInfo.API_after.API_nur"
-                  :options="pages.choosedOrg.nurses"
-                  type="nur"
-                ></choose-radio>
-              </div>-->
             </div>
           </div>
         </el-collapse-item>
         <el-button @click="save" size="medium" type="primary" class="btn">返回</el-button>
       </el-collapse>
     </div>
-    <!-- 病情描述对话框 -->
-    <el-dialog title="病情概况" :visible.sync="pages.illStateDialog" width="40%">
-      <check-box :options="pages.stateOptions" :checked="pages.checkList" v-model="pages.checkList"></check-box>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="illStateSave">确 定</el-button>
-      </span>
-    </el-dialog>
     <!-- 视频对话框 -->
     <div v-show="pages.videoDialogVisible" v-drag class="drag">
       <span @click="videoDialogClose">X</span>
       <video :src="pages.videoDialogSrc" controls="controls" style="width:100%"></video>
     </div>
-    <!-- 诊断结论更多选项对话框对话框 -->
-    <el-dialog title="诊断结论" :visible.sync="pages.diagResultDialogVisible" width="40%">
-      <check-box
-        :options="pages.diagResultCheckReconmendList"
-        :checked="pages.diagResultCheckList"
-        v-model="pages.diagResultCheckList"
-      ></check-box>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="diagResultSave">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- 治疗方案更多选项对话框 -->
-    <el-dialog title="治疗方案" :visible.sync="pages.treatmentDialogVisible" width="40%">
-      <check-box
-        :options="pages.treatmentCheckReconmendList"
-        :checked="pages.treatmentCheckList"
-        v-model="pages.treatmentCheckList"
-      ></check-box>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="treatmentSave">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- 添加处方对话框 -->
-    <el-dialog title="添加处方" :visible.sync="pages.prescriptionDialogVisible" width="60%">
-      <el-table size="mini" :data="pages.prescription" style="width: 100%">
-        <el-table-column label="名称">
-          <template slot-scope="scope">
-            <el-input
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsName"
-              style="width:100%;hight:100%"
-            ></el-input>
-            <span v-else>{{ scope.row.API_drugsName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="数量">
-          <template slot-scope="scope">
-            <el-input
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsNumber"
-              style="width:100%;hight:100%"
-            ></el-input>
-            <span v-else>{{ scope.row.API_drugsNumber }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="单位">
-          <template slot-scope="scope">
-            <el-input
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsNumberUnits"
-              style="width:100%;hight:100%"
-            ></el-input>
-            <span v-else>{{ scope.row.API_drugsNumberUnits }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="用法">
-          <template slot-scope="scope">
-            <el-select
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsUsage"
-              placeholder="请选择"
-            >
-              <el-option value="口服"></el-option>
-              <el-option value="外用"></el-option>
-            </el-select>
-            <span v-else>{{ scope.row.API_drugsUsage }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="频率">
-          <template slot-scope="scope">
-            <el-select
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_useFrequency"
-              placeholder="请选择"
-            >
-              <el-option value="一天一次"></el-option>
-              <el-option value="一天两次"></el-option>
-              <el-option value="一天三次"></el-option>
-            </el-select>
-            <span v-else>{{ scope.row.API_useFrequency }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="使用时间">
-          <template slot-scope="scope">
-            <el-select
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_useTime"
-              placeholder="请选择"
-            >
-              <el-option value="饭前"></el-option>
-              <el-option value="饭后"></el-option>
-              <el-option value="均可"></el-option>
-            </el-select>
-            <span v-else>{{ scope.row.API_useTime }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="150px">
-          <template slot-scope="scope">
-            <el-button
-              v-if="!scope.row.isEditable"
-              size="mini"
-              @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button>
-            <el-button v-else size="mini" @click="handleSave(scope.$index, scope.row)">确定</el-button>
-            <el-button size="mini" type="danger" @click="delMedical(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div style="width:100px ;margin:20px auto">
-        <el-link class="link" @click="addMedical" type="primary">+添加药品</el-link>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="sevePrescription">确 定</el-button>
-      </span>
-    </el-dialog>
-
-    <!-- 导入历史诊断结论 -->
-    <el-dialog title="历史诊断结论" :visible.sync="pages.HistoryDialogVisable" width="40%">
-      <el-table :data="pages.diagHistory" style="width: 100%">
-        <el-table-column type="index" label="序号" width="50"></el-table-column>
-        <el-table-column label="诊断结论">
-          <template slot-scope="scope">
-            <span>{{ scope.row.join('，') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="address" width="100" label="操作">
-          <template slot-scope="scope">
-            <el-button size="mini" type="danger" @click="importResult(scope.row)">导入</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="pages.HistoryDialogVisable=false">取消</el-button>
-      </span>
-    </el-dialog>
-
-    <!-- 导入历史治疗方案 -->
-    <el-dialog title="历史治疗方案" :visible.sync="pages.HistoryTreatmentDialogVisable" width="700px">
-      <el-table ref="historyTreatment" :data="pages.treatHistory" style="width: 100%">
-        <el-table-column type="expand">
-          <template slot-scope="scope">
-            <PrescriptionTable :prescription="scope.row.API_prescription"></PrescriptionTable>
-          </template>
-        </el-table-column>
-        <el-table-column type="index" label="序号" width="50"></el-table-column>
-        <el-table-column label="治疗方案" width="300">
-          <template slot-scope="scope">
-            <span>{{ scope.row.API_description.join('，') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="处方">
-          <template slot-scope="scope">
-            <el-button type="text" @click="toogleExpand(scope.row)">查看</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column prop="address" width="100" label="操作">
-          <template slot-scope="scope">
-            <el-button size="mini" type="danger" @click="importTreatment(scope.row)">导入</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="pages.HistoryTreatmentDialogVisable = false;">取消</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -681,7 +468,8 @@ export default {
             //   API_isEditable: false,
             //   API_days: "7"
             // }
-          ] //处方
+          ], //处方
+          API_prescriptionFlag: true
         },
         // 推荐医疗机构/医师/护士
         API_after: {
@@ -702,9 +490,6 @@ export default {
     };
   },
   methods: {
-    conTest() {
-      console.log(this.API_diagInfo.API_after);
-    },
     videoDialogClose() {
       this.pages.videoDialogVisible = false;
       this.pages.videoDialogSrc = "";

@@ -13,7 +13,7 @@
             <span class="formLabel">就诊状态：</span>
           </template>
           <el-select v-model="formInline.API_state" placeholder="请选择就诊状态">
-            <el-option label="未就诊" value="未就诊"></el-option>
+            <el-option label="未完成" value="未完成"></el-option>
             <el-option label="已完成" value="已完成"></el-option>
           </el-select>
         </el-form-item>
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { getTodayPatients } from "../../api/patientdiag/patientdiag.js";
+import { getPatientsList } from "../../api/patienttreatment/patienttreatment.js";
 export default {
   data() {
     return {
@@ -92,7 +92,7 @@ export default {
     },
     patientDetails(index, row) {
       console.log(index, row);
-      localStorage.setItem("pid", row.API_pid);
+      localStorage.setItem("pid", row.pid);
       this.$router.push("/treatment/treatmentdetails");
     },
     handleSizeChange(val) {
@@ -100,6 +100,9 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val;
+    },
+    patientsList() {
+      getPatientsList();
     }
   },
   computed: {
@@ -108,7 +111,7 @@ export default {
       this.$store.state.patientTreatment.patientsList.forEach(data => {
         if (
           (!this.formInline.API_name ||
-            data.API_name == this.formInline.API_name) &&
+            data.API_name.includes(this.formInline.API_name)) &&
           (!this.formInline.API_state ||
             data.API_state == this.formInline.API_state)
         ) {
@@ -126,7 +129,7 @@ export default {
     }
   },
   mounted() {
-    // getTodayPatients();
+    getPatientsList();
   }
 };
 </script>

@@ -15,6 +15,8 @@
           <el-select v-model="formInline.API_state" placeholder="请选择就诊状态">
             <el-option label="未完成" value="未完成"></el-option>
             <el-option label="已完成" value="已完成"></el-option>
+            <el-option label="已过期" value="已过期"></el-option>
+            <el-option label="申请中" value="申请中"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -48,16 +50,16 @@
             <!-- <span>{{ new Date(scope.row.API_date).toLocaleTimeString('zh-CN') }}</span> -->
           </template>
         </el-table-column>
-        <el-table-column label="就诊状态" width="180">
+        <el-table-column label="就诊状态" width="120">
           <template slot-scope="scope">
-            <!-- <span>{{"未诊断"}}</span> -->
             <span>{{scope.row.API_state }}</span>
-            <!-- <span>{{ scope.row.API_state }}</span> -->
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="250">
           <template slot-scope="scope">
             <el-button size="mini" @click="patientDetails(scope.$index, scope.row)">查看</el-button>
+            <el-button size="mini" @click="patientDetails(scope.$index, scope.row)">接受</el-button>
+            <el-button size="mini" @click="patientDetails(scope.$index, scope.row)">拒绝</el-button>
           </template>
         </el-table-column>
       </el-table>

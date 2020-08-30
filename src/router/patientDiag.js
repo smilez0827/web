@@ -1,3 +1,5 @@
+
+
 const patientDiag = {
     path: '/patientdiag',
     redirect: '/patientdiag/todayconsultation',

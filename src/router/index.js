@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import { Message } from 'element-ui';
 import patientDiag from './patientDiag.js'
 import patientTreatment from './patientTreatment.js'
+import instantInfo from './instantInfo.js'
 
 Vue.use(VueRouter);
 
@@ -145,6 +146,8 @@ const routes = [
           },
         ]
       },
+      // 即时信息模块
+      instantInfo,
     ]
   },
 ];

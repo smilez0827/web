@@ -8,15 +8,6 @@
           </template>
           <el-input v-model="formInline.API_name" placeholder="请输入姓名" style="width:150px"></el-input>
         </el-form-item>
-        <!-- <el-form-item>
-          <template slot="label">
-            <span class="formLabel">就诊状态：</span>
-          </template>
-          <el-select v-model="formInline.API_state" placeholder="请选择就诊状态">
-            <el-option label="未就诊" value="未就诊"></el-option>
-            <el-option label="已完成" value="已完成"></el-option>
-          </el-select>
-        </el-form-item>-->
         <el-form-item>
           <template slot="label">
             <span class="formLabel">时间：</span>
@@ -49,7 +40,7 @@
 
         <el-table-column label="症状">
           <template slot-scope="scope">
-            <span>{{ scope.row.API_symptom }}</span>
+            <span>{{ scope.row.API_symptom||"无" }}</span>
           </template>
         </el-table-column>
         <el-table-column label="就诊时间" width="180">
@@ -59,7 +50,6 @@
         </el-table-column>
         <el-table-column label="就诊状态" width="180">
           <template slot-scope="scope">
-            <!-- <span>{{ scope.row.API_state||"已完成" }}</span> -->
             <span>{{ scope.row.API_state }}</span>
           </template>
         </el-table-column>
@@ -104,6 +94,7 @@ export default {
   methods: {
     reSet() {
       (this.formInline.API_name = ""), (this.formInline.API_state = "");
+      this.formInline.API_recentRange = "";
     },
     patientDetails(index, row) {
       console.log(index, row);
@@ -119,13 +110,17 @@ export default {
   },
   computed: {
     showTable: function() {
+      let time = new Date().getTime();
       let result = [];
       this.tableData.forEach(data => {
         if (
           (!this.formInline.API_name ||
             data.API_name.includes(this.formInline.API_name)) &&
           (!this.formInline.API_state ||
-            data.API_state == this.formInline.API_state)
+            data.API_state == this.formInline.API_state) &&
+          (!this.formInline.API_recentRange ||
+            new Date(data.API_date).getTime() >
+              time - this.formInline.API_recentRange)
         ) {
           result.push(data);
         }
@@ -142,7 +137,6 @@ export default {
   mounted() {
     getHistoryPatients().then(res => {
       this.tableData = res;
-      console.log(res);
     });
   }
 };

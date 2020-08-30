@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import msg from "./message/message.js"
 import patientDiag from "./patientDiag/patientDiag.js"
 import patientTreatment from "./patientTreatment/patientTreatment.js"
+import instantInfo from "./instantInfo/instantInfo.js"
 
 
 Vue.use(Vuex);
@@ -131,5 +132,6 @@ export default new Vuex.Store({
     msg,
     patientDiag,
     patientTreatment,
+    instantInfo,
   }
 });

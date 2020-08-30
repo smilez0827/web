@@ -1,37 +1,16 @@
 export default {
-    namespace: true,
+    namespaced: true,
     state: {
-        patientsList: [
-            {
-                API_date: "14:50",
-                API_name: "王小虎",
-                API_pid: "1",
-                API_expert: "张三",
-                API_state: "已完成"
-            },
-            {
-                API_date: "14:50",
-                API_pid: "1",
-                API_name: "王小虎",
-                API_expert: "张三",
-                API_state: "已完成"
-            },
-            {
-                API_date: "14:50",
-                API_name: "王小虎",
-                API_expert: "张三",
-                API_pid: "1",
-                API_state: "已完成"
-            },
-        ],
+        patientsList: [],
     },
     getters: {
     },
     mutations: {
-        //整体更新病人列表
-        // todayPatientsList(state, patients) {
-        //     state.todayPatientsList = patients
-        // },
+        // 整体更新病人列表
+        patientsList(state, patients) {
+            console.log(patients)
+            state.patientsList = patients
+        },
         // //来新病人后添加到列表中
         // addTodayPatient(state, newPatient) {
         //     state.todayPatientsList.push(newPatient)

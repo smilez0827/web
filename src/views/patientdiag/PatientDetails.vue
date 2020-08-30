@@ -6,100 +6,17 @@
           <template slot="title">
             <h3 class="title">基本信息</h3>
           </template>
-          <div class="basicInfo clearfix">
-            <div class="pic">
-              <img :src="patientInfo.API_basicInfo.API_pic" alt />
-            </div>
-            <div class="info">
-              <div>
-                <div>姓名：{{patientInfo.API_basicInfo.API_name}}</div>
-                <div>性别：{{patientInfo.API_basicInfo.API_gender}}</div>
-                <div>出生日期：{{new Date(patientInfo.API_basicInfo.API_birthday).toLocaleDateString()}}</div>
-              </div>
-              <div>
-                <div>家庭住址：{{patientInfo.API_basicInfo.API_address}}</div>
-              </div>
-              <div>
-                <div>联系方式：{{patientInfo.API_basicInfo.API_tel}}</div>
-                <div>就诊时间：{{patientInfo.API_basicInfo.API_date}}</div>
-                <div>
-                  <!-- <el-link type="primary" @click="searchHistory">查看病历</el-link> -->
-                </div>
-              </div>
-            </div>
-          </div>
+          <personal-info :prsonalInfo="patientInfo.API_basicInfo"></personal-info>
         </el-collapse-item>
         <el-collapse-item name="2">
           <template slot="title">
             <h3 class="title">病情概况</h3>
           </template>
-          <div class="illState">
-            <div class="description">
-              <div>
-                <p>{{this.patientInfo.API_illState.API_description.length>0?this.patientInfo.API_illState.API_description.join("，"):"暂无"}}</p>
-              </div>
-              <div>
-                <el-link @click="inputBoxShow('illState')" type="success" style="float:right">修改</el-link>
-              </div>
-            </div>
-            <div
-              class="media"
-              v-if="patientInfo.API_illState.API_audio.length>0||patientInfo.API_illState.API_video.length>0"
-            >
-              <div>
-                <el-link
-                  v-if="patientInfo.API_illState.API_audio.length>0"
-                  type="primary"
-                  @click="mediaSwich('audio')"
-                >音频</el-link>
-                <template>
-                  <span
-                    v-if="patientInfo.API_illState.API_audio.length>0&&patientInfo.API_illState.API_video.length>0"
-                    class="switch"
-                  >/</span>
-                  <el-link
-                    v-if="patientInfo.API_illState.API_video.length>0"
-                    type="primary"
-                    @click="mediaSwich('video')"
-                  >视频</el-link>
-                </template>
-              </div>
-              <div
-                v-if="patientInfo.API_illState.API_audio.length>0"
-                v-show="this.pages.AVshow=='audio'"
-              >
-                <div v-for="item in patientInfo.API_illState.API_audio" :key="item.id">
-                  <div>
-                    <audio
-                      :src="item.API_voice"
-                      controls="controls"
-                      preload="auto"
-                      style="height:20px"
-                    ></audio>
-                  </div>
-                  <div>
-                    <!-- <p>{{item.API_text}}</p> -->
-                  </div>
-                </div>
-              </div>
-              <div
-                v-if="patientInfo.API_illState.API_video.length>0"
-                v-show="this.pages.AVshow=='video'"
-              >
-                <!-- <video
-                  :src="patientInfo.API_illState.API_video[0].API_video"
-                  preload="auto"
-                  controls="controls"
-                  style="width:100%"
-                ></video>-->
-                <div v-for="(item,index) in patientInfo.API_illState.API_video" :key="item.id">
-                  <el-link
-                    @click="videoPlay(item)"
-                  >{{index+1}}.{{item.API_name}}({{Math.floor(item.API_time)}}s)</el-link>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ill-state
+            :illState="this.patientInfo.API_illState"
+            @modify="inputBoxShow('illState')"
+            @vedio="videoPlay($event)"
+          ></ill-state>
         </el-collapse-item>
         <el-collapse-item name="3">
           <template slot="title">
@@ -115,15 +32,16 @@
           <template slot="title">
             <h3 class="title">检查结果</h3>
           </template>
-          <div class="examResult">
+          <ExamingResult :examInfo="this.patientInfo.API_examResult"></ExamingResult>
+          <!-- <div class="examResult">
             <span v-if="patientInfo.API_examResult.length==0" class="textdefault">{{"无"}}</span>
             <el-tabs v-else type="card" value="0">
               <el-tab-pane
                 v-for="(item,index) in patientInfo.API_examResult"
                 :key="item.id"
-                :label="item.API_title"
                 :name="index+''"
               >
+                <template slot="label">检查{{pages.nums[index+1]}}</template>
                 <template v-if="item.API_type=='img'">
                   <div class="imgExam">
                     <div class="img">
@@ -131,7 +49,12 @@
                         style="width: 500px;"
                         :src="item.API_img"
                         :preview-src-list="[item.API_img]"
-                      ></el-image>
+                      >
+                        <div slot="placeholder" class="image-slot">
+                          加载中
+                          <span class="dot">...</span>
+                        </div>
+                      </el-image>
                     </div>
                     <div class="info">
                       <div>
@@ -185,7 +108,7 @@
                 </template>
               </el-tab-pane>
             </el-tabs>
-          </div>
+          </div>-->
         </el-collapse-item>
         <el-collapse-item name="5">
           <template slot="title">
@@ -224,22 +147,7 @@
           </template>
           <div class="diagResult">
             <div class="head clearfix">
-              <!-- <div class="checkBox">
-                <el-checkbox-group v-model="API_diagInfo.API_treatment.API_description">
-                  <el-checkbox
-                    v-for="item in pages.treatmentCheckReconmendList.slice(0,2)"
-                    :key="item.id"
-                    :label="item.value"
-                  ></el-checkbox>
-                </el-checkbox-group>
-              </div>-->
               <div class="more">
-                <!-- <el-link @click="treatmentModify" class="link" type="success">更多选项</el-link> -->
-                <el-link
-                  @click="prescriptionModify"
-                  class="link"
-                  type="success"
-                >{{API_diagInfo.API_treatment.API_prescription.length>0?"修改处方":"添加处方"}}</el-link>
                 <el-link
                   @click="pages.HistoryTreatmentDialogVisable=true"
                   class="link"
@@ -252,10 +160,17 @@
                 <p>{{API_diagInfo.API_treatment.API_description.join("，")||"暂无"}}</p>
               </div>
             </div>
-            <div v-show="API_diagInfo.API_treatment.API_prescription.length>0" class="prescription">
-              <span class="label">处方</span>
-              <el-link type="danger" @click="delPrescription" style="float:right">删除</el-link>
-              <PrescriptionTable :prescription="API_diagInfo.API_treatment.API_prescription"></PrescriptionTable>
+            <div class="prescription">
+              <div v-show="API_diagInfo.API_treatment.API_prescription.length>0">
+                <span class="label">处方</span>
+                <el-link type="danger" @click="delPrescription" style="float:right">删除</el-link>
+              </div>
+              <prescription-edit
+                @flagChange="prescriptionFlagChange"
+                :prescription="API_diagInfo.API_treatment.API_prescription"
+                v-model="API_diagInfo.API_treatment.API_prescription"
+                type="type1"
+              ></prescription-edit>
             </div>
           </div>
         </el-collapse-item>
@@ -263,11 +178,12 @@
           <template slot="title">
             <h3 class="title">后续治疗</h3>
           </template>
-          <div class="after">
+          <after @after="afterInfo($event)"></after>
+          <!-- <div class="after">
             <div>
               <span
                 class="label"
-              >推荐医疗机构：{{API_diagInfo.API_after.API_org.API_orgName||API_diagInfo.API_after.API_org.API_orgName=='null'?"未选择":API_diagInfo.API_after.API_org.API_orgName}}</span>
+              >推荐医疗机构：{{API_diagInfo.API_after.API_org.API_orgName||(API_diagInfo.API_after.API_org.API_orgName=='null'?"未选择":API_diagInfo.API_after.API_org.API_orgName)}}</span>
               <div class="box">
                 <choose-radio v-model="pages.choosedOrg" :options="pages.medicalInfo" type="org"></choose-radio>
               </div>
@@ -275,7 +191,7 @@
             <div>
               <span
                 class="label"
-              >推荐主管医师：{{API_diagInfo.API_after.API_doc.API_docName||API_diagInfo.API_after.API_doc.API_docName=='null'?"未选择":API_diagInfo.API_after.API_doc.API_docName}}</span>
+              >推荐主管医师：{{API_diagInfo.API_after.API_doc.API_docName||(API_diagInfo.API_after.API_doc.API_docName=='null'?"未选择":API_diagInfo.API_after.API_doc.API_docName)}}</span>
               <div v-if="pages.choosedOrg.doctors.length>0" class="box">
                 <choose-radio
                   v-model="API_diagInfo.API_after.API_doc"
@@ -287,7 +203,7 @@
             <div>
               <span
                 class="label"
-              >推荐主管护士：{{API_diagInfo.API_after.API_nur.API_nurName||API_diagInfo.API_after.API_nur.API_nurName=='null'?"未选择":API_diagInfo.API_after.API_nur.API_nurName}}</span>
+              >推荐主管护士：{{API_diagInfo.API_after.API_nur.API_nurName||(API_diagInfo.API_after.API_nur.API_nurName=='null'?"未选择":API_diagInfo.API_after.API_nur.API_nurName)}}</span>
               <div v-if="pages.choosedOrg.nurses.length>0" class="box">
                 <choose-radio
                   v-model="API_diagInfo.API_after.API_nur"
@@ -296,7 +212,7 @@
                 ></choose-radio>
               </div>
             </div>
-          </div>
+          </div>-->
         </el-collapse-item>
         <el-button @click="save" size="medium" type="primary" class="btn">保存</el-button>
       </el-collapse>
@@ -344,127 +260,6 @@
       <span @click="videoDialogClose">X</span>
       <video :src="pages.videoDialogSrc" controls="controls" style="width:100%"></video>
     </div>
-    <!-- 诊断结论更多选项对话框对话框 -->
-    <el-dialog title="诊断结论" :visible.sync="pages.diagResultDialogVisible" width="40%">
-      <check-box
-        :options="pages.diagResultCheckReconmendList"
-        :checked="pages.diagResultCheckList"
-        v-model="pages.diagResultCheckList"
-      ></check-box>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="diagResultSave">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- 治疗方案更多选项对话框 -->
-    <el-dialog title="治疗方案" :visible.sync="pages.treatmentDialogVisible" width="40%">
-      <check-box
-        :options="pages.treatmentCheckReconmendList"
-        :checked="pages.treatmentCheckList"
-        v-model="pages.treatmentCheckList"
-      ></check-box>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="treatmentSave">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- 添加处方对话框 -->
-    <el-dialog title="添加处方" :visible.sync="pages.prescriptionDialogVisible" width="60%">
-      <el-table size="mini" :data="pages.prescription" style="width: 100%">
-        <el-table-column label="名称">
-          <template slot-scope="scope">
-            <el-input
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsName"
-              style="width:100%;hight:100%"
-            ></el-input>
-            <span v-else>{{ scope.row.API_drugsName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="数量">
-          <template slot-scope="scope">
-            <el-input
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsNumber"
-              style="width:100%;hight:100%"
-            ></el-input>
-            <span v-else>{{ scope.row.API_drugsNumber }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="单位">
-          <template slot-scope="scope">
-            <el-input
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsNumberUnits"
-              style="width:100%;hight:100%"
-            ></el-input>
-            <span v-else>{{ scope.row.API_drugsNumberUnits }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="用法">
-          <template slot-scope="scope">
-            <el-input
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsUsage"
-              style="width:100%;hight:100%"
-            ></el-input>
-            <!-- <span v-else>{{ scope.row.API_drugsNumber }}</span> -->
-            <!-- <el-select
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsUsage"
-              placeholder="请选择"
-            >
-              <el-option value="口服"></el-option>
-              <el-option value="外用"></el-option>
-            </el-select>-->
-            <span v-else>{{ scope.row.API_drugsUsage }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="频率">
-          <template slot-scope="scope">
-            <el-select
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_useFrequency"
-              placeholder="请选择"
-            >
-              <el-option value="一天一次"></el-option>
-              <el-option value="一天两次"></el-option>
-              <el-option value="一天三次"></el-option>
-            </el-select>
-            <span v-else>{{ scope.row.API_useFrequency }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="使用时间">
-          <template slot-scope="scope">
-            <el-select
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_useTime"
-              placeholder="请选择"
-            >
-              <el-option value="饭前"></el-option>
-              <el-option value="饭后"></el-option>
-              <el-option value="均可"></el-option>
-            </el-select>
-            <span v-else>{{ scope.row.API_useTime }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="150px">
-          <template slot-scope="scope">
-            <el-button
-              v-if="!scope.row.isEditable"
-              size="mini"
-              @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button>
-            <el-button v-else size="mini" @click="handleSave(scope.$index, scope.row)">确定</el-button>
-            <el-button size="mini" type="danger" @click="delMedical(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div style="width:100px ;margin:20px auto">
-        <el-link class="link" @click="addMedical" type="primary">+添加药品</el-link>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="sevePrescription">确 定</el-button>
-      </span>
-    </el-dialog>
 
     <!-- 导入历史诊断结论 -->
     <el-dialog title="历史诊断结论" :visible.sync="pages.HistoryDialogVisable" width="40%">
@@ -534,16 +329,33 @@ import CheckBox from "../../components/common/CheckBox.vue";
 import Prescription from "../../components/common/Prescription.vue";
 import Radio from "../../components/common/Radio.vue";
 import SpecialInput from "../../components/common/SpecialInput.vue";
+import PrescriptionEdit from "../../components/common/PrescriptionEdit.vue";
+import mixin from "./components/index.js";
 export default {
+  mixins: [mixin],
   components: {
     CheckBox: CheckBox,
     PrescriptionTable: Prescription,
     ChooseRadio: Radio,
-    SpecialInput: SpecialInput
+    SpecialInput: SpecialInput,
+    PrescriptionEdit: PrescriptionEdit
   },
   data() {
     return {
       pages: {
+        nums: [
+          "零",
+          "一",
+          "二",
+          "三",
+          "四",
+          "五",
+          "六",
+          "七",
+          "八",
+          "九",
+          "十"
+        ],
         collapse_activeNames: ["1", "2", "3", "4", "5", "6", "7"], //页面中激活的折叠面板
         AVshow: "video", //音视频切换标志
         videoDialogVisible: false, //视频播放框是否可见
@@ -752,6 +564,9 @@ export default {
     };
   },
   methods: {
+    prescriptionFlagChange(flag) {
+      this.API_diagInfo.API_treatment.API_prescriptionFlag = flag;
+    },
     videoDialogClose() {
       this.pages.videoDialogVisible = false;
       this.pages.videoDialogSrc = "";
@@ -941,6 +756,9 @@ export default {
           this.API_diagInfo.API_treatment.API_description.push(data);
           break;
       }
+    },
+    afterInfo(info) {
+      console.log(info);
     }
   },
   directives: {
@@ -993,7 +811,6 @@ export default {
         API_nurName: "",
         API_nurId: ""
       };
-      console.log(this.API_diagInfo.API_after);
       this.API_diagInfo.API_after.API_org.API_orgName = value.orgName;
       this.API_diagInfo.API_after.API_org.API_orgId = value.orgId;
     }
@@ -1004,6 +821,7 @@ export default {
       this.patientInfo = res.patientInfo;
       this.API_diagInfo = res.API_diagInfo;
       this.API_state = res.API_state;
+      console.log(this.patientInfo);
     });
     getStateOptions().then(res => {
       this.pages.stateOptions = res;
@@ -1036,66 +854,7 @@ export default {
     font-size: 20px;
     color: #1c7e7c;
   }
-  .basicInfo {
-    padding-left: 20px;
-    padding-top: 20px;
-    .pic {
-      width: 170px;
-      height: 150px;
-      border-right: 1px solid #d9d9d9;
-      padding-right: 20px;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-      margin: auto;
-      float: left;
-    }
-    .info {
-      float: left;
-      margin-left: 20px;
-      width: 65%;
-      height: 130px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      div {
-        display: flex;
-        justify-content: space-between;
-        font-size: 18px;
-      }
-    }
-  }
-  .illState {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    .description {
-      width: 100%;
-      height: 100%;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      p {
-        font-size: 18px;
-        text-indent: 40px;
-      }
-    }
-    .media {
-      flex-shrink: 0;
-      align-self: stretch;
-      width: 450px;
-      border-left: 2px solid #d9d9d9;
-      padding-left: 20px;
-      .switch {
-        margin: 0 5px;
-      }
-      audio {
-        margin-top: 10px;
-      }
-    }
-  }
+
   .history {
     p {
       font-size: 18px;
