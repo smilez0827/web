@@ -11,9 +11,9 @@ export function login(data) {
             localStorage.setItem("UserID", data.UserID);
             localStorage.setItem("function", JSON.stringify(res.data.function));
             localStorage.setItem("name", JSON.stringify(res.data.name));
-            store.commit('userInfo', [data.UserID, res.data.name, res.data.role, res.data.function])
+            store.commit('userInfo', [data.UserID, res.data.name, res.data.role, res.data.function, res.data.portrait])
             router.push('/index')
-            socket.emit("login",data.UserID)
+            socket.emit("login", data.UserID)
         } else {
             Message({
                 showClose: true,
@@ -43,7 +43,7 @@ export function getBasicInfo() {
 
 //修改个人信息
 export function changeBasicInfo(data) {
-    console.log(data    )
+    console.log(data)
     return Put('/api/personalInfo', { Info: data }).then(res => {
         console.log(res)
         if (res.status == 200) {
@@ -213,17 +213,17 @@ export function getMonthDetails(data) {
 //修改密码
 export function modifyPassword(data) {
     // console.log(data)
-    return Put('/api/personalinfo/password',data).then(res => {
-        if(res.status==200){
-            if(res.data.status==200){
+    return Put('/api/personalinfo/password', data).then(res => {
+        if (res.status == 200) {
+            if (res.data.status == 200) {
                 Message.success(res.data.msg)
-            }else{
+            } else {
                 Message.error(res.data.msg)
             }
-        }else{
+        } else {
             Message.error("修改失败！")
         }
-    }).catch(err=>{
+    }).catch(err => {
         Message.error("网络错误！")
     });
 }

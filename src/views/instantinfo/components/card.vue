@@ -1,17 +1,13 @@
 <template>
   <div id="card">
     <header>
-      <img class="avatar" v-bind:src="user.img" v-bind:alt="user.name" />
-      <p class="name">{{user.name}}</p>
+      <img
+        class="avatar"
+        v-bind:src="this.$store.state.user.userInfo.portrait"
+        v-bind:alt="this.$store.state.user.userInfo.portrait"
+      />
+      <p class="name">{{this.$store.state.user.userInfo.name}}</p>
     </header>
-    <footer>
-      <!-- <input
-        class="search"
-        type="text"
-        v-model="$store.state.instantInfo.filterKey"
-        placeholder="search user..."
-      /> -->
-    </footer>
   </div>
 </template>
 
@@ -20,10 +16,11 @@ export default {
   name: "card",
   data() {
     return {
-      user: {
-        name: "Li-yiwei",
-        img: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-      }
+      // user: {
+      //   name: "Li-yiwei",
+      //   img:
+      //     "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+      // }
     };
   }
 };

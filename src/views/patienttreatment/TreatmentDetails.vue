@@ -25,7 +25,7 @@
               <div>
                 <div>姓名：{{patientInfo.API_basicInfo.API_name||"无"}}</div>
                 <div>性别：{{patientInfo.API_basicInfo.API_gender||"无"}}</div>
-                <div>出生日期：{{new Date(patientInfo.API_basicInfo.API_birthday||"无").toLocaleDateString()}}</div>
+                <div>出生日期：{{new Date(patientInfo.API_basicInfo.API_birthday).toLocaleDateString()||"无"}}</div>
               </div>
               <div>
                 <div>家庭住址：{{patientInfo.API_basicInfo.API_address||"无"}}</div>

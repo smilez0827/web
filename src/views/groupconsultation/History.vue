@@ -12,10 +12,10 @@
         class="demo-ruleForm"
       >
         <el-form-item label="姓名" prop="name">
-          <el-input  v-model="ruleForm.name" autocomplete="off"></el-input>
+          <el-input v-model="ruleForm.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="账号" prop="account">
-          <el-input  v-model="ruleForm.account" autocomplete="off"></el-input>
+          <el-input v-model="ruleForm.account" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>

@@ -4,17 +4,6 @@ import Vue from "vue";
 import store from "../store/index.js"
 import { getTodayPatients } from '../api/patientdiag/patientdiag.js';
 const socket = io('http://132.232.18.227:3000');
-// socket.addEventListener("seekMedicalAdvice", (data) => {
-//     getTodayPatients()
-//     let obj = {}
-//     obj.type = "huanzhe"
-//     obj.time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
-//     obj.msg = "您有新的就诊请求"
-//     obj.router = "/patientdiag/todaydiagnosis"
-//     store.commit("addMessage", obj)
-//     data.API_pid = data.pid
-//     store.commit("addTodayPatient", data)
-// })
 socket.addEventListener("seekMedical", (data) => {
     getTodayPatients()
     let obj = {}
@@ -34,11 +23,39 @@ socket.addEventListener("temp_message", (data) => {
         getTodayPatients()
         data.forEach(item => {
             let obj = {}
-            obj.type = "huanzhe"
-            obj.time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
-            obj.msg = "您有新的就诊请求"
-            obj.router = "/patientdiag/todaydiagnosis"
-            store.commit("addMessage", obj)
+            switch (item.type) {
+                case 'seekmedical':
+                    obj.type = "huanzhe"
+                    obj.time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
+                    obj.msg = "您有新的就诊请求"
+                    obj.router = "/patientdiag/todaydiagnosis"
+                    store.commit("addMessage", obj)
+                    break;
+                case 'seekmedicalreply':
+                    break;
+                default:
+                    store.commit("instantInfo/receiveMessage", {
+                        fromid: item.fromid,
+                        message: item.message,
+                        type: item.type,
+                        msgtime: item.req_datetime,
+                        toid: item.toid
+                    })
+                    obj.type = "instant"
+                    obj.time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
+                    obj.msg = "您有新的消息"
+                    obj.router = "/instantinfo/message"
+                    store.commit("addMessage", obj)
+                    let msg
+                    break;
+
+            }
+            // let obj = {}
+            // obj.type = "huanzhe"
+            // obj.time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
+            // obj.msg = "您有新的就诊请求"
+            // obj.router = "/patientdiag/todaydiagnosis"
+            // store.commit("addMessage", obj)
         });
     }
 
@@ -46,6 +63,22 @@ socket.addEventListener("temp_message", (data) => {
 
 socket.addEventListener("login", (data) => {
     console.log(data)
+})
+socket.addEventListener("seekmedicalreply", (data) => {
+    getTodayPatients()
+    store.commit("changeTodayPatient", { pid: data.pid, newState: data.API_state },)
+
+})
+
+socket.addEventListener("instantMsg", (data) => {
+    store.commit("instantInfo/receiveMessage", data)
+    let obj = {}
+    obj.type = "instant"
+    obj.time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
+    obj.msg = "您有新的消息"
+    obj.router = "/instantinfo/message"
+    store.commit("addMessage", obj)
+
 })
 
 Vue.use(VueSocketIOExt, socket);

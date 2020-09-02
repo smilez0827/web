@@ -14,10 +14,10 @@
       </div>
       <div>
         <el-link
+          v-if="(illState.API_audio.length>0)&&(illState.API_video.length>0)&&(state=='未完成')"
           type="success"
           @click="clickModify"
           style="float:right"
-          v-if="(illState.API_audio.length>0)&&(illState.API_video.length>0)"
         >修改</el-link>
       </div>
     </div>
@@ -30,18 +30,30 @@
         </template>
       </div>
       <div v-if="illState.API_audio.length>0" v-show="flag=='audio'">
-        <div v-for="item in illState.API_audio" :key="item.id">
+        <div v-for="(item,index) in illState.API_audio" :key="item.id">
           <div>
-            <audio :src="item.API_voice" controls="controls" preload="auto" style="height:20px"></audio>
+            <p>{{index+1}}{{'：'+item.API_Question}}</p>
+            <audio
+              v-for="audio in item.API_audio"
+              :key="audio.id"
+              :src="audio"
+              controls="controls"
+              preload="auto"
+              style="height:20px"
+            ></audio>
           </div>
           <div></div>
         </div>
       </div>
       <div v-if="illState.API_video.length>0" v-show="flag=='video'">
         <div v-for="(item,index) in illState.API_video" :key="item.id">
-          <el-link
-            @click="playVideo(item)"
-          >{{index+1}}.{{item.API_name}}({{Math.floor(item.API_time)}}s)</el-link>
+          <p>{{index+1}}{{'：'+item.API_Question}}</p>
+          <div style="margin-left:20px" v-for="video in item.API_video" :key="video.id">
+            <el-link @click="playVideo(video)">{{"回答视频"}}({{Math.floor(item.API_time)}}s)</el-link>
+          </div>
+          <!-- <el-link @click="playVideo(item)">{{item.API_name}}({{Math.floor(item.API_time)}}s)</el-link> -->
+
+          <!-- <el-link @click="playVideo(item)">{{item.API_name}}({{Math.floor(item.API_time)}}s)</el-link> -->
         </div>
       </div>
     </div>
@@ -79,6 +91,12 @@ export default {
           ], //视频的地址，以数组的形式发过来
           API_questionnaire: []
         };
+      }
+    },
+    state: {
+      type: String,
+      default: () => {
+        return "";
       }
     }
   },

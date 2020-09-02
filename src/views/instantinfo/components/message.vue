@@ -1,36 +1,34 @@
 <template>
-  <div id="message" v-scroll-bottom="session">
-    <el-button @click="startRecord">start</el-button>
-    <el-button @click="endRecord">end</el-button>
+  <div id="message" v-scroll-bottom="sessions">
     <template v-for="item in sessions">
       <ul class="ul" v-if="currentSessionId==item.id" :key="item.id">
         <li class="li" v-for="(entry,index) in item.messages" :key="entry.id">
           <p class="time">
-            <span
+            <!-- <span
               v-show="index==0 || entry.date.getTime()-item.messages[index-1].date.getTime()>150000"
-            >{{entry.date | time}}</span>
+            >{{entry.date | time}}</span>-->
           </p>
           <div class="main" :class="{self:entry.self}">
             <img class="avatar" :src="entry.self ? img : item.user.img" alt />
-            <img class="widthControl" v-if="entry.msgType=='img'" :src="entry.content" alt />
+            <img class="widthControl" v-if="entry.type=='img'" :src="entry.message" alt />
 
             <audio
-              v-else-if="entry.msgType=='audio'"
+              v-else-if="entry.type=='audio'"
               controls="controls"
               preload="auto"
               style="height:20px;width:300px"
               class="widthControl"
-              :src="entry.content"
+              :src="entry.message"
             ></audio>
 
             <video
-              v-else-if="entry.msgType=='video'"
+              v-else-if="entry.type=='video'"
               controls="controls"
               class="widthControl"
-              :src="entry.content"
-            ></video>
+              :src="entry.message"
+            >your browser does not support the video tag.</video>
 
-            <p v-else class="text">{{entry.content}}</p>
+            <p v-else class="text">{{entry.message}}</p>
           </div>
         </li>
       </ul>
@@ -81,20 +79,13 @@ export default {
     }
   },
   mounted() {
-    let constraints = { audio: true, video: { width: 1280, height: 720 } };
-    navigator.mediaDevices.getUserMedia(constraints).then(stream => {
-      let mediaRecorder = new MediaRecorder(stream, this.recorderConfig);
-      this.recorder = mediaRecorder;
-    });
+    // let constraints = { audio: true, video: { width: 1280, height: 720 } };
+    // navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+    //   let mediaRecorder = new MediaRecorder(stream, this.recorderConfig);
+    //   this.recorder = mediaRecorder;
+    // });
   },
-  methods: {
-    startRecord() {
-      this.recorder.start();
-    },
-    endRecord() {
-      this.recorder.end();
-    }
-  }
+  methods: {}
 };
 </script>
 

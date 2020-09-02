@@ -3,30 +3,31 @@
 个人信息
 
   -->
+
   <div class="personalInfo">
     <div class="img">
       <img :src="prsonalInfo.API_pic" alt />
     </div>
     <div class="info">
       <el-row>
-        <el-col :span="8">姓名：{{prsonalInfo.API_name}}</el-col>
-        <el-col :span="8">性别：{{prsonalInfo.API_gender}}</el-col>
+        <el-col :span="8">姓名：{{prsonalInfo.API_name||"无"}}</el-col>
+        <el-col :span="8">性别：{{prsonalInfo.API_gender||"无"}}</el-col>
         <el-col
           :xs="24"
           :sm="24"
           :md="24"
           :lg="8"
           :xl="8"
-        >出生日期：{{new Date(prsonalInfo.API_birthday).toLocaleDateString() }}</el-col>
+        >出生日期：{{new Date(prsonalInfo.API_birthday).toLocaleDateString() ||"无"}}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="24">家庭住址：{{prsonalInfo.API_address}}</el-col>
+        <el-col :span="24">家庭住址：{{prsonalInfo.API_address||"无"}}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="6">联系方式：{{prsonalInfo.API_tel}}</el-col>
+        <el-col :span="6">联系方式：{{prsonalInfo.API_tel||"无"}}</el-col>
         <el-col :span="12">
           就诊时间：{{
-          new Date(prsonalInfo.API_date).toLocaleDateString()
+          new Date(prsonalInfo.API_date).toLocaleDateString()||"无"
           }}
         </el-col>
         <el-col :span="6">
@@ -44,37 +45,39 @@ export default {
       type: Object,
       default: () => {
         return {
-          API_pic:
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-          API_name: "张三",
-          API_gender: "男",
-          API_birthday: "2017/9/24",
-          API_address: "四川成都市",
-          API_tel: "19982055906",
-          API_date: "2019/7/8"
+          API_pic: "",
+          API_name: "",
+          API_gender: "",
+          API_birthday: "",
+          API_address: "",
+          API_tel: "",
+          API_date: ""
         };
       }
     }
   },
   methods: {
     startCommunication() {
-      console.log(this.$store.state.instantInfo.sessions);
       let flag = true;
+
       this.$store.state.instantInfo.sessions.forEach(person => {
-        if (person.id == "101001") {
+        if (person.id == this.prsonalInfo.API_UserID) {
           flag = false;
         }
       });
       if (flag) {
         this.$store.commit("instantInfo/addPerson", {
-          id: "101001",
-          name: "李四",
+          id: this.prsonalInfo.API_UserID,
+          name: this.prsonalInfo.API_name,
           img: this.prsonalInfo.API_pic
         });
       } else {
-        this.$store.commit("instantInfo/changeCurrentSessionId", "101001");
-        this.$router.push("/instantinfo/message");
+        this.$store.commit(
+          "instantInfo/changeCurrentSessionId",
+          this.prsonalInfo.API_UserID
+        );
       }
+      this.$router.push("/instantinfo/message");
     }
   }
 };

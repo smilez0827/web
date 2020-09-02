@@ -1,5 +1,4 @@
 export default {
-    namespace: true,
     state: {
         todayPatientsList: [],
     },
@@ -12,16 +11,13 @@ export default {
         },
         //来新病人后添加到列表中
         addTodayPatient(state, newPatient) {
-            console.log("11")
             state.todayPatientsList.push(newPatient)
         },
         // 完成病人诊断后改变其就诊状态
         changeTodayPatient(state, data) {
-            console.log(data)
             state.todayPatientsList.forEach(e => {
                 if (e.API_pid == data.pid) {
-                    e.API_state = "已完成"
-                    e.API_symptom = data.API_symptom.join(',')
+                    e.API_state = data.newState
                 }
             });
         }

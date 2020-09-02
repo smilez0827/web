@@ -1,11 +1,15 @@
 <template>
   <div id="uesrtext">
+    <!-- <el-buttt @click="startRecorder">start</el-buttt>
+    <el-buttt @click="stopRecorder">end</el-buttt>-->
+    <!-- <audio controls="controls" :src="this.audio.audioSrc"></audio> -->
     <div class="menu">
       <span class="file">
         <el-upload
           class="upload-demo"
-          action="http://132.232.18.227:8087/upload"
-          :on-success="handleSuccess"
+          action="http://132.232.18.227:3000/upload"
+          :before-upload="beforeImgUpload"
+          :on-success="imgSuccess"
           :headers="uploadToken"
           :auto-upload="true"
           :show-file-list="false"
@@ -14,8 +18,20 @@
         </el-upload>
       </span>
       <span class="file">
-        <i class="iconfont icon-huatong"></i>
-        <input type="file" name id />
+        <el-upload
+          class="upload-demo"
+          action="http://132.232.18.227:3000/upload"
+          :before-upload="beforeVedioUpload"
+          :on-success="videoSuccess"
+          :headers="uploadToken"
+          :auto-upload="true"
+          :show-file-list="false"
+        >
+          <i class="iconfont icon-shipin"></i>
+        </el-upload>
+      </span>
+      <span class="file">
+        <i @mousedown="startRecorder" @mouseup="stopRecorder" class="iconfont icon-huatong"></i>
       </span>
     </div>
     <textarea placeholder="按 Ctrl + Enter 发送" v-model="content" v-on:keyup="addMessage"></textarea>
@@ -24,36 +40,93 @@
 
 <script>
 import { mapState } from "vuex";
-
+import Recorder from "js-audio-recorder";
+let recorder = new Recorder();
 export default {
   name: "uesrtext",
   data() {
     return {
+      audio: {
+        recorder: "",
+        audioSrc: ""
+      },
       content: "",
       uploadToken: {
         Authorization: localStorage.getItem("token")
       }
     };
   },
+  computed: {
+    ...mapState({
+      sessions: state => state.instantInfo.sessions,
+      currentSessionId: state => state.instantInfo.currentSessionId
+    })
+  },
   methods: {
-    handleSuccess(res, files, fileList) {
-      console.log(res);
-
-      this.$store.commit("instantInfo/addMessage", {
-        content:
-          "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-        msgType: "img"
+    uploadFile() {
+      let param = new FormData();
+      param.append("file", this.wavFile);
+      this.$axios.post("http://132.232.18.227:3000/upload", param).then(res => {
+        this.sendMsg("audio", res.data.readloadurl);
       });
-      this.content = "";
+    },
+    startRecorder() {
+      this.audio.recorder = new Recorder();
+      this.audio.recorder.start();
+    },
+    stopRecorder() {
+      this.audio.recorder.stop();
+      let audioBolb = this.audio.recorder.getWAVBlob();
+      this.wavFile = new File([this.audio.recorder.getWAVBlob()], "voice.wav", {
+        type: "audio/wav"
+      });
+      this.uploadFile();
+      let reader = new FileReader();
+      reader.readAsDataURL(audioBolb);
+    },
+    beforeImgUpload(file) {
+      const isJPG =
+        file.type === "image/jpeg" ||
+        file.type === "image/png" ||
+        file.type === "image/jpg";
+      if (!isJPG) {
+        this.$message.error("只能发送png或jpg图片");
+      }
+      return isJPG;
+    },
+    beforeVedioUpload(file) {
+      const isJPG = file.type === "video/mp4";
+      if (!isJPG) {
+        this.$message.error("只能发送MP4视频");
+      }
+      return isJPG;
+    },
+    imgSuccess(res, files, fileList) {
+      console.log(res);
+      this.sendMsg("img", res.downloadurl);
+    },
+    videoSuccess(res, files, fileList) {
+      console.log(res);
+      this.sendMsg("video", res.readloadurl);
+      // readloadurl
     },
     addMessage(e) {
       if (e.ctrlKey && e.keyCode === 13 && this.content.length) {
-        this.$store.commit("instantInfo/addMessage", {
-          content: this.content,
-          msgType: "text"
-        });
-        this.content = "";
+        this.sendMsg("text", this.content);
       }
+    },
+    sendMsg(type, message) {
+      let msg = {
+        fromid: localStorage.getItem("UserID"),
+        message: message,
+        type: type,
+        msgtime: new Date(),
+        toid: this.currentSessionId
+      };
+      this.$store.commit("instantInfo/addMessage", msg);
+      console.log(msg);
+      this.$socket.client.emit("instantMsg", msg);
+      this.content = "";
     }
   }
 };

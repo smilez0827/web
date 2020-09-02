@@ -1,61 +1,78 @@
-let obj = {
-    API_patientsList: [
-        {
-            API_date: "14:50",
-            API_name: "王小虎",
-            API_pid: "1",
-            API_expert: "张三",
-            API_state: "已完成"
-        }, {
-            API_date: "14:50",
-            API_name: "王小虎",
-            API_pid: "1",
-            API_expert: "张三",
-            API_state: "已完成"
-        },
-    ]
-}
 
-
-let obj2 = {
-    patientInfo: {
-        // 患者基本信息
-        API_basicInfo: {
-            API_pic: require("../../assets/img/default/person.png"),
-            API_name: "王小虎",
-            API_gender: "男",
-            API_birthday: "1996-07-23",
-            API_address: "四川省成都市",
-            API_tel: "19999999999",
-            API_date: "2020-06-24"
+function solve(n) {
+    let a = new Array();;
+    let i = 0;
+    let j = 0;
+    for (i = 0; i < n; i++) {
+        a[i] = new Array();
+        for (j = 0; j < n; j++) {
+            a[i][j] = 0;
         }
-    },
-}
-
-let obj3 = {
-    API_treatmentLog: [
-        {
-            API_treatment: "西药治疗",
-            API_prescription: [
-                {
-                    API_drugsName: "含曲林片",
-                    API_drugsNumberUnits: "盒",
-                    API_drugsNumber: "2",
-                    API_drugsUsage: "一次两粒",
-                    API_useFrequency: "一天一次",
-                    API_useTime: "饭后",
-                    API_isEditable: false,
-                    API_days: "7"
+    }
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            if ((i >= n / 2) && (j < n / 2)) {
+                if (n - i - 1 > j) {
+                    a[i][j] = 4
+                } else {
+                    a[i][j] = 5
                 }
-            ]
-        },
-        {
-            API_treatment: "2",
-            API_prescription: []
-        },
-        {
-            API_treatment: "2",
-            API_prescription: []
+                if (n - i - 1 == j) {
+                    a[i][j] = 0
+                }
+            }
+
+            if (i < n / 2 && j < n / 2) {
+                if (i > j) {
+                    a[i][j] = 3
+                } else {
+                    a[i][j] = 2
+                }
+                if (i == j) {
+                    a[i][j] = 0
+                }
+            }
+
+            if (i >= n / 2 && j >= n / 2) {
+                if (i > j) {
+                    a[i][j] = 6
+                } else {
+                    a[i][j] = 7
+                }
+                if (i == j) {
+                    a[i][j] = 0
+                }
+            }
+
+            if (i < n / 2 && j >= n / 2) {
+                if (i > n - j - 1) {
+                    a[i][j] = 8
+                } else {
+                    a[i][j] = 1
+                }
+                if (i == n - j - 1) {
+                    a[i][j] = 0
+                }
+            }
         }
-    ]
+    }
+    if (n % 2 == 1) {
+        for (i = 0; i < n; i++) {
+            a[parseInt(n / 2)][i] = 0;
+            a[i][parseInt(n / 2)] = 0
+        }
+    }
+    for (i = 0; i < n; i++) {
+        console.log(a[i].join(" "))
+    }
 }
+
+let a = {
+    z: "23"
+}
+let b = {
+    x: "22"
+}
+b.prototype = a;
+
+console.log(Object.keys(b))

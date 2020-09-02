@@ -5,8 +5,13 @@ import patientDiag from "./patientDiag/patientDiag.js"
 import patientTreatment from "./patientTreatment/patientTreatment.js"
 import instantInfo from "./instantInfo/instantInfo.js"
 
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
+
+const dataState = createPersistedState({
+  paths: ["instantInfo", "user.userInfo"]
+})
 
 export default new Vuex.Store({
   state: {
@@ -16,6 +21,7 @@ export default new Vuex.Store({
         userId: '',
         name: '',
         func: [],
+        portrait: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
       },
       personalInfo:
       {
@@ -93,6 +99,7 @@ export default new Vuex.Store({
       state.user.userInfo.name = data[1];
       state.user.userInfo.role = data[2];
       state.user.userInfo.func = data[3];
+      state.user.userInfo.portrait = data[4];
     },
     recommend(state, data) {
       state.recommend.imgList = data[0];
@@ -133,5 +140,6 @@ export default new Vuex.Store({
     patientDiag,
     patientTreatment,
     instantInfo,
-  }
+  },
+  plugins: [dataState]
 });

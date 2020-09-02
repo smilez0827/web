@@ -6,6 +6,7 @@ import router from '../../router/index.js'
 export function getTodayPatients() {
     if (store.state.patientDiag.todayPatientsList.length == 0) {
         Get("http://132.232.18.227:3000/patientdiag/todaypatients").then((res) => {
+            console.log(res)
             if (res.data.seekmedicaladvicedata.length > 0) {
                 res.data.seekmedicaladvicedata.forEach(item => {
                     item.API_pid = item.pid
@@ -36,7 +37,6 @@ export function getHistoryPatients(pid) {
 export function getPatientDetails(pid) {
     return Get("http://132.232.18.227:3000/patientdiag/patient/" + pid).then((res) => {
         if (res.status == 200) {
-            console.log(res.data)
             let obj = {};
             obj.patientInfo = {};
             obj.API_diagInfo = {};
@@ -60,11 +60,11 @@ export function getPatientDetails(pid) {
 }
 
 // 保存患者诊断信息
-export function savePatientDiagInfo(pid, API_state, API_description, API_diagInfo) {
+export function savePatientDiagInfo(pid, API_state, API_illState, API_diagInfo) {
     let errList = [];
     let flag = true;
     // if (API_state) {
-    if (API_description.length == 0) {
+    if (API_illState.API_description == 0 && API_illState.API_questionnaire.length == 0) {
         errList.push("病情描述")
         flag = false
     }
@@ -85,13 +85,13 @@ export function savePatientDiagInfo(pid, API_state, API_description, API_diagInf
         let obj = {};
         obj.API_state = API_state;
         obj.API_illState = {};
-        obj.API_illState.API_description = API_description
+        obj.API_illState.API_description = API_illState.API_description
         obj.API_diagInfo = API_diagInfo
-        console.log(obj)
         Post("http://132.232.18.227:3000/patientdiag/patient/" + pid, obj).then(res => {
             if (res.status == 200) {
                 Message.success(res.data.msg)
-                store.commit("changeTodayPatient", { pid: pid, API_symptom: obj.API_illState.API_description })
+
+                store.commit("changeTodayPatient", { pid: pid, API_symptom: obj.API_illState.API_description, newState: "已完成" })
             } else {
                 Message.error("保存失败")
             }
@@ -200,7 +200,23 @@ export function getMedicalInfo() {
 
 // 获取药品信息
 export function getDurgsInfo(page, name) {
-    return Get("http://132.232.18.227:3000/patientdiag/drugsinfo", { page, name }).then(res => {
+    return Post("http://132.232.18.227:3000/patientdiag/durgsearch", {
+        name: name,
+        page: page + ""
+    }).then(res => {
+        if (res.data.data.length == 0) {
+            Message.error("没有找到相关药品")
+        }
+        return res.data
+
+    })
+}
+
+// 获取历史处方
+export function getHistoryPrescription(page) {
+    return Post("http://132.232.18.227:3000/patientdiag/prescriptionhistory", { page: page + "" }).then(res => {
+        console.log(page)
+        console.log(res.data)
         return res.data
     })
 }

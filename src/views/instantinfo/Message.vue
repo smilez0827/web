@@ -22,9 +22,7 @@ export default {
   data() {
     return {};
   },
-  mounted: function() {
-    this.$store.dispatch("instantInfo/initData");
-  },
+  mounted: function() {},
   components: {
     card,
     list,
@@ -48,8 +46,7 @@ export default {
   .sidebar {
     float: right;
     color: #f4f4f4;
-    // background-color: #409EFF;
-    background-image: linear-gradient(75deg, #409EFF, #67C23A);
+    background-image: linear-gradient(75deg, #409eff, #67c23a);
     width: 250px;
   }
   .main {

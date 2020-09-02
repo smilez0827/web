@@ -32,7 +32,7 @@
         :cell-style="{'text-align':'center'}"
         :header-cell-style="{background:'#EFF3F4',color:'#1c7e7c','text-align':'center',  'font-size': '18px','font-weight': 'bold',}"
       >
-        <el-table-column label="序号" width="80" type="index"></el-table-column>
+        <el-table-column fixed label="序号" width="80" type="index"></el-table-column>
         <el-table-column label="姓名" width="120">
           <template slot-scope="scope">
             <span>{{ scope.row.API_name }}</span>
@@ -44,10 +44,9 @@
             <span>{{ scope.row.API_symptom ||"暂无"}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="就诊时间" width="180">
+        <el-table-column label="就诊时间" width="100">
           <template slot-scope="scope">
-            <span>{{ scope.row.API_date }}</span>
-            <!-- <span>{{ new Date(scope.row.API_date).toLocaleTimeString('zh-CN') }}</span> -->
+            <span>{{ new Date(scope.row.API_date).toLocaleTimeString('zh-CN',{hour12:false}) }}</span>
           </template>
         </el-table-column>
         <el-table-column label="就诊状态" width="120">
@@ -55,11 +54,14 @@
             <span>{{scope.row.API_state }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="250">
+        <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
+            <el-button
+              v-show="scope.row.API_state=='申请中'"
+              size="mini"
+              @click="acceptApply ( scope.row)"
+            >接受</el-button>
             <el-button size="mini" @click="patientDetails(scope.$index, scope.row)">查看</el-button>
-            <el-button size="mini" @click="patientDetails(scope.$index, scope.row)">接受</el-button>
-            <el-button size="mini" @click="patientDetails(scope.$index, scope.row)">拒绝</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -82,6 +84,7 @@
 
 <script>
 import { getTodayPatients } from "../../api/patientdiag/patientdiag.js";
+
 export default {
   data() {
     return {
@@ -108,6 +111,12 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val;
+    },
+    acceptApply(patient) {
+      this.$socket.client.emit("seekmedicalreply", {
+        doctorID: localStorage.getItem("UserID"),
+        pid: patient.API_pid
+      });
     }
   },
   computed: {

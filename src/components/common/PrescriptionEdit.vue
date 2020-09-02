@@ -11,7 +11,7 @@
   <div>
     <div v-show="prescription.length>0">
       <el-table size="mini" :data="prescription" style="width: 100%">
-        <el-table-column label="名称">
+        <el-table-column fixed label="名称">
           <template slot-scope="scope">
             <el-input
               v-if="scope.row.isEditable"
@@ -43,24 +43,25 @@
         </el-table-column>
         <el-table-column label="单位" width="80">
           <template slot-scope="scope">
-            <el-input
+            <el-select
               v-if="scope.row.isEditable"
               v-model="scope.row.API_drugsNumberUnits"
-              style="width:100%;hight:100%"
-            ></el-input>
+              placeholder
+            >
+              <el-option value="包"></el-option>
+              <el-option value="片"></el-option>
+              <el-option value="粒"></el-option>
+            </el-select>
             <span v-else>{{ scope.row.API_drugsNumberUnits }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="用法">
+        <el-table-column label="单次用量">
           <template slot-scope="scope">
-            <el-select
+            <el-input
               v-if="scope.row.isEditable"
               v-model="scope.row.API_drugsUsage"
-              placeholder="请选择"
-            >
-              <el-option value="一次两片"></el-option>
-              <el-option value="一次三片"></el-option>
-            </el-select>
+              style="width:100%;hight:100%"
+            ></el-input>
             <span v-else>{{ scope.row.API_drugsUsage }}</span>
           </template>
         </el-table-column>
@@ -92,7 +93,7 @@
             <span v-if="!scope.row.isEditable">{{ scope.row.API_useTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150px">
+        <el-table-column fixed="right" label="操作" width="150px">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -110,14 +111,15 @@
     </div>
     <el-dialog title="添加药品" :visible.sync="diglogVisible" width="700px">
       <div class="search">
-        <el-input v-model="searchName" size="mini" style="width:50%;margin-right:10px"></el-input>
+        <el-input
+          placeholder="请输入药品名称或名称首字母"
+          v-model="searchName"
+          size="mini"
+          style="width:50%;margin-right:10px"
+        ></el-input>
         <el-button size="mini" @click="medicalSearch" type="primary">查询</el-button>
       </div>
-      <div
-        class="medicalCard"
-        v-for="item in medicalData.slice(currentIndexRange[0],currentIndexRange[1])"
-        :key="item.id"
-      >
+      <div class="medicalCard" v-for="item in medicalData" :key="item.id">
         <div class="pic">
           <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" alt />
         </div>
@@ -145,12 +147,8 @@
       </div>
       <div class="pageSwitch">
         <div class="btn">
-          <el-link
-            @click="page.current-=1"
-            v-show="currentIndexRange[0]>0"
-            style="margin-right:20px"
-          >上一页</el-link>
-          <el-link @click="page.current+=1" v-show="currentIndexRange[1]<medicalData.length">下一页</el-link>
+          <el-link @click="prePage" v-show="page.current>1" style="margin-right:20px">上一页</el-link>
+          <el-link @click="nextPage" v-show="page.current<page.maxPage">下一页</el-link>
         </div>
       </div>
     </el-dialog>
@@ -196,12 +194,6 @@ export default {
   computed: {
     tempPrescription() {
       return JSON.parse(JSON.stringify(this.prescription));
-    },
-    currentIndexRange() {
-      return [
-        (this.page.current - 1) * this.page.pageSize,
-        (this.page.current - 1) * this.page.pageSize + this.page.pageSize
-      ];
     }
   },
   watch: {
@@ -238,6 +230,11 @@ export default {
     },
     flag(newValue, oldValue) {
       this.$emit("flagChange", newValue);
+    },
+    diglogVisible() {
+      this.searchName = "";
+      this.data = [];
+      this.page.maxPage = 0;
     }
   },
   data() {
@@ -245,48 +242,10 @@ export default {
       searchName: "",
       flag: true,
       diglogVisible: false,
-      medicalData: [
-        {
-          name: "青霉素V钾颗粒",
-          type: "颗粒剂",
-          specification: "2g:0.125g",
-          manufacturer: "国药集团威奇达药业有限公司",
-          class: "化学药品",
-          standardCode: "86902954003796",
-          approvalNumber: "国药准字H20051939"
-        },
-        {
-          name: "青霉素V钾颗粒",
-          type: "颗粒剂",
-          specification: "2g:0.125g",
-          manufacturer: "国药集团威奇达药业有限公司",
-          class: "化学药品",
-          standardCode: "86902954003796",
-          approvalNumber: "国药准字H20051939"
-        },
-        {
-          name: "青霉素V钾颗粒",
-          type: "颗粒剂",
-          specification: "2g:0.125g",
-          manufacturer: "国药集团威奇达药业有限公司",
-          class: "化学药品",
-          standardCode: "86902954003796",
-          approvalNumber: "国药准字H20051939"
-        },
-        {
-          name: "青霉素V钾颗粒",
-          type: "颗粒剂",
-          specification: "2g:0.125g",
-          manufacturer: "国药集团威奇达药业有限公司",
-          class: "化学药品",
-          standardCode: "86902954003796",
-          approvalNumber: "国药准字H20051939"
-        }
-      ],
+      medicalData: [],
       page: {
         current: 1,
-        maxPage: 10,
-        pageSize: 3
+        maxPage: 0
       }
     };
   },
@@ -322,7 +281,11 @@ export default {
       this.diglogVisible = true;
     },
     medicalSearch() {
-      console.log(this.searchName);
+      this.page.current = 1;
+      getDurgsInfo(this.page.current, this.searchName).then(res => {
+        this.medicalData = res.data;
+        this.page.maxPage = res.maxNum;
+      });
     },
     medicalSelect(medical) {
       this.prescription.push({
@@ -335,20 +298,22 @@ export default {
         API_drugsSpecification: medical.specification,
         isEditable: true
       });
+
       this.diglogVisible = false;
     },
     nextPage() {
       this.page.current += 1;
       getDurgsInfo(this.page.current, this.searchName).then(res => {
-        this.medicalData = res.medicalData;
-        this.page.maxPage = res.maxPage;
+        console.log(res);
+        this.medicalData = res.data;
+        this.page.maxPage = res.maxNum;
       });
     },
     prePage() {
       this.page.current -= 1;
       getDurgsInfo(this.page.current, this.searchName).then(res => {
-        this.medicalData = res.medicalData;
-        this.page.maxPage = res.maxPage;
+        this.medicalData = res.data;
+        this.page.maxPage = res.maxNum;
       });
     }
   },
@@ -373,7 +338,7 @@ export default {
 
 .medicalCard {
   display: flex;
-  height: 100px;
+  min-height: 100px;
   background-color: rgb(201, 196, 196);
   overflow: hidden;
   margin-top: 10px;

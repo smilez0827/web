@@ -1,92 +1,60 @@
 
 
 const now = new Date();
-// store.watch(function (state) {
-//     return state.sessions
-// }, function (val) {
-//     console.log('CHANGE: ', val);
-//     localStorage.setItem('vue-chat-session', JSON.stringify(val));
-// }, {
-//     deep: true/*这个貌似是开启watch监测的判断,官方说明也比较模糊*/
-// })
-
 export default {
     namespaced: true,
     state: {
         sessions: [
             {
-                id: 1,
+                id: "101001",
                 user: {
                     name: '示例介绍',
                     img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
                 },
                 messages: [{
-                    content: 'Hello，这是一个基于Vue + Vuex + Webpack构建的简单chat示例，聊天记录保存在localStorge, 有什么问题可以通过Github Issue问我。',
-                    date: now,
-                    msgType: 'text'
+                    fromid: "1",
+                    toid: "101001",
+                    message: 'Hello，这是一个基于Vue + Vuex + Webpack构建的简单chat示例，聊天记录保存在localStorge, 有什么问题可以通过Github Issue问我。',
+                    msgtime: now,
+                    type: 'text'
                 }, {
-                    content: '项目地址(原作者): https://github.com/coffcer/vue-chat',
-                    date: now,
-                    msgType: 'text'
+                    fromid: "1",
+                    toid: "101001",
+                    message: '项目地址(原作者): https://github.com/coffcer/vue-chat',
+                    msgtime: now,
+                    type: 'text'
                 }, {
-                    content: '本项目地址(重构): https://github.com/is-liyiwei',
-                    date: now,
-                    msgType: 'text'
+                    fromid: "1",
+                    toid: "101001",
+                    message: '本项目地址(重构): https://github.com/is-liyiwei',
+                    msgtime: now,
+                    type: 'text'
                 },
+                // {
+                //     fromid: "1",
+                //     toid: "101001",
+                //     message: 'http://132.232.18.227:8081/download?url=upload/2f0f54f336734c0708225ed54cae54f9.mp4',
+                //     msgtime: now,
+                //     type: 'video'
+                // },
                 {
-                    content: 'http://132.232.18.227:8081/download?url=upload/2f0f54f336734c0708225ed54cae54f9.mp4',
-                    date: now,
-                    msgType: 'video'
-                },
-                {
-                    content: 'http://132.232.18.227:8081/download?url=upload/eef6b533f6cc298fa163a4f2fa204cfb.wav',
-                    date: now,
-                    msgType: 'audio'
+                    fromid: "1",
+                    toid: "101001",
+                    message: 'http://132.232.18.227:8081/download?url=upload/eef6b533f6cc298fa163a4f2fa204cfb.wav',
+                    msgtime: now,
+                    type: 'audio'
                 }]
             },
             {
-                id: 2,
+                id: "101002",
                 user: {
-                    name: 'webpack',
+                    name: '101002',
                     img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
                 },
-                messages: [{
-                    content: 'Hi，我是webpack哦',
-                    date: now,
-                    msgType: 'text'
-                },
-                {
-                    content: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                    date: now,
-                    msgType: 'img'
-                },
-                {
-                    content: 'http://132.232.18.227:8081/download?url=upload/2f0f54f336734c0708225ed54cae54f9.mp4',
-                    date: now,
-                    msgType: 'video'
-                },
-                {
-                    content: 'http://132.232.18.227:8081/download?url=upload/eef6b533f6cc298fa163a4f2fa204cfb.wav',
-                    date: now,
-                    msgType: 'audio'
-                }
-                ]
+                messages: []
             },
-            {
-                id: 3,
-                user: {
-                    name: 'test',
-                    img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-                },
-                messages: [
-                    {
-                        content: 'http://132.232.18.227:8081/download?url=upload/eef6b533f6cc298fa163a4f2fa204cfb.wav',
-                        date: now,
-                        msgType: 'audio'
-                    }
-                ]
-            }],
-        currentSessionId: 3,
+        ],
+        currentSessionId: '101001',
         filterKey: ''
     },
     getters: {
@@ -100,10 +68,26 @@ export default {
             state.sessions.forEach(item => {
                 if (item.id == state.currentSessionId) {
                     item.messages.push({
-                        content: msg.content,
-                        date: new Date(),
+                        fromid: msg.fromid,
+                        toid: msg.toid,
+                        message: msg.message,
+                        msgtime: msg.msgtime,
+                        type: msg.type,
                         self: true,
-                        msgType: msg.msgType
+                    })
+                }
+            });
+        },
+        receiveMessage(state, msg) {
+            state.sessions.forEach(item => {
+                //第一次收到消息的情况没做，因为当前只存在专家向患者发起消息
+                if (item.id == msg.fromid) {
+                    item.messages.push({
+                        fromid: msg.fromid,
+                        toid: msg.toid,
+                        message: msg.message,
+                        msgtime: msg.msgtime,
+                        type: msg.type
                     })
                 }
             });
@@ -119,17 +103,10 @@ export default {
             })
             state.currentSessionId = person.id
         },
-        INIT_DATA(state) {
-            let data = localStorage.getItem('vue-chat-session');
-            if (data) {
-                state.sessions = JSON.parse(data);
-            }
-        }
+
     },
     actions: {
-        initData(context) {
-            context.commit('INIT_DATA')
-        }
+
     }
 
 

@@ -14,58 +14,114 @@
         </template>
       </div>
     </div>
-    <div>医疗机构：</div>
-    <div class="org">
-      <el-row :gutter="5">
-        <el-col v-for="item in info" :key="item.id" :xs="8" :sm="6" :md="4" :lg="4">
-          <div @click="orgSelect(item)" class="orgCard">
-            <div class="pic">
-              <img :src="item.orgPic" alt />
+    <template v-if="state=='未完成'">
+      <div>医疗机构：</div>
+      <div class="org">
+        <el-row :gutter="5">
+          <el-col v-for="item in info" :key="item.id" :xs="8" :sm="6" :md="4" :lg="4">
+            <div @click="orgSelect(item)" class="orgCard">
+              <div class="pic">
+                <img :src="item.orgPic" alt />
+              </div>
+              <div
+                :class="(currentOrg.orgId&&currentOrg.orgId==item.orgId)?' check choosed':'check'"
+              >{{item.orgName}}</div>
             </div>
-            <div
-              :class="(currentOrg.orgId&&currentOrg.orgId==item.orgId)?' check choosed':'check'"
-            >{{item.orgName}}</div>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
-    <template v-if="currentOrg.orgId">
-      <div>医生：</div>
-      <div class="doc">
-        <el-checkbox-group v-model="choosedDoc">
-          <el-row :gutter="5">
-            <el-col v-for="doc in currentOrg.doctors" :key="doc.id" :xs="8" :sm="6" :md="4" :lg="4">
-              <div class="docCard">
-                <div class="pic">
-                  <img :src="doc.docPic" alt />
-                </div>
-                <div class="check">
-                  <el-checkbox :label="doc">{{doc.docName}}</el-checkbox>
-                </div>
-              </div>
-            </el-col>
-          </el-row>
-        </el-checkbox-group>
+          </el-col>
+        </el-row>
       </div>
-    </template>
-    <template v-if="currentOrg.orgId">
-      <div>护士：</div>
-      <div class="nur">
-        <el-checkbox-group v-model="choosedNur">
-          <el-row :gutter="5">
-            <el-col v-for="nur in currentOrg.nurses" :key="nur.id" :xs="8" :sm="6" :md="4" :lg="4">
-              <div class="nurCard">
-                <div class="pic">
-                  <img :src="nur.nurPic" alt />
+      <template v-if="currentOrg.orgId">
+        <div>医生：</div>
+        <div class="doc">
+          <el-checkbox-group v-model="choosedDoc">
+            <el-row :gutter="5">
+              <el-col
+                v-for="doc in currentOrg.doctors.slice(0,this.docShowNum)"
+                :key="doc.id"
+                :xs="8"
+                :sm="6"
+                :md="4"
+                :lg="4"
+              >
+                <div class="docCard">
+                  <div class="pic">
+                    <img :src="doc.docPic" alt />
+                  </div>
+                  <div class="check">
+                    <el-checkbox :label="doc">{{doc.docName}}</el-checkbox>
+                  </div>
                 </div>
-                <div class="check">
-                  <el-checkbox :label="nur">{{nur.nurName}}</el-checkbox>
+              </el-col>
+              <el-col
+                v-if="this.docShowNum<currentOrg.doctors.length"
+                :xs="8"
+                :sm="6"
+                :md="4"
+                :lg="4"
+              >
+                <div @click="moreDoc" class="docCard">
+                  <div class="more">
+                    <i class="iconfont icon-more icon"></i>
+                  </div>
                 </div>
-              </div>
-            </el-col>
-          </el-row>
-        </el-checkbox-group>
-      </div>
+              </el-col>
+
+              <!-- <el-col
+                :xs="8"
+                :sm="6"
+                :md="4"
+                :lg="4"
+                v-if="this.nur.count<nurShowTable.result.length"
+                class="cardItem"
+              >
+                <div class="more">
+                  <i @click="nur.count += 10;" class="iconfont icon-more icon"></i>
+                </div>
+              </el-col>-->
+            </el-row>
+          </el-checkbox-group>
+        </div>
+      </template>
+      <template v-if="currentOrg.orgId">
+        <div>护士：</div>
+        <div class="nur">
+          <el-checkbox-group v-model="choosedNur">
+            <el-row :gutter="5">
+              <el-col
+                v-for="nur in currentOrg.nurses"
+                :key="nur.id"
+                :xs="8"
+                :sm="6"
+                :md="4"
+                :lg="4"
+              >
+                <div class="nurCard">
+                  <div class="pic">
+                    <img :src="nur.nurPic" alt />
+                  </div>
+                  <div class="check">
+                    <el-checkbox :label="nur">{{nur.nurName}}</el-checkbox>
+                  </div>
+                </div>
+              </el-col>
+
+              <el-col
+                v-if="this.nurShowNum<currentOrg.nurses.length"
+                :xs="8"
+                :sm="6"
+                :md="4"
+                :lg="4"
+              >
+                <div @click="moreNur" class="docCard">
+                  <div class="more">
+                    <i class="iconfont icon-more icon"></i>
+                  </div>
+                </div>
+              </el-col>
+            </el-row>
+          </el-checkbox-group>
+        </div>
+      </template>
     </template>
   </div>
 </template>
@@ -217,6 +273,12 @@ export default {
           }
         ];
       }
+    },
+    state: {
+      type: String,
+      default: () => {
+        return "";
+      }
     }
   },
   computed: {
@@ -293,13 +355,27 @@ export default {
   },
   data() {
     return {
+      docShowNum: 5,
+      nurShowNum: 5,
       choosed: [],
       currentOrg: {},
       choosedDoc: [],
       choosedNur: []
     };
   },
+  watch: {
+    currentOrg() {
+      this.docShowNum = 5;
+      this.nurShowNum = 5;
+    }
+  },
   methods: {
+    moreDoc() {
+      this.docShowNum += 5;
+    },
+    moreNur() {
+      this.nurShowNum += 5;
+    },
     docChanged(docs) {
       this.choosed.forEach(item => {
         item.doctors = [];
@@ -370,6 +446,15 @@ export default {
       .check {
         margin: auto;
       }
+      .more {
+        text-align: center;
+        .icon {
+          font-size: 80px;
+          color: #c0c4cc;
+          line-height: 170px;
+          cursor: pointer;
+        }
+      }
     }
   }
   .nur {
@@ -387,6 +472,15 @@ export default {
       }
       .check {
         margin: auto;
+      }
+      .more {
+        text-align: center;
+        .icon {
+          font-size: 80px;
+          color: #c0c4cc;
+          line-height: 170px;
+          cursor: pointer;
+        }
       }
     }
   }

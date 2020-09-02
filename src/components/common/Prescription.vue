@@ -1,17 +1,22 @@
 <template>
   <div>
-    <el-table size="mini" :data="prescription" style="width: 100%">
+    <el-table v-if="prescription.length>0" size="mini" :data="prescription" style="width: 100%">
       <el-table-column label="名称">
         <template slot-scope="scope">
           <span>{{ scope.row.API_drugsName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数量">
+      <el-table-column label="规格">
+        <template slot-scope="scope">
+          <span>{{ scope.row.API_drugsSpecification }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="数量" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.API_drugsNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="单位">
+      <el-table-column label="单位" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.API_drugsNumberUnits }}</span>
         </template>
@@ -40,12 +45,15 @@
 export default {
   name: "CheckBox",
   props: {
-    prescription: Array
+    prescription: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    }
   },
 
-  methods: {
-    
-  },
+  methods: {},
   mounted() {}
 };
 </script>
