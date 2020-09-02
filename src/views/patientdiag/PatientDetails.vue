@@ -485,12 +485,7 @@ export default {
           this.patientInfo.API_illState,
           this.API_diagInfo
         );
-        // this.$socket.client.emit("later_treatment", {
-        //   fromid: localStorage.getItem("UserID"),
-        //   toid: this.patientInfo.API_basicInfo.API_UserID,
-        //   pid: localStorage.getItem("pid"),
-        //   after: this.API_diagInfo.API_after
-        // });
+     
       } else {
         this.$router.push("/patientdiag/todaydiagnosis");
       }
