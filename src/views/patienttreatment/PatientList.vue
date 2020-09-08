@@ -38,17 +38,17 @@
         </el-table-column>
 
         <el-table-column label="诊断专家">
-          ``
           <template slot-scope="scope">
             <span>{{ scope.row.API_expert}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+
+        <el-table-column label="收治时间">
           <template slot-scope="scope">
-            <!-- <span>{{"未诊断"}}</span> -->
-            <span>{{ scope.row.API_state }}</span>
+            <span>{{ scope.row.API_expert}}</span>
           </template>
         </el-table-column>
+
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini" @click="patientDetails(scope.$index, scope.row)">查看</el-button>

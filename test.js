@@ -70,9 +70,6 @@ function solve(n) {
 let a = {
     z: "23"
 }
-let b = {
-    x: "22"
-}
-b.prototype = a;
 
-console.log(Object.keys(b))
+let str = window.atob(a)
+console.log(str)

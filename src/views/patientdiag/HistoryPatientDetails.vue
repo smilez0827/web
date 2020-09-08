@@ -239,7 +239,8 @@
             <h3 class="title">后续治疗</h3>
           </template>
           <div class="after">
-            <div>
+            <after :preInfo=" API_diagInfo.API_after" :state="this.API_state"></after>
+            <!-- <div>
               <span class="label">推荐医疗机构：{{API_diagInfo.API_after.API_org.API_orgName||"未选择"}}</span>
             </div>
             <div>
@@ -247,7 +248,7 @@
             </div>
             <div>
               <span class="label">推荐主管护士：{{API_diagInfo.API_after.API_nur.API_nurName||"未选择"}}</span>
-            </div>
+            </div>-->
           </div>
         </el-collapse-item>
         <el-button @click="save" size="medium" type="primary" class="btn">返回</el-button>
@@ -277,7 +278,9 @@ import message from "../../store/message/message.js";
 import CheckBox from "../../components/common/CheckBox.vue";
 import Prescription from "../../components/common/Prescription.vue";
 import Radio from "../../components/common/Radio.vue";
+import mixin from "./components/index.js";
 export default {
+  mixins: [mixin],
   components: {
     CheckBox: CheckBox,
     PrescriptionTable: Prescription,
@@ -401,6 +404,7 @@ export default {
           nurses: []
         }
       },
+      API_state: "已完成",
       //患者相关信息
       patientInfo: {
         // 患者基本信息
@@ -472,20 +476,7 @@ export default {
           API_prescriptionFlag: true
         },
         // 推荐医疗机构/医师/护士
-        API_after: {
-          API_org: {
-            API_orgId: "",
-            API_orgName: ""
-          },
-          API_doc: {
-            API_docId: "",
-            API_docName: ""
-          },
-          API_nur: {
-            API_nurId: "",
-            API_nurName: ""
-          }
-        }
+        API_after: []
       }
     };
   },
@@ -655,58 +646,14 @@ export default {
       }
     }
   },
-  watch: {
-    "API_diagInfo.API_after.API_orgId": function(value) {
-      if (value) {
-        // 发起http请求获得该机构医生及护士
-        console.log(value);
-      } else {
-        //将医生和护士选择列表置空
-        this.pages.afterInfo.docList = [];
-        this.pages.afterInfo.nurList = [];
-        this.API_diagInfo.API_after.API_docId = "";
-        this.API_diagInfo.API_after.API_nurId = "";
-      }
-    },
-    "pages.choosedOrg": function(value) {
-      this.API_diagInfo.API_after.API_doc = {
-        API_docName: "",
-        API_docId: ""
-      };
-      this.API_diagInfo.API_after.API_nur = {
-        API_nurName: "",
-        API_nurId: ""
-      };
-      console.log(this.API_diagInfo.API_after);
-      this.API_diagInfo.API_after.API_org.API_orgName = value.orgName;
-      this.API_diagInfo.API_after.API_org.API_orgId = value.orgId;
-    }
-  },
+
   mounted() {
     let pid = localStorage.getItem("pid");
     getPatientDetails(pid).then(res => {
       this.patientInfo = res.patientInfo;
       this.API_diagInfo = res.API_diagInfo;
       this.API_state = res.API_state;
-    });
-    getStateOptions().then(res => {
-      this.pages.stateOptions = res;
-    });
-    getResultOptions().then(res => {
-      this.pages.diagResultCheckReconmendList = res;
-    });
-    getTreatmentOptions().then(res => {
-      this.pages.treatmentCheckReconmendList = res;
-    });
-    getDiagHistory().then(res => {
-      this.pages.diagHistory = res;
-      console.log(res);
-    });
-    getTreatHistory().then(res => {
-      this.pages.treatHistory = res;
-    });
-    getMedicalInfo().then(res => {
-      this.pages.medicalInfo = res;
+      console.log(this.API_diagInfo);
     });
   }
 };

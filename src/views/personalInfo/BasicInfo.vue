@@ -6,7 +6,6 @@
           <template slot="title">
             <h3 class="title">基本信息</h3>
           </template>
-
           <div class="card">
             <el-row>
               <el-col :span="4" :offset="1">
@@ -49,7 +48,12 @@
                   <el-col :span="10">
                     <el-form-item label="出生日期：" prop="date">
                       <!-- <el-input v-model="formData.basicInfo.Birthday" placeholder="请输入出生日期" style="width:70%"></el-input> -->
-                      <el-date-picker value-format="yyyy-MM-dd" v-model="formData.basicInfo.Birthday" type="date" placeholder="选择日期"></el-date-picker>
+                      <el-date-picker
+                        value-format="yyyy-MM-dd"
+                        v-model="formData.basicInfo.Birthday"
+                        type="date"
+                        placeholder="选择日期"
+                      ></el-date-picker>
                     </el-form-item>
                   </el-col>
                 </el-row>

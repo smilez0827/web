@@ -1,13 +1,4 @@
 <template>
-  <!-- 
-说明：
-传入的数据：
-    prescription：原有的处方数组，可以为空，表示新添加的处方
-    drugsInfo：传入医疗药品的信息
-向父组件传值：
-    input事件，每次确定一个药品的时候触发，可以改变原有的处方列表
-    flag事件，传递出false，当所有药品编辑完成后传递出true,标志着处方是否完成编辑
-  -->
   <div>
     <div v-show="prescription.length>0">
       <el-table size="mini" :data="prescription" style="width: 100%">
@@ -109,7 +100,13 @@
         <el-link @click="addMedical" class="btn" type="success">{{"+添加药品"}}</el-link>
       </div>
     </div>
-    <el-dialog title="添加药品" :visible.sync="diglogVisible" width="700px">
+    <el-dialog
+      :modal="false"
+      class="addmeidicaldialog"
+      title="添加药品"
+      :visible.sync="diglogVisible"
+      width="700px"
+    >
       <div class="search">
         <el-input
           placeholder="请输入药品名称或名称首字母"
@@ -139,7 +136,7 @@
           </div>
           <div>
             <el-row>
-              <el-col :span="12">药品本位码：{{item.standardCode}}</el-col>
+              <el-col :span="11">药品本位码：{{item.standardCode}}</el-col>
               <el-button @click="medicalSelect(item)" class="select" type="success" size="mini">选择</el-button>
             </el-row>
           </div>
@@ -150,6 +147,85 @@
           <el-link @click="prePage" v-show="page.current>1" style="margin-right:20px">上一页</el-link>
           <el-link @click="nextPage" v-show="page.current<page.maxPage">下一页</el-link>
         </div>
+      </div>
+    </el-dialog>
+
+    <el-dialog
+      :modal="false"
+      class="addmeidicaldialog"
+      title="添加药品"
+      :visible.sync="medicalDialog"
+      width="700px"
+    >
+      <div class="medicalCard">
+        <div class="pic">
+          <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" alt />
+        </div>
+        <div class="info">
+          <div>
+            <el-row>
+              <el-col :span="8">名称：{{tempDrug.name}}</el-col>
+              <el-col :span="5">剂型：{{tempDrug.type}}</el-col>
+              <el-col :span="11">规格:{{tempDrug.specification}}</el-col>
+            </el-row>
+          </div>
+          <div>
+            <el-row>
+              <el-col :span="8">厂商：{{tempDrug.manufacturer}}</el-col>
+              <el-col :span="11">批准文号：{{tempDrug.approvalNumber}}</el-col>
+            </el-row>
+          </div>
+          <div>
+            <el-row>
+              <el-col :span="12">药品本位码：{{tempDrug.standardCode}}</el-col>
+            </el-row>
+          </div>
+        </div>
+      </div>
+      <div class="drugPrescription">
+        <el-form size="mini" :inline="true" label-width="80px">
+          <el-form-item label="药品数量">
+            <el-input v-model="durgsDetails.number" style="width:200px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="药品单位">
+            <el-select style="width:200px" v-model="durgsDetails.unit">
+              <el-option value="粒"></el-option>
+              <el-option value="g"></el-option>
+              <el-option value="mg"></el-option>
+              <el-option value="包"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="单次用量">
+            <el-input v-model="durgsDetails.useage" style="width:200px"></el-input>
+          </el-form-item>
+          <el-form-item label="用量单位">
+            <el-select style="width:200px" v-model="durgsDetails.useageUnit">
+              <el-option value="粒"></el-option>
+              <el-option value="g"></el-option>
+              <el-option value="mg"></el-option>
+              <el-option value="包"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="用药途径">
+            <el-select v-model="durgsDetails.useWay" style="width:200px">
+              <el-option value="口服"></el-option>
+              <el-option value="外用"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="用药频次">
+            <el-select v-model="durgsDetails.frequency" style="width:200px">
+              <el-option value="一天一次"></el-option>
+              <el-option value="一天两次"></el-option>
+              <el-option value="一天三次"></el-option>
+              <el-option value="两天一次"></el-option>
+              <el-option value="一周一次"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="medicalDialog = false">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -242,10 +318,20 @@ export default {
       searchName: "",
       flag: true,
       diglogVisible: false,
+      medicalDialog: true,
       medicalData: [],
       page: {
         current: 1,
         maxPage: 0
+      },
+      tempDrug: {},
+      durgsDetails: {
+        number: "",
+        unit: "",
+        useage: "",
+        useageUnit: "",
+        useWay: "",
+        frequency: ""
       }
     };
   },
@@ -288,18 +374,19 @@ export default {
       });
     },
     medicalSelect(medical) {
-      this.prescription.push({
-        API_drugsName: medical.name,
-        API_drugsNumberUnits: "",
-        API_drugsNumber: "",
-        API_drugsUsage: "",
-        API_useFrequency: "",
-        API_useTime: "",
-        API_drugsSpecification: medical.specification,
-        isEditable: true
-      });
-
+      // this.prescription.push({
+      //   API_drugsName: medical.name,
+      //   API_drugsNumberUnits: "",
+      //   API_drugsNumber: "",
+      //   API_drugsUsage: "",
+      //   API_useFrequency: "",
+      //   API_useTime: "",
+      //   API_drugsSpecification: medical.specification,
+      //   isEditable: true
+      // });
       this.diglogVisible = false;
+      this.tempDrug = medical;
+      this.medicalDialog = true;
     },
     nextPage() {
       this.page.current += 1;
@@ -339,7 +426,7 @@ export default {
 .medicalCard {
   display: flex;
   min-height: 100px;
-  background-color: rgb(201, 196, 196);
+  background-color: rgb(236, 231, 231);
   overflow: hidden;
   margin-top: 10px;
   padding: 5px;
@@ -375,4 +462,12 @@ export default {
     float: right;
   }
 }
+.drugPrescription {
+  margin-top: 20px;
+}
+</style>
+<style lang="scss">
+// .addmeidicaldialog {
+//   z-index: 10000;
+// }
 </style>

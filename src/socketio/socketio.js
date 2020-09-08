@@ -6,6 +6,7 @@ import { getTodayPatients } from '../api/patientdiag/patientdiag.js';
 const socket = io('http://132.232.18.227:3000');
 socket.addEventListener("seekMedical", (data) => {
     getTodayPatients()
+    console.log(data)
     let obj = {}
     obj.type = "huanzhe"
     obj.time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
@@ -71,6 +72,7 @@ socket.addEventListener("seekmedicalreply", (data) => {
 })
 
 socket.addEventListener("instantMsg", (data) => {
+    console.log(data)
     store.commit("instantInfo/receiveMessage", data)
     let obj = {}
     obj.type = "instant"

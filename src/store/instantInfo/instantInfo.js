@@ -11,39 +11,15 @@ export default {
                     name: '示例介绍',
                     img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
                 },
-                messages: [{
-                    fromid: "1",
-                    toid: "101001",
-                    message: 'Hello，这是一个基于Vue + Vuex + Webpack构建的简单chat示例，聊天记录保存在localStorge, 有什么问题可以通过Github Issue问我。',
-                    msgtime: now,
-                    type: 'text'
-                }, {
-                    fromid: "1",
-                    toid: "101001",
-                    message: '项目地址(原作者): https://github.com/coffcer/vue-chat',
-                    msgtime: now,
-                    type: 'text'
-                }, {
-                    fromid: "1",
-                    toid: "101001",
-                    message: '本项目地址(重构): https://github.com/is-liyiwei',
-                    msgtime: now,
-                    type: 'text'
-                },
-                // {
-                //     fromid: "1",
-                //     toid: "101001",
-                //     message: 'http://132.232.18.227:8081/download?url=upload/2f0f54f336734c0708225ed54cae54f9.mp4',
-                //     msgtime: now,
-                //     type: 'video'
-                // },
-                {
-                    fromid: "1",
-                    toid: "101001",
-                    message: 'http://132.232.18.227:8081/download?url=upload/eef6b533f6cc298fa163a4f2fa204cfb.wav',
-                    msgtime: now,
-                    type: 'audio'
-                }]
+                messages: [
+                    // {
+                    //     fromid: "1",
+                    //     toid: "101001",
+                    //     message: 'http://132.232.18.227:8081/download?url=upload/2f0f54f336734c0708225ed54cae54f9.mp4',
+                    //     msgtime: now,
+                    //     type: 'video'
+                    // },
+                ]
             },
             {
                 id: "101002",

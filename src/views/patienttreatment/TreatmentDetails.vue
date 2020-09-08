@@ -11,35 +11,22 @@
           @select="inputBoxSelect($event,'treatment')"
           @delete="inputBoxDelete($event,'treatment')"
         ></special-input>
+
+        <special-input
+          :data="pages.treatmentCheckReconmendList"
+          :flag="pages.inputBoxVisible.state"
+          :preValue="newTreatmentLog.API_patientState"
+          @blur="inputBoxBlur('state')"
+          @select="inputBoxSelect($event,'state')"
+          @delete="inputBoxDelete($event,'state')"
+        ></special-input>
       </div>
       <el-collapse v-model="pages.collapse_activeNames">
         <el-collapse-item name="1">
           <template slot="title">
             <h3 class="title">基本信息</h3>
           </template>
-          <div class="basicInfo clearfix">
-            <div class="pic">
-              <img :src="patientInfo.API_basicInfo.API_pic" alt />
-            </div>
-            <div class="info">
-              <div>
-                <div>姓名：{{patientInfo.API_basicInfo.API_name||"无"}}</div>
-                <div>性别：{{patientInfo.API_basicInfo.API_gender||"无"}}</div>
-                <div>出生日期：{{new Date(patientInfo.API_basicInfo.API_birthday).toLocaleDateString()||"无"}}</div>
-              </div>
-              <div>
-                <div>家庭住址：{{patientInfo.API_basicInfo.API_address||"无"}}</div>
-              </div>
-              <div>
-                <div>联系方式：{{patientInfo.API_basicInfo.API_tel||"无"}}</div>
-                <div>就诊时间：{{patientInfo.API_basicInfo.API_date||"无"}}</div>
-                <div>
-                  <!-- <el-link type="primary" style="margin-right:20px">诊断记录</el-link>
-                  <el-link type="primary" style="margin-right:20px">查房记录</el-link>-->
-                </div>
-              </div>
-            </div>
-          </div>
+          <PersonalInfo :prsonalInfo="patientInfo.API_basicInfo"></PersonalInfo>
         </el-collapse-item>
         <el-collapse-item name="2">
           <template slot="title">
@@ -73,7 +60,8 @@
                   <p>{{ new Date(item.API_date).toLocaleDateString()}}</p>
                 </div>
                 <div class="treatmentLog">
-                  <p>患者治疗：{{item.API_description.join(',')||"暂无"}}</p>
+                  <p>患者状况：{{item.API_state||"暂无"}}</p>
+                  <p>治疗意见：{{item.API_description.join(',')||"暂无"}}</p>
                   <div v-if="item.API_prescription.length>0">
                     <el-link @click="lookPrescription(item.API_prescription)" type="primary">查看处方</el-link>
                   </div>
@@ -100,18 +88,15 @@
     <!-- 查看处方对话框 -->
     <el-dialog title="处方" :visible.sync="pages.prescriptionDialogVisible" width="700px">
       <PrescriptionTable :prescription="pages.tempPrescription"></PrescriptionTable>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="pages.prescriptionDialogVisible = false">确 定</el-button>
-      </span>
     </el-dialog>
     <!-- 新增治疗记录对话框 -->
     <el-dialog title="新增治疗记录" :visible.sync="pages.addTreatmentLogDialogVisible" width="1000px">
-      <div class="box" @click="inputBoxShow()">
-        <p>{{newTreatmentLog.API_treatment.join('，')||"暂无"}}</p>
-      </div>
-      <div>
-        <prescription-edit @flagChange="flagChange" v-model="newTreatmentLog.API_prescription"></prescription-edit>
-      </div>
+      <NewTreatmentLog
+        @flagChange="flagChange($event)"
+        :newLog="newTreatmentLog"
+        @inputBox="inputBoxShow($event)"
+        @prescription="prescription($event)"
+      ></NewTreatmentLog>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="postNewLog">确 定</el-button>
       </span>
@@ -125,15 +110,15 @@ import {
   newTreatmentLog
 } from "../../api/patienttreatment/patienttreatment.js";
 import Prescription from "../../components/common/Prescription.vue";
-import CheckBox from "../../components/common/CheckBox.vue";
 import SpecialInput from "../../components/common/SpecialInput.vue";
-import PrescriptionEdit from "../../components/common/PrescriptionEdit.vue";
+import NewTreatmentLog from "./components/NewTreatmentLog.vue";
+import PersonalInfo from "./components/PersonalInfo.vue";
 export default {
   components: {
     PrescriptionTable: Prescription,
-    CheckBox: CheckBox,
     SpecialInput: SpecialInput,
-    PrescriptionEdit: PrescriptionEdit
+    PersonalInfo: PersonalInfo,
+    NewTreatmentLog: NewTreatmentLog
   },
   data() {
     return {
@@ -157,7 +142,8 @@ export default {
         checkList: [],
         tempPrescription: [],
         inputBoxVisible: {
-          treatment: false
+          treatment: false,
+          state: false
         }
       },
       patientInfo: {
@@ -165,6 +151,7 @@ export default {
       },
       API_treatmentLog: [],
       newTreatmentLog: {
+        API_patientState: ["头疼", "眼花缭乱"],
         API_treatment: [],
         API_prescription: [],
         API_prescriptionFlag: true
@@ -183,6 +170,11 @@ export default {
           result.push(item);
         }
       });
+      result.sort((a, b) => {
+        let time1 = new Date(a.API_date).getTime();
+        let time2 = new Date(b.API_date).getTime();
+        return time2 - time1;
+      });
       return result;
     }
   },
@@ -196,17 +188,49 @@ export default {
     handleCurrentChange(val) {
       this.pages.currentPage = val;
     },
-    inputBoxShow() {
-      this.pages.inputBoxVisible.treatment = true;
+    inputBoxShow(type) {
+      switch (type) {
+        case "state":
+          this.inputBoxBlur("treatment");
+          this.pages.inputBoxVisible.state = true;
+          break;
+        case "treatment":
+          this.inputBoxBlur("state");
+          this.pages.inputBoxVisible.treatment = true;
+          break;
+      }
     },
-    inputBoxBlur() {
-      this.pages.inputBoxVisible.treatment = false;
+    inputBoxBlur(type) {
+      switch (type) {
+        case "state":
+          this.pages.inputBoxVisible.state = false;
+          break;
+        case "treatment":
+          this.pages.inputBoxVisible.treatment = false;
+          break;
+      }
     },
-    inputBoxDelete(index) {
-      this.newTreatmentLog.API_treatment.splice(index, 1);
+    inputBoxDelete(index, type) {
+      switch (type) {
+        case "state":
+          this.newTreatmentLog.API_patientState.splice(index, 1);
+
+          break;
+        case "treatment":
+          this.newTreatmentLog.API_treatment.splice(index, 1);
+
+          break;
+      }
     },
-    inputBoxSelect(data) {
-      this.newTreatmentLog.API_treatment.push(data);
+    inputBoxSelect(data, type) {
+      switch (type) {
+        case "state":
+          this.newTreatmentLog.API_patientState.push(data);
+          break;
+        case "treatment":
+          this.newTreatmentLog.API_treatment.push(data);
+          break;
+      }
     },
     postNewLog() {
       if (
@@ -234,6 +258,9 @@ export default {
         this.$message.error("请完善治疗记录");
       }
     },
+    prescription(data) {
+      console.log(data);
+    },
     lookPrescription(data) {
       this.pages.prescriptionDialogVisible = true;
       this.pages.tempPrescription = data;
@@ -242,9 +269,9 @@ export default {
   mounted() {
     let pid = localStorage.getItem("pid");
     getPatientsDetails(pid).then(res => {
+      console.log(res)
       this.patientInfo.API_basicInfo = res.API_basicInfo;
       this.API_treatmentLog = res.API_treatmentLog;
-      console.log(this.patientInfo);
     });
   }
 };
@@ -258,37 +285,6 @@ export default {
   .title {
     font-size: 20px;
     color: #1c7e7c;
-  }
-  .basicInfo {
-    padding-left: 20px;
-    padding-top: 20px;
-    .pic {
-      width: 170px;
-      height: 150px;
-      border-right: 1px solid #d9d9d9;
-      padding-right: 20px;
-      flex-shrink: 0;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-      margin: auto;
-      float: left;
-    }
-    .info {
-      float: left;
-      margin-left: 20px;
-      width: 70%;
-      height: 130px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      div {
-        display: flex;
-        justify-content: space-between;
-        font-size: 18px;
-      }
-    }
   }
   .btn {
     float: right;
@@ -329,7 +325,6 @@ export default {
       color: #1c7e7c;
     }
     .addbtn {
-      // float: right;
       margin-left: 20px;
       width: 90px;
     }
@@ -340,6 +335,9 @@ export default {
       margin: auto;
       display: flex;
       margin-top: 20px;
+      background-color: #eff3f4;
+      border-radius: 5px;
+      padding: 15px;
       .date {
         font-size: 18px;
         color: #1c7e7c;
@@ -361,25 +359,16 @@ export default {
   margin-top: 20px;
   font-size: 18px;
 }
-.box {
-  width: 100%;
-  min-height: 80px;
-  margin-top: 5px;
-  border: 1px solid #e4e7ed;
-  p {
-    margin-top: 5px;
-    font-size: 18px;
-    text-indent: 20px;
-  }
-}
+
 .inputBox {
   position: fixed;
+  left: 240px;
   bottom: 0px;
-  left: calc(50% - 500px);
-  width: 1000px;
+  width: calc(95% - 240px);
   z-index: 3000;
   transition: 0.5s;
 }
+
 .tips {
   margin-top: 20px;
   font-size: 18px;

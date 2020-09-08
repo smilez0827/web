@@ -1,6 +1,20 @@
 <template>
   <div class="after">
-    <div class="result">
+    <div v-if="state=='已完成'">
+      <p>已选择：{{preInfo.length>0?'':'无'}}</p>
+      <div style="margin-left:20px;margin-bottom:10px" v-for="item in preInfo" :key="item.id">
+        <span class="org" style="margin-right:20px">{{item.orgName}}</span>
+        <template v-if="item.doctors.length>0">
+          <span>医生：</span>
+          <span style="margin-right:10px" v-for="doc in item.doctors" :key="doc.id">{{doc.docName}}</span>
+        </template>
+        <template v-if="item.nurses.length>0">
+          <span style="margin-left:30px">护士：</span>
+          <span style="margin-right:10px" v-for="doc in item.nurses" :key="doc.id">{{doc.nurName}}</span>
+        </template>
+      </div>
+    </div>
+    <div v-else class="result">
       <p>已选择：{{result.length>0?'':'无'}}</p>
       <div style="margin-left:20px;margin-bottom:10px" v-for="item in result" :key="item.id">
         <span class="org" style="margin-right:20px">{{item.orgName}}</span>
@@ -65,19 +79,6 @@
                   </div>
                 </div>
               </el-col>
-
-              <!-- <el-col
-                :xs="8"
-                :sm="6"
-                :md="4"
-                :lg="4"
-                v-if="this.nur.count<nurShowTable.result.length"
-                class="cardItem"
-              >
-                <div class="more">
-                  <i @click="nur.count += 10;" class="iconfont icon-more icon"></i>
-                </div>
-              </el-col>-->
             </el-row>
           </el-checkbox-group>
         </div>
@@ -278,6 +279,12 @@ export default {
       type: String,
       default: () => {
         return "";
+      }
+    },
+    preInfo: {
+      type: Array,
+      default: () => {
+        return [];
       }
     }
   },

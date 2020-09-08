@@ -30,8 +30,8 @@
           <i class="iconfont icon-shipin"></i>
         </el-upload>
       </span>
-      <span class="file">
-        <i @mousedown="startRecorder" @mouseup="stopRecorder" class="iconfont icon-huatong"></i>
+      <span @mousedown="startRecorder" @mouseup="stopRecorder" class="file">
+        <i :class=" this.audio.pressFlag? 'iconfont icon-huatong pressed':'iconfont icon-huatong'"></i>
       </span>
     </div>
     <textarea placeholder="按 Ctrl + Enter 发送" v-model="content" v-on:keyup="addMessage"></textarea>
@@ -48,7 +48,8 @@ export default {
     return {
       audio: {
         recorder: "",
-        audioSrc: ""
+        audioSrc: "",
+        pressFlag: false
       },
       content: "",
       uploadToken: {
@@ -73,6 +74,7 @@ export default {
     startRecorder() {
       this.audio.recorder = new Recorder();
       this.audio.recorder.start();
+      this.audio.pressFlag = true;
     },
     stopRecorder() {
       this.audio.recorder.stop();
@@ -83,6 +85,7 @@ export default {
       this.uploadFile();
       let reader = new FileReader();
       reader.readAsDataURL(audioBolb);
+      this.audio.pressFlag = false;
     },
     beforeImgUpload(file) {
       const isJPG =
@@ -175,5 +178,8 @@ export default {
     border: none;
     outline: none;
   }
+}
+.pressed {
+  color: red;
 }
 </style>

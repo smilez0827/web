@@ -37,6 +37,7 @@ export function getHistoryPatients(pid) {
 export function getPatientDetails(pid) {
     return Get("http://132.232.18.227:3000/patientdiag/patient/" + pid).then((res) => {
         if (res.status == 200) {
+            console.log(res)
             let obj = {};
             obj.patientInfo = {};
             obj.API_diagInfo = {};
@@ -51,8 +52,6 @@ export function getPatientDetails(pid) {
             new Promise((resolve) => {
                 resolve(res)
                 router.push("/patientdiag/todaydiagnosis")
-
-
             })
         }
 

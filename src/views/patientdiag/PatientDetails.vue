@@ -103,6 +103,7 @@
             <h3 class="title">后续治疗</h3>
           </template>
           <after
+            :preInfo=" API_diagInfo.API_after"
             :medicalInfo="pages.medicalInfo"
             :state="this.API_state"
             @after="afterInfo($event)"
@@ -424,21 +425,10 @@ export default {
         API_treatment: {
           API_description: [],
           API_prescriptionFlag: true,
-          API_prescription: [
-            // {
-            //   API_drugsName: "含曲林片",
-            //   API_drugsNumberUnits: "盒",
-            //   API_drugsNumber: "2",
-            //   API_drugsUsage: "一次两粒",
-            //   API_useFrequency: "一天一次",
-            //   API_useTime: "饭后",
-            //   API_isEditable: false,
-            //   API_days: "7"
-            // }
-          ] //处方
+          API_prescription: [] //处方
         },
         // 推荐医疗机构/医师/护士
-        API_after: {}
+        API_after: []
       }
     };
   },
@@ -485,7 +475,6 @@ export default {
           this.patientInfo.API_illState,
           this.API_diagInfo
         );
-     
       } else {
         this.$router.push("/patientdiag/todaydiagnosis");
       }
@@ -615,6 +604,7 @@ export default {
     getPatientDetails(pid).then(res => {
       this.patientInfo = res.patientInfo;
       this.API_diagInfo = res.API_diagInfo;
+      console.log(this.API_state);
       this.API_state = res.API_state;
     });
     getStateOptions().then(res => {

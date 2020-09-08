@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       loginInfo: {
-        UserID: "101001",
+        UserID: "102001",
         password: "123"
       }
     };
@@ -63,7 +63,7 @@ export default {
     }
   },
   mounted() {
-    localStorage.clear();
+    // localStorage.clear();
   }
 };
 </script>

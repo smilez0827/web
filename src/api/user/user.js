@@ -13,6 +13,7 @@ export function login(data) {
             localStorage.setItem("name", JSON.stringify(res.data.name));
             store.commit('userInfo', [data.UserID, res.data.name, res.data.role, res.data.function, res.data.portrait])
             router.push('/index')
+            console.log(res)
             socket.emit("login", data.UserID)
         } else {
             Message({
