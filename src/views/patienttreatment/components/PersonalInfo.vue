@@ -23,8 +23,7 @@
       </el-row>
       <el-row>
         <el-col :span="6">联系方式：{{prsonalInfo.API_tel||"无"}}</el-col>
-        <el-col :span="12">
-        </el-col>
+        <el-col :span="12"></el-col>
         <el-col :span="6">
           <!-- <el-link type="success" @click="startCommunication">发起会话</el-link> -->
         </el-col>
@@ -43,7 +42,7 @@ export default {
           API_pic: "",
           API_name: "",
           API_gender: "",
-          API_birthday: "",
+          API_birthday: "1999-0",
           API_address: "",
           API_tel: "",
           API_date: ""

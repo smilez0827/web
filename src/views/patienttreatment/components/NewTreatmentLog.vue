@@ -9,7 +9,7 @@
       <p>{{newLog.API_treatment.join('，')||"暂无"}}</p>
     </div>
     <div>
-      <prescription-edit @flagChange="flagChange" v-model="newTreatmentLog.API_prescription"></prescription-edit>
+      <prescription-edit @input="prescription($event)"></prescription-edit>
     </div>
   </div>
 </template>
@@ -68,18 +68,12 @@ export default {
     Prescription
   },
   methods: {
-    flagChange(flag) {
-      this.newTreatmentLog.API_prescriptionFlag = flag;
-      this.$emit("flagChange", flag);
-      this.prescription();
-    },
     inputBoxShow(type) {
       this.$emit("inputBox", type);
     },
-    prescription() {
-      if (this.newTreatmentLog.API_prescriptionFlag) {
-        this.$emit("prescription", this.newTreatmentLog.API_prescription);
-      }
+    prescription(data) {
+      this.newTreatmentLog.API_prescription = data;
+      this.$emit("prescription", this.newTreatmentLog.API_prescription);
     }
   }
 };

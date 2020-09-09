@@ -75,10 +75,6 @@ export function savePatientDiagInfo(pid, API_state, API_illState, API_diagInfo) 
         errList.push("治疗方案描述")
         flag = false
     }
-    if (API_diagInfo.API_treatment.API_prescription.length != 0 && !API_diagInfo.API_treatment.API_prescriptionFlag) {
-        errList.push("处方")
-        flag = false
-    }
     // }
     if (flag) {
         let obj = {};

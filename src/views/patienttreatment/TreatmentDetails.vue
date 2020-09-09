@@ -13,7 +13,7 @@
         ></special-input>
 
         <special-input
-          :data="pages.treatmentCheckReconmendList"
+          :data="pages.stateOptions"
           :flag="pages.inputBoxVisible.state"
           :preValue="newTreatmentLog.API_patientState"
           @blur="inputBoxBlur('state')"
@@ -60,7 +60,7 @@
                   <p>{{ new Date(item.API_date).toLocaleDateString()}}</p>
                 </div>
                 <div class="treatmentLog">
-                  <p>患者状况：{{item.API_state||"暂无"}}</p>
+                  <p>患者状况：{{item.API_patientState.join(',')||"暂无"}}</p>
                   <p>治疗意见：{{item.API_description.join(',')||"暂无"}}</p>
                   <div v-if="item.API_prescription.length>0">
                     <el-link @click="lookPrescription(item.API_prescription)" type="primary">查看处方</el-link>
@@ -92,7 +92,6 @@
     <!-- 新增治疗记录对话框 -->
     <el-dialog title="新增治疗记录" :visible.sync="pages.addTreatmentLogDialogVisible" width="1000px">
       <NewTreatmentLog
-        @flagChange="flagChange($event)"
         :newLog="newTreatmentLog"
         @inputBox="inputBoxShow($event)"
         @prescription="prescription($event)"
@@ -107,7 +106,9 @@
 <script>
 import {
   getPatientsDetails,
-  newTreatmentLog
+  newTreatmentLog,
+  getTreatmentOptions,
+  getStateOptions
 } from "../../api/patienttreatment/patienttreatment.js";
 import Prescription from "../../components/common/Prescription.vue";
 import SpecialInput from "../../components/common/SpecialInput.vue";
@@ -133,13 +134,13 @@ export default {
         },
         prescriptionDialogVisible: false,
         addTreatmentLogDialogVisible: false,
+        stateOptions: [],
         treatmentCheckReconmendList: [
           { pinyin: "jyjxbszl", value: "建议进行保守治疗" },
           { pinyin: "jyjxzyzl", value: "建议采用中药治疗" },
           { pinyin: "yjdyyjxjc", value: "推荐到医院进行检查" },
           { pinyin: "yjjxsszl", value: "建议到医院进行手术治疗" }
         ],
-        checkList: [],
         tempPrescription: [],
         inputBoxVisible: {
           treatment: false,
@@ -151,7 +152,7 @@ export default {
       },
       API_treatmentLog: [],
       newTreatmentLog: {
-        API_patientState: ["头疼", "眼花缭乱"],
+        API_patientState: [],
         API_treatment: [],
         API_prescription: [],
         API_prescriptionFlag: true
@@ -179,9 +180,6 @@ export default {
     }
   },
   methods: {
-    flagChange(flag) {
-      this.newTreatmentLog.API_prescriptionFlag = flag;
-    },
     handleSizeChange(val) {
       this.pages.pageSize = val;
     },
@@ -233,10 +231,7 @@ export default {
       }
     },
     postNewLog() {
-      if (
-        this.newTreatmentLog.API_treatment.length > 0 &&
-        this.newTreatmentLog.API_prescriptionFlag
-      ) {
+      if (this.newTreatmentLog.API_treatment.length > 0) {
         newTreatmentLog(localStorage.getItem("pid"), this.newTreatmentLog).then(
           res => {
             if (res) {
@@ -244,7 +239,6 @@ export default {
               getPatientsDetails(localStorage.getItem("pid")).then(res => {
                 this.patientInfo.API_basicInfo = res.API_basicInfo;
                 this.API_treatmentLog = res.API_treatmentLog;
-                console.log(this.API_treatmentLog);
               });
             }
           }
@@ -259,7 +253,7 @@ export default {
       }
     },
     prescription(data) {
-      console.log(data);
+      this.newTreatmentLog.API_prescription = data;
     },
     lookPrescription(data) {
       this.pages.prescriptionDialogVisible = true;
@@ -269,9 +263,14 @@ export default {
   mounted() {
     let pid = localStorage.getItem("pid");
     getPatientsDetails(pid).then(res => {
-      console.log(res)
       this.patientInfo.API_basicInfo = res.API_basicInfo;
       this.API_treatmentLog = res.API_treatmentLog;
+    });
+    getTreatmentOptions().then(res => {
+      this.pages.treatmentCheckReconmendList = res;
+    });
+    getStateOptions().then(res => {
+      this.pages.stateOptions = res;
     });
   }
 };

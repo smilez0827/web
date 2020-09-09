@@ -45,7 +45,7 @@
 
         <el-table-column label="收治时间">
           <template slot-scope="scope">
-            <span>{{ scope.row.API_expert}}</span>
+            <span>{{ new Date(scope.row.API_date).toLocaleDateString()}}</span>
           </template>
         </el-table-column>
 

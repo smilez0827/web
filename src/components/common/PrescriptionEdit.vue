@@ -1,87 +1,59 @@
 <template>
   <div>
+    <!-- 
+处方的字段：
+        API_drugsName: "",            药品名称
+        API_drugsNumber: "",          药品总数
+        API_drugsNumberUnits: "",     药品单位
+        API_drugsSpecification: "",   药品规格
+        API_drugsUsage: "",           药品单次用量
+        API_manufacturer: "",         药品厂商
+        API_useFrequency: "",         药品使用频率
+        API_useTime: ""               药品使用时长
+
+emit:
+  input事件:处方发生改变
+    -->
     <div v-show="prescription.length>0">
       <el-table size="mini" :data="prescription" style="width: 100%">
         <el-table-column fixed label="名称">
           <template slot-scope="scope">
-            <el-input
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsName"
-              style="width:100%;hight:100%"
-            ></el-input>
-            <span v-else>{{ scope.row.API_drugsName }}</span>
+            <span>{{ scope.row.API_drugsName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column fixed label="生产厂家">
+          <template slot-scope="scope">
+            <span>{{ scope.row.API_manufacturer }}</span>
           </template>
         </el-table-column>
         <el-table-column label="规格">
           <template slot-scope="scope">
-            <el-input
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsSpecification"
-              style="width:100%;hight:100%"
-            ></el-input>
-            <span v-else>{{ scope.row.API_drugsSpecification }}</span>
+            <span>{{ scope.row.API_drugsSpecification }}</span>
           </template>
         </el-table-column>
         <el-table-column label="数量" width="80">
           <template slot-scope="scope">
-            <el-input
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsNumber"
-              style="width:100%;hight:100%"
-            ></el-input>
-            <span v-else>{{ scope.row.API_drugsNumber }}</span>
+            <span>{{ scope.row.API_drugsNumber }}</span>
           </template>
         </el-table-column>
         <el-table-column label="单位" width="80">
           <template slot-scope="scope">
-            <el-select
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsNumberUnits"
-              placeholder
-            >
-              <el-option value="包"></el-option>
-              <el-option value="片"></el-option>
-              <el-option value="粒"></el-option>
-            </el-select>
-            <span v-else>{{ scope.row.API_drugsNumberUnits }}</span>
+            <span>{{ scope.row.API_drugsNumberUnits }}</span>
           </template>
         </el-table-column>
         <el-table-column label="单次用量">
           <template slot-scope="scope">
-            <el-input
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_drugsUsage"
-              style="width:100%;hight:100%"
-            ></el-input>
-            <span v-else>{{ scope.row.API_drugsUsage }}</span>
+            <span>{{ scope.row.API_drugsUsage }}</span>
           </template>
         </el-table-column>
         <el-table-column label="频率">
           <template slot-scope="scope">
-            <el-select
-              v-if="scope.row.isEditable"
-              v-model="scope.row.API_useFrequency"
-              placeholder="请选择"
-            >
-              <el-option value="一天一次"></el-option>
-              <el-option value="一天两次"></el-option>
-              <el-option value="一天三次"></el-option>
-            </el-select>
-            <span v-else>{{ scope.row.API_useFrequency }}</span>
+            <span>{{ scope.row.API_useFrequency }}</span>
           </template>
         </el-table-column>
         <el-table-column label="使用时间">
           <template slot-scope="scope">
-            <el-select
-              v-show="scope.row.isEditable"
-              v-model="scope.row.API_useTime"
-              placeholder="请选择"
-            >
-              <el-option value="饭前"></el-option>
-              <el-option value="饭后"></el-option>
-              <el-option value="均可"></el-option>
-            </el-select>
-            <span v-if="!scope.row.isEditable">{{ scope.row.API_useTime }}</span>
+            <span>{{ scope.row.API_useTime }}</span>
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="150px">
@@ -100,6 +72,7 @@
         <el-link @click="addMedical" class="btn" type="success">{{"+添加药品"}}</el-link>
       </div>
     </div>
+    <!-- 选择药品对话框 -->
     <el-dialog
       :modal="false"
       class="addmeidicaldialog"
@@ -149,7 +122,7 @@
         </div>
       </div>
     </el-dialog>
-
+    <!-- 添加药品对话框 -->
     <el-dialog
       :modal="false"
       class="addmeidicaldialog"
@@ -197,21 +170,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="单次用量">
-            <el-input v-model="durgsDetails.useage" style="width:200px"></el-input>
-          </el-form-item>
-          <el-form-item label="用量单位">
-            <el-select style="width:200px" v-model="durgsDetails.useageUnit">
-              <el-option value="粒"></el-option>
-              <el-option value="g"></el-option>
-              <el-option value="mg"></el-option>
-              <el-option value="包"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="用药途径">
-            <el-select v-model="durgsDetails.useWay" style="width:200px">
-              <el-option value="口服"></el-option>
-              <el-option value="外用"></el-option>
-            </el-select>
+            <el-input v-model="durgsDetails.consumption" style="width:200px"></el-input>
           </el-form-item>
           <el-form-item label="用药频次">
             <el-select v-model="durgsDetails.frequency" style="width:200px">
@@ -222,10 +181,78 @@
               <el-option value="一周一次"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="用药时间">
+            <el-select v-model="durgsDetails.useDays" style="width:200px">
+              <el-option value="三天"></el-option>
+              <el-option value="一周"></el-option>
+              <el-option value="半个月"></el-option>
+              <el-option value="一个月"></el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button size="mini" type="primary" @click="medicalDialog = false">确 定</el-button>
+        <el-button size="mini" type="primary" @click="drugConfirm">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 修改处方中的药品 -->
+    <el-dialog
+      :modal="false"
+      class="addmeidicaldialog"
+      title="添加药品"
+      :visible.sync="medicalModifyDialog"
+      width="700px"
+    >
+      <div class="drugPrescription">
+        <el-form size="mini" :inline="true" label-width="80px">
+          <el-form-item label="药品名称">
+            <el-input disabled v-model="medicalModify.API_drugsName" style="width:200px"></el-input>
+          </el-form-item>
+          <el-form-item label="生产厂家">
+            <el-input disabled v-model="medicalModify.API_manufacturer" style="width:200px"></el-input>
+          </el-form-item>
+          <el-form-item label="规格">
+            <el-input disabled v-model="medicalModify.API_drugsSpecification" style="width:200px"></el-input>
+          </el-form-item>
+          <el-form-item label="药品数量">
+            <el-input v-model="medicalModify.API_drugsNumber" style="width:200px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="药品单位">
+            <el-select style="width:200px" v-model="medicalModify.API_drugsNumberUnits">
+              <el-option value="粒"></el-option>
+              <el-option value="g"></el-option>
+              <el-option value="mg"></el-option>
+              <el-option value="包"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="单次用量">
+            <el-input v-model="medicalModify.API_drugsUsage" style="width:200px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="用药频次">
+            <el-select v-model="medicalModify.API_useFrequency" style="width:200px">
+              <el-option value="一天一次"></el-option>
+              <el-option value="一天两次"></el-option>
+              <el-option value="一天三次"></el-option>
+              <el-option value="两天一次"></el-option>
+              <el-option value="一周一次"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="用药频次">
+            <el-select v-model="medicalModify.API_useTime" style="width:200px">
+              <el-option value="一天一次"></el-option>
+              <el-option value="一天两次"></el-option>
+              <el-option value="一天三次"></el-option>
+              <el-option value="两天一次"></el-option>
+              <el-option value="一周一次"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="drugModifyConfirm">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -246,67 +273,12 @@ export default {
     drugsInfo: {
       type: Array,
       default: () => {
-        return [
-          {
-            API_drugsName: "含曲林片",
-            API_drugsNumberUnits: "盒",
-            API_drugsNumber: "2",
-            API_drugsUsage: "一次两粒",
-            API_useFrequency: "一天一次",
-            API_useTime: "饭后"
-          },
-          {
-            API_drugsName: "青霉素胶囊",
-            API_drugsNumberUnits: "盒",
-            API_drugsNumber: "2",
-            API_drugsUsage: "一次三粒",
-            API_useFrequency: "一天三次",
-            API_useTime: "饭后"
-          }
-        ];
+        return [];
       }
     }
   },
-  computed: {
-    tempPrescription() {
-      return JSON.parse(JSON.stringify(this.prescription));
-    }
-  },
-  watch: {
-    tempPrescription: {
-      handler(newValue, oldValue) {
-        let tempFlag = true;
-        newValue.forEach((item, index) => {
-          if (item.isEditable) {
-            tempFlag = false;
-            if (item.API_drugsName) {
-              this.drugsInfo.forEach(durg => {
-                if (
-                  item.API_drugsName == durg.API_drugsName &&
-                  item.API_drugsName != oldValue[index].API_drugsName
-                ) {
-                  this.prescription[index].API_drugsNumberUnits =
-                    durg.API_drugsNumberUnits;
-                  this.prescription[index].API_drugsNumber =
-                    durg.API_drugsNumber;
-                  this.prescription[index].API_drugsUsage = durg.API_drugsUsage;
-                  this.prescription[index].API_useFrequency =
-                    durg.API_useFrequency;
-                  this.prescription[index].API_useTime = durg.API_useTime;
-                }
-              });
-            }
-          }
-        });
-        if (tempFlag) this.flag = true;
-        else this.flag = false;
-      },
 
-      deep: true
-    },
-    flag(newValue, oldValue) {
-      this.$emit("flagChange", newValue);
-    },
+  watch: {
     diglogVisible() {
       this.searchName = "";
       this.data = [];
@@ -316,9 +288,9 @@ export default {
   data() {
     return {
       searchName: "",
-      flag: true,
-      diglogVisible: false,
-      medicalDialog: true,
+      diglogVisible: false, //药品搜索对话框
+      medicalDialog: false, //添加药品填写信息对话框
+      medicalModifyDialog: false, //修改药品对话框
       medicalData: [],
       page: {
         current: 1,
@@ -329,43 +301,24 @@ export default {
         number: "",
         unit: "",
         useage: "",
-        useageUnit: "",
         useWay: "",
-        frequency: ""
+        frequency: "",
+        useTime: ""
+      },
+      medicalModify: {
+        API_drugsName: "",
+        API_drugsNumber: "",
+        API_drugsNumberUnits: "",
+        API_drugsSpecification: "",
+        API_drugsUsage: "",
+        API_manufacturer: "",
+        API_useFrequency: "",
+        API_useTime: ""
       }
     };
   },
   methods: {
-    editaleChange(index, item) {
-      let temp = item;
-      if (!item.isEditable) {
-        temp.isEditable = true;
-        this.prescription.splice(index, 1, temp);
-      } else {
-        if (
-          item.API_drugsName &&
-          item.API_drugsNumberUnits &&
-          item.API_drugsNumber &&
-          item.API_drugsUsage &&
-          item.API_useFrequency &&
-          item.API_useTime &&
-          item.API_drugsSpecification
-        ) {
-          temp.isEditable = false;
-          this.prescription.splice(index, 1, temp);
-          this.$emit("input", this.prescription);
-        } else {
-          this.$message.error("请检查填写的药品");
-        }
-      }
-    },
-    delMedical(index, item) {
-      this.prescription.splice(index, 1);
-      this.$emit("input", this.prescription);
-    },
-    addMedical() {
-      this.diglogVisible = true;
-    },
+    // 搜索药品
     medicalSearch() {
       this.page.current = 1;
       getDurgsInfo(this.page.current, this.searchName).then(res => {
@@ -373,21 +326,56 @@ export default {
         this.page.maxPage = res.maxNum;
       });
     },
+    // 选择药品
     medicalSelect(medical) {
-      // this.prescription.push({
-      //   API_drugsName: medical.name,
-      //   API_drugsNumberUnits: "",
-      //   API_drugsNumber: "",
-      //   API_drugsUsage: "",
-      //   API_useFrequency: "",
-      //   API_useTime: "",
-      //   API_drugsSpecification: medical.specification,
-      //   isEditable: true
-      // });
       this.diglogVisible = false;
       this.tempDrug = medical;
       this.medicalDialog = true;
     },
+    // 点击添加药品
+    addMedical() {
+      this.diglogVisible = true;
+    },
+    // 确定添加的药品
+    drugConfirm() {
+      this.prescription.push({
+        API_drugsName: this.tempDrug.name,
+        API_manufacturer: this.tempDrug.manufacturer,
+        API_drugsNumberUnits: this.durgsDetails.unit,
+        API_drugsNumber: this.durgsDetails.number,
+        API_drugsUsage: this.durgsDetails.consumption,
+        API_useFrequency: this.durgsDetails.frequency,
+        API_drugsSpecification: this.tempDrug.specification,
+        API_useTime: this.durgsDetails.useDays
+      });
+      this.$emit("input", this.prescription);
+      this.medicalDialog = false;
+    },
+
+    // 确定药品修改
+    drugModifyConfirm() {
+      this.prescription.forEach((item, index) => {
+        if (item.API_drugsName == this.medicalModify.API_drugsName) {
+          this.prescription.splice(index, 1, this.medicalModify);
+        }
+      });
+      this.$emit("input", this.prescription);
+      this.medicalModifyDialog = false;
+    },
+
+    // 点击修改
+    editaleChange(index, item) {
+      this.medicalModify = JSON.parse(JSON.stringify(item));
+      this.medicalModifyDialog = true;
+    },
+
+    // 点击删除药品
+    delMedical(index, item) {
+      this.prescription.splice(index, 1);
+      this.$emit("input", this.prescription);
+    },
+
+    // 药品翻页
     nextPage() {
       this.page.current += 1;
       getDurgsInfo(this.page.current, this.searchName).then(res => {
@@ -403,8 +391,7 @@ export default {
         this.page.maxPage = res.maxNum;
       });
     }
-  },
-  mounted() {}
+  }
 };
 </script>
 

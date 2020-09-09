@@ -6,6 +6,11 @@
           <span>{{ scope.row.API_drugsName }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="生产厂家">
+        <template slot-scope="scope">
+          <span>{{ scope.row.API_manufacturer }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="规格">
         <template slot-scope="scope">
           <span>{{ scope.row.API_drugsSpecification }}</span>
@@ -21,7 +26,7 @@
           <span>{{ scope.row.API_drugsNumberUnits }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用法">
+      <el-table-column label="单次用量">
         <template slot-scope="scope">
           <span>{{ scope.row.API_drugsUsage }}</span>
         </template>
