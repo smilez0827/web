@@ -22,12 +22,11 @@
         <el-col :span="24">家庭住址：{{prsonalInfo.API_address||"无"}}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="6">联系方式：{{prsonalInfo.API_tel||"无"}}</el-col>
-
-        <el-col :span="6" :offset="10">
+        <el-col :span="10">联系方式：{{prsonalInfo.API_tel||"无"}}</el-col>
+        <el-col :span="14" >
           <el-link type="success" style="margin-right:20px" @click="diagResult">发起会话</el-link>
           <el-link type="success" style="margin-right:20px" @click="diagResult">诊断记录</el-link>
-          <el-link type="success" style="margin-right:20px" @click="diagResult">护理记录</el-link>
+          <el-link type="success" style="margin-right:20px" @click="diagResult">治疗记录</el-link>
         </el-col>
       </el-row>
     </div>
@@ -41,13 +40,13 @@ export default {
       type: Object,
       default: () => {
         return {
-          API_pic: "",
-          API_name: "",
-          API_gender: "",
+          API_pic: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+          API_name: "张三",
+          API_gender: "男",
           API_birthday: "1999-0",
-          API_address: "",
-          API_tel: "",
-          API_date: ""
+          API_address: "四川省成都市",
+          API_tel: "19999999999",
+          API_date: "2020/7/8"
         };
       }
     }

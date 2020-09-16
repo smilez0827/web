@@ -4,6 +4,8 @@ import { Message } from 'element-ui';
 import patientDiag from './patientDiag.js'
 import patientTreatment from './patientTreatment.js'
 import instantInfo from './instantInfo.js'
+import operationManage from './operationManage.js'
+
 
 Vue.use(VueRouter);
 
@@ -91,7 +93,10 @@ const routes = [
       },
       // 患者诊断
       patientDiag,
+      // 患者治疗
       patientTreatment,
+      // 查房管理
+      operationManage,
       {
         path: '/groupconsultation',
         redirect: "/groupconsultation/todayconsultation",

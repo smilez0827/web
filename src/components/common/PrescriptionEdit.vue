@@ -28,7 +28,8 @@ emit:
         </el-table-column>
         <el-table-column label="规格">
           <template slot-scope="scope">
-            <span>{{ scope.row.API_drugsSpecification }}</span>
+            <!-- <span>{{ scope.row.API_drugsSpecification }}</span> -->
+            <span>{{ "0.1g" }}</span>
           </template>
         </el-table-column>
         <el-table-column label="数量" width="80">

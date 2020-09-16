@@ -111,7 +111,6 @@ export default {
     videoSuccess(res, files, fileList) {
       console.log(res);
       this.sendMsg("video", res.readloadurl);
-      // readloadurl
     },
     addMessage(e) {
       if (e.ctrlKey && e.keyCode === 13 && this.content.length) {

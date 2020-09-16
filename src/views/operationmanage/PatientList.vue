@@ -10,11 +10,11 @@
         </el-form-item>
         <el-form-item>
           <template slot="label">
-            <span class="formLabel">就诊状态：</span>
+            <span class="formLabel">今日状态：</span>
           </template>
-          <el-select v-model="formInline.API_state" placeholder="请选择就诊状态">
-            <el-option label="未完成" value="未完成"></el-option>
-            <el-option label="已完成" value="已完成"></el-option>
+          <el-select v-model="formInline.API_state" placeholder="请选择今日状态">
+            <el-option label="已处理" value="已处理"></el-option>
+            <el-option label="未处理" value="未处理"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -48,7 +48,7 @@
             <span>{{ new Date(scope.row.API_date).toLocaleDateString()}}</span>
           </template>
         </el-table-column>
-        
+
         <!-- 医生今天是否对患者进行过处理 -->
         <el-table-column label="今日状态">
           <template slot-scope="scope">
@@ -80,8 +80,13 @@
 </template>
 
 <script>
-import { getPatientsList } from "../../api/patienttreatment/patienttreatment.js";
+import { getPatientsList } from "../../api/operationmanage/operationmanage.js";
 export default {
+  sockets: {
+    newPatient() {
+      this.tableData.push(data);
+    }
+  },
   data() {
     return {
       formInline: {
@@ -100,22 +105,19 @@ export default {
     patientDetails(index, row) {
       console.log(index, row);
       localStorage.setItem("pid", row.pid);
-      this.$router.push("/treatment/treatmentdetails");
+      this.$router.push("/operationmanage/operationdetails");
     },
     handleSizeChange(val) {
       this.pageSize = val;
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-    },
-    patientsList() {
-      getPatientsList();
     }
   },
   computed: {
     showTable: function() {
       let result = [];
-      this.$store.state.patientTreatment.patientsList.forEach(data => {
+      this.tableData.forEach(data => {
         if (
           (!this.formInline.API_name ||
             data.API_name.includes(this.formInline.API_name)) &&
@@ -131,12 +133,13 @@ export default {
         var time2 = Date.parse(b.API_date);
         return time2 - time1;
       });
-      console.log(result);
       return result;
     }
   },
   mounted() {
-    getPatientsList();
+    getPatientsList().then(res => {
+      this.tableData = res;
+    });
   }
 };
 </script>
