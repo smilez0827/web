@@ -24,10 +24,10 @@
       <el-row>
         <el-col :span="6">联系方式：{{prsonalInfo.API_tel||"无"}}</el-col>
 
-        <el-col :span="6" :offset="10">
-          <el-link type="success" style="margin-right:20px" @click="diagResult">发起会话</el-link>
+        <el-col :span="10" :offset="6">
+          <el-link type="success" style="margin-right:20px" @click="startCommunication">发起会话</el-link>
           <el-link type="success" style="margin-right:20px" @click="diagResult">诊断记录</el-link>
-          <el-link type="success" style="margin-right:20px" @click="diagResult">护理记录</el-link>
+          <el-link type="success" style="margin-right:20px" @click="nursingResult">护理记录</el-link>
         </el-col>
       </el-row>
     </div>
@@ -55,6 +55,9 @@ export default {
   methods: {
     diagResult() {
       this.$router.push("/treatment/diagresult");
+    },
+    nursingResult() {
+      this.$router.push("/treatment/nursingresult");
     },
     startCommunication() {
       let flag = true;

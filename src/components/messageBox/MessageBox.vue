@@ -1,32 +1,34 @@
 <template>
   <div class="msgbox">
-    <p v-show="!this.$store.state.msg.messageList.length>0">暂无新消息</p>
-    <p v-for="(item,index) in this.$store.state.msg.messageList" :key="item.id">
-      <span @click="noticeRoute(item.router,index)">[{{item.time}}]{{item.msg}}</span>
+    <p v-show="!this.$store.state.msg.messageList.length > 0">暂无新消息</p>
+    <p
+      v-for="(item, index) in this.$store.state.msg.messageList"
+      :key="item.id"
+    >
+      <span @click="noticeRoute(item.router, index)"
+        >[{{ item.time }}]{{ item.msg }}</span
+      >
     </p>
   </div>
 </template>
 
 <script>
-import { login } from '../../api/user/user';
+import { login } from "../../api/user/user";
 export default {
   name: "MessageBox",
   methods: {
     noticeRoute(route, index) {
-      this.$router.push(route);
+      if (route) this.$router.push(route);
       this.$store.commit("delDessage", index);
     }
   },
   sockets: {
     relogin(val) {
       console.log(val);
-    },
-    newPatient(val) {
-      console.log(val);
     }
   },
-  mounted(){
-    this.$socket.client.emit("login",localStorage.getItem("UserID"))
+  mounted() {
+    this.$socket.client.emit("login", localStorage.getItem("UserID"));
   }
 };
 </script>

@@ -41,7 +41,7 @@
 
         <el-table-column label="症状">
           <template slot-scope="scope">
-            <span>{{ scope.row.API_symptom ||"暂无"}}</span>
+            <span>{{ scope.row.API_symptom ||"问卷/语音/视频"}}</span>
           </template>
         </el-table-column>
         <el-table-column label="就诊时间" width="100">

@@ -105,11 +105,9 @@ export default {
       return isJPG;
     },
     imgSuccess(res, files, fileList) {
-      console.log(res);
       this.sendMsg("img", res.downloadurl);
     },
     videoSuccess(res, files, fileList) {
-      console.log(res);
       this.sendMsg("video", res.readloadurl);
     },
     addMessage(e) {
@@ -119,6 +117,7 @@ export default {
     },
     sendMsg(type, message) {
       let msg = {
+        pid: localStorage.getItem("pid") || "-1",
         fromid: localStorage.getItem("UserID"),
         message: message,
         type: type,
@@ -126,7 +125,6 @@ export default {
         toid: this.currentSessionId
       };
       this.$store.commit("instantInfo/addMessage", msg);
-      console.log(msg);
       this.$socket.client.emit("instantMsg", msg);
       this.content = "";
     }

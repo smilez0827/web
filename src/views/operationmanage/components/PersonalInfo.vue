@@ -23,10 +23,10 @@
       </el-row>
       <el-row>
         <el-col :span="10">联系方式：{{prsonalInfo.API_tel||"无"}}</el-col>
-        <el-col :span="14" >
-          <el-link type="success" style="margin-right:20px" @click="diagResult">发起会话</el-link>
+        <el-col :span="14">
+          <el-link type="success" style="margin-right:20px" @click="startCommunication">发起会话</el-link>
           <el-link type="success" style="margin-right:20px" @click="diagResult">诊断记录</el-link>
-          <el-link type="success" style="margin-right:20px" @click="diagResult">治疗记录</el-link>
+          <el-link type="success" style="margin-right:20px" @click="treatResult">治疗记录</el-link>
         </el-col>
       </el-row>
     </div>
@@ -40,7 +40,8 @@ export default {
       type: Object,
       default: () => {
         return {
-          API_pic: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+          API_pic:
+            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
           API_name: "张三",
           API_gender: "男",
           API_birthday: "1999-0",
@@ -53,8 +54,12 @@ export default {
   },
   methods: {
     diagResult() {
-      this.$router.push("/treatment/diagresult");
+      this.$router.push("/operationmanage/diagresult");
     },
+    treatResult() {
+      this.$router.push("/operationmanage/treatresult");
+    },
+
     startCommunication() {
       let flag = true;
 

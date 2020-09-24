@@ -455,7 +455,6 @@ export default {
     videoPlay(item) {
       this.pages.videoDialogVisible = true;
       this.pages.videoDialogSrc = item;
-      // this.pages.videoDialogSrc = item;
     },
 
     searchHistory() {

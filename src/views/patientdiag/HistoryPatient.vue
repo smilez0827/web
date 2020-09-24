@@ -48,11 +48,11 @@
             <span>{{ new Date(scope.row.API_date).toLocaleDateString() }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="就诊状态" width="180">
+        <!-- <el-table-column label="就诊状态" width="180">
           <template slot-scope="scope">
             <span>{{ scope.row.API_state }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button size="mini" @click="patientDetails(scope.$index, scope.row)">查看</el-button>
@@ -116,8 +116,7 @@ export default {
         if (
           (!this.formInline.API_name ||
             data.API_name.includes(this.formInline.API_name)) &&
-          (!this.formInline.API_state ||
-            data.API_state == this.formInline.API_state) &&
+          data.API_state == "已完成" &&
           (!this.formInline.API_recentRange ||
             new Date(data.API_date).getTime() >
               time - this.formInline.API_recentRange)

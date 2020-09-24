@@ -1,26 +1,31 @@
 <template>
   <div>
     <div class="filter">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item>
-          <template slot="label">
-            <span class="formLabel">姓名：</span>
-          </template>
-          <el-input v-model="formInline.API_name" placeholder="请输入姓名" style="width:150px"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <template slot="label">
-            <span class="formLabel">就诊状态：</span>
-          </template>
-          <el-select v-model="formInline.API_state" placeholder="请选择就诊状态">
-            <el-option label="未完成" value="未完成"></el-option>
-            <el-option label="已完成" value="已完成"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="reSet" class="btn">重置</el-button>
-        </el-form-item>
-      </el-form>
+      <div style="margin-bottom: 15px">
+        <span style="font-size: 18px;font-weight: bold;color: #1c7e7c;margin-left: 5px">患者查询</span>
+      </div>
+      <div>
+        <el-form size="mini" :inline="true" :model="formInline" class="demo-form-inline">
+          <el-form-item>
+            <template slot="label">
+              <span class="formLabel">姓名：</span>
+            </template>
+            <el-input v-model="formInline.API_name" placeholder="请输入患者姓名" style="width:150px"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <template slot="label">
+              <span class="formLabel">住院号：</span>
+            </template>
+            <el-input v-model="formInline.API_number" placeholder="请输入患者住院号" style="width:150px"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <template slot="label">
+              <span class="formLabel">主诊专家：</span>
+            </template>
+            <el-input v-model="formInline.API_expert" placeholder="请输入专家姓名" style="width:150px"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
     <div class="eltable">
       <el-table
@@ -28,9 +33,14 @@
         style="width: 100%"
         border
         :cell-style="{'text-align':'center'}"
-        :header-cell-style="{background:'#EFF3F4',color:'#1c7e7c','text-align':'center',  'font-size': '18px','font-weight': 'bold',}"
+        :header-cell-style="{background:'#EFF3F4',color:'#1c7e7c','text-align':'center',  'font-size': '16px',}"
       >
-        <el-table-column label="序号" width="80" type="index"></el-table-column>
+        <el-table-column label="住院号" width="100">
+          <template slot-scope="scope">
+            <span>{{ 123456789 }}</span>
+            <!-- <span>{{ scope.row.API_name }}</span> -->
+          </template>
+        </el-table-column>
         <el-table-column label="姓名">
           <template slot-scope="scope">
             <span>{{ scope.row.API_name }}</span>
@@ -43,22 +53,15 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="收治时间">
+        <el-table-column label="申请时间">
           <template slot-scope="scope">
-            <span>{{ new Date(scope.row.API_date).toLocaleDateString()}}</span>
-          </template>
-        </el-table-column>
-        
-        <!-- 医生今天是否对患者进行过处理 -->
-        <el-table-column label="今日状态">
-          <template slot-scope="scope">
-            <span>{{ "未处理"}}</span>
+            <span>{{ scope.row.API_date}}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="patientDetails(scope.$index, scope.row)">查看</el-button>
+            <el-button size="mini" @click="patientDetails(scope.$index, scope.row)">处理</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -80,13 +83,14 @@
 </template>
 
 <script>
-import { getPatientsList } from "../../api/patienttreatment/patienttreatment.js";
+import { getPatientsList } from "@api/patienttreatment/patienttreatment.js";
 export default {
   data() {
     return {
       formInline: {
         API_name: "",
-        API_state: ""
+        API_number: "",
+        API_expert: ""
       },
       tableData: [],
       currentPage: 1,
@@ -98,24 +102,20 @@ export default {
       (this.formInline.API_name = ""), (this.formInline.API_state = "");
     },
     patientDetails(index, row) {
-      console.log(index, row);
       localStorage.setItem("pid", row.pid);
-      this.$router.push("/treatment/treatmentdetails");
+      this.$router.push("/treatment/patientdetails");
     },
     handleSizeChange(val) {
       this.pageSize = val;
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-    },
-    patientsList() {
-      getPatientsList();
     }
   },
   computed: {
     showTable: function() {
       let result = [];
-      this.$store.state.patientTreatment.patientsList.forEach(data => {
+      this.tableData.forEach(data => {
         if (
           (!this.formInline.API_name ||
             data.API_name.includes(this.formInline.API_name)) &&
@@ -131,12 +131,13 @@ export default {
         var time2 = Date.parse(b.API_date);
         return time2 - time1;
       });
-      console.log(result);
       return result;
     }
   },
   mounted() {
-    getPatientsList();
+    getPatientsList().then(res => {
+      this.tableData = res;
+    });
   }
 };
 </script>
@@ -155,8 +156,8 @@ export default {
   margin: 10px 5% 10px 0px;
 }
 .formLabel {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 16px;
+  // font-weight: bold;
   color: #1c7e7c;
   margin-left: 5px;
 }

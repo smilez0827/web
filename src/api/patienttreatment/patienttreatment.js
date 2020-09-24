@@ -4,11 +4,10 @@ import { Message } from 'element-ui';
 import router from '../../router/index.js'
 // 获取今日患者列表
 export function getPatientsList() {
-    if (store.state.patientTreatment.patientsList.length == 0) {
-        Get("http://132.232.18.227:3000/patienttreatment/patientlist").then((res) => {
-            store.commit("patientTreatment/patientsList", res.data.API_patientsList)
-        })
-    }
+    return Get("http://132.232.18.227:3000/patienttreatment/patientlist").then((res) => {
+        return res.data.API_patientsList
+    })
+
 }
 
 // 获取患者详情
@@ -59,3 +58,102 @@ export function getStateOptions() {
     }
 
 }
+
+
+export function getPatientsNursingDetails(pid) {
+    return Get("/api/patienttreatment/patientdetails/" + pid).then((res) => {
+        return res.data;
+    })
+}
+
+// 住院申请列表
+export function getApplyList() {
+    return new Promise(resolve => {
+        let obj = [
+            {
+                API_date: "2020-09-18 10:06:28",
+                API_expert: "专家2",
+                API_name: "zhangxiao",
+                API_pid: 426,
+                API_state: "已处理",
+                API_toHospitalID: "202009188426",
+            },
+            {
+                API_date: "2020-09-18 10:06:28",
+                API_expert: "专家2",
+                API_name: "jbh",
+                API_pid: 426,
+                API_state: "已处理",
+                API_toHospitalID: "202009188425",
+            },
+            {
+                API_date: "2020-09-18 10:06:28",
+                API_expert: "专家1",
+                API_name: "zhangxiao",
+                API_pid: 426,
+                API_state: "已处理",
+                API_toHospitalID: "202009188426",
+            }
+        ]
+        resolve(obj)
+    })
+    // return Get("/api/operationmanage/applylist").then((res) => {
+    //     return res.data.applyList;
+    // })
+}
+
+
+// 住院申请详情
+export function getApplyDetails() {
+    return new Promise(resolve => {
+        let obj = {
+            API_basicInfo: {
+                API_UserID: "13568479726",
+                API_name: "zhangxiao",
+                API_address: "西南交通大学",
+                API_birthday: "2020-03-11 00:00:00",
+                API_date: "2020-09-18 10:06:28",
+                API_gender: "男",
+                API_pic: "http://132.232.18.227:5000/user/userinfo/readfile?url=5446492386645447be3b515d6534e588.jpg",
+                API_tel: "199887676677",
+            },
+
+            API_questionnaire: [
+                {
+                    data: {},
+                    name: "吞咽功能评定",
+                    state: "已完成"
+                },
+                {
+                    data: {},
+                    name: "跌倒风险评定",
+                    state: "已完成"
+                },
+            ],
+        }
+        obj.API_questionnaire.forEach(item => {
+            switch (item.name) {
+                case "吞咽功能评定":
+                    item.type = "TUNYAN"
+                    break
+                case "跌倒风险评定":
+                    item.type = "DIEDAO"
+                    break
+            }
+        })
+        resolve(obj)
+    })
+    // return Get("/api/operationmanage/applylist").then((res) => {
+    //     return res.data.applyList;
+    // })
+}
+
+
+// 确认入院申请
+export function confirmApply(pid, data) {
+    console.log(pid, data)
+    // return Get("/api/operationmanage/applylist").then((res) => {
+    //     return res.data.applyList;
+    // })
+}
+

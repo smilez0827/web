@@ -4,13 +4,15 @@ import msg from "./message/message.js"
 import patientDiag from "./patientDiag/patientDiag.js"
 import patientTreatment from "./patientTreatment/patientTreatment.js"
 import instantInfo from "./instantInfo/instantInfo.js"
+import patientCommunication from "./instantInfo/patientCommunication.js"
+import operationManage from "./operationManage/operationManage.js"
 
 import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
 const dataState = createPersistedState({
-  paths: ["instantInfo", "user.userInfo"]
+  paths: ["instantInfo", "user.userInfo",]
 })
 
 export default new Vuex.Store({
@@ -20,6 +22,7 @@ export default new Vuex.Store({
       userInfo: {
         userId: '',
         name: '',
+        role: "",
         func: [],
         portrait: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
       },
@@ -140,6 +143,8 @@ export default new Vuex.Store({
     patientDiag,
     patientTreatment,
     instantInfo,
+    operationManage,
+    patientCommunication
   },
   plugins: [dataState]
 });

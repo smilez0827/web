@@ -5,19 +5,24 @@ const operationManage = {
     component: () => import('../views/operationmanage/Layout.vue'),
     children: [
         {
+            path: "/operationmanage/applylist",
+            name: "住院申请",
+            component: () => import('@views/operationmanage/applylist/ApplyList.vue'),
+        },
+        {
+            path: "/operationmanage/applydetails",
+            name: "住院申请详情",
+            component: () => import('@views/operationmanage/applydetails/ApplyDetails.vue'),
+        },
+        {
             path: "/operationmanage/patientlist",
-            name: "患者列表",
-            component: () => import('../views/operationmanage/PatientList.vue'),
+            name: "住院患者",
+            component: () => import('@views/operationmanage/patientslist/patientsList.vue'),
         },
         {
-            path: "/operationmanage/operationdetails",
-            name: "查房记录",
-            component: () => import('../views/operationmanage/manageDetails.vue'),
-        },
-        {
-            path: "/operationmanage/diagresult",
-            name: "诊断记录",
-            component: () => import('../views/patienttreatment/PatientDiagResult.vue'),
+            path: "/operationmanage/patientdetails",
+            name: "住院患者详情",
+            component: () => import('@views/operationmanage/patientdetails/PatientDetails.vue'),
         },
     ]
 }

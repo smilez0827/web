@@ -99,7 +99,7 @@ export default {
   top: 0;
   height: 100%;
   width: 100%;
-  min-width: 1000px;
+  min-width: 1200px;
   background-color: #eff3f4;
   overflow: hidden;
   .pageContainer {

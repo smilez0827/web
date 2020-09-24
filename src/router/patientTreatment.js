@@ -5,19 +5,24 @@ const patientTreatment = {
     component: () => import('../views/patienttreatment/Layout.vue'),
     children: [
         {
+            path: "/treatment/applylist",
+            name: "住院申请",
+            component: () => import('@views/patienttreatment/applylist/ApplyList.vue'),
+        },
+        {
+            path: "/treatment/applydetails",
+            name: "住院申请详情",
+            component: () => import('@views/patienttreatment/applydetails/ApplyDetails.vue'),
+        },
+        {
             path: "/treatment/patientlist",
-            name: "患者列表",
-            component: () => import('../views/patienttreatment/PatientList.vue'),
+            name: "住院患者",
+            component: () => import('@views/patienttreatment/patientlist/PatientList.vue'),
         },
         {
-            path: "/treatment/treatmentdetails",
-            name: "治疗记录",
-            component: () => import('../views/patienttreatment/TreatmentDetails.vue'),
-        },
-        {
-            path: "/treatment/diagresult",
-            name: "诊断记录",
-            component: () => import('../views/patienttreatment/PatientDiagResult.vue'),
+            path: "/treatment/patientdetails",
+            name: "住院患者详情",
+            component: () => import('@views/patienttreatment/patientdetails/PatientDetails.vue'),
         },
     ]
 }
