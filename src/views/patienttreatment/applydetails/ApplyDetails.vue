@@ -21,18 +21,21 @@
             <h3 class="title">患者评估</h3>
           </template>
           <div class="container">
-            <div v-for="(item,index) in pinggu" :key="item.id" class="pinggu">
+            <div v-for="(item, index) in pinggu" :key="item.id" class="pinggu">
               <div>
-                <span style="margin-right:40px">{{item.name}}{{'('+item.state+')'}}</span>
+                <span style="margin-right:40px"
+                  >{{ item.name }}{{ "(" + item.state + ")" }}</span
+                >
                 <el-link
-                  @click="jinxingpinggu(item,index)"
-                  :type="item.state=='已完成'?'primary':'success'"
-                >{{item.state=='已完成'?'查看':'进行评估'}}</el-link>
+                  @click="jinxingpinggu(item, index)"
+                  :type="item.state == '已完成' ? 'primary' : 'success'"
+                  >{{ item.state == "已完成" ? "查看" : "进行评估" }}</el-link
+                >
               </div>
               <div v-show="item.isOpen" class="pinggubiao">
                 <div style="margin:20px 0;">
                   <components
-                    @cancel="pingguCancel(item,index)"
+                    @cancel="pingguCancel(item, index)"
                     :preData="item.data"
                     :readonly="true"
                     :is="item.type"
@@ -42,6 +45,7 @@
             </div>
           </div>
         </el-collapse-item>
+        {{ newTreatLog.API_description }}
         <el-collapse-item name="4">
           <template slot="title">
             <h3 class="title">入院治疗安排</h3>
@@ -55,27 +59,29 @@
             <!-- <NewTreatmentLog></NewTreatmentLog> -->
           </div>
         </el-collapse-item>
-        <el-button @click="save" size="medium" type="primary" class="btn">确认</el-button>
+        <el-button @click="save" size="medium" type="primary" class="btn"
+          >确认</el-button
+        >
       </el-collapse>
-      <div :class="this.$store.state.pageState?'inputBox':'inputBox2'">
+      <div :class="this.$store.state.pageState ? 'inputBox' : 'inputBox2'">
         <!-- 患者状态描述输入 -->
         <special-input
           :data="pages.stateOptions"
           :flag="pages.inputBoxVisible.illState"
           :preValue="newTreatLog.API_patientState"
           @blur="inputBoxBlur('illState')"
-          @select="inputBoxSelect($event,'illState')"
-          @delete="inputBoxDelete($event,'illState')"
+          @select="inputBoxSelect($event, 'illState')"
+          @delete="inputBoxDelete($event, 'illState')"
         ></special-input>
 
         <!-- 治疗方案输入框 -->
         <special-input
           :data="pages.treatmentOptions"
           :flag="pages.inputBoxVisible.treatment"
-          :preValue="newTreatLog.API_description"
+          :preValue="newTreatLog.API_treatment"
           @blur="inputBoxBlur('treatment')"
-          @select="inputBoxSelect($event,'treatment')"
-          @delete="inputBoxDelete($event,'treatment')"
+          @select="inputBoxSelect($event, 'treatment')"
+          @delete="inputBoxDelete($event, 'treatment')"
         ></special-input>
       </div>
       <!-- 聊天 -->
@@ -161,25 +167,11 @@ export default {
       patientInfo: {
         API_basicInfo: {}
       },
-      pinggu: [
- 
-      ],
+      pinggu: [],
       newTreatLog: {
         API_patientState: [],
-        API_treatment: [,],
-        API_prescription: [
-          // {
-          //   API_drugsName: "含曲林片",
-          //   API_drugsNumberUnits: "盒",
-          //   API_drugsNumber: "2",
-          //   API_drugsUsage: "一次两粒",
-          //   API_useFrequency: "一天一次",
-          //   API_drugsSpecification: "0.1g",
-          //   API_useTime: "饭后",
-          //   API_isEditable: false,
-          //   API_days: "7"
-          // }
-        ]
+        API_treatment: [],
+        API_prescription: []
       }
     };
   },
@@ -236,7 +228,13 @@ export default {
     },
     save() {
       let pid = localStorage.getItem("pid");
-      confirmApply(pid, this.newTreatLog);
+      confirmApply(pid, this.newTreatLog).then(res => {
+        if (res) {
+          this.$message.success("患者确认入院");
+        } else {
+          this.$message.error("患者入院失败");
+        }
+      });
     },
     jinxingpinggu(item, index) {
       let obj = JSON.parse(JSON.stringify(item));
@@ -285,7 +283,7 @@ export default {
           this.newTreatLog.API_patientState.splice(index, 1);
           break;
         case "treatment":
-          this.newTreatLog.API_description.splice(index, 1);
+          this.newTreatLog.API_treatment.splice(index, 1);
           break;
       }
     },

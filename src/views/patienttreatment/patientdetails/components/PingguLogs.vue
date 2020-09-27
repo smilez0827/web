@@ -12,23 +12,6 @@
         end-placeholder="结束日期"
       ></el-date-picker>
 
-      <div style="float:right">
-        <span class="formLabel">下次评估时间：</span>
-        <el-date-picker
-          size="small"
-          v-model="nextPingguTime"
-          align="right"
-          type="date"
-          placeholder="选择日期"
-          :picker-options="pages.pickerOptions"
-        ></el-date-picker>
-        <el-button
-          @click="dialogVisible=true"
-          size="small"
-          style="margin-left:30px"
-          type="success"
-        >进行评估</el-button>
-      </div>
     </div>
     <div>
       <div v-if="pages.newLogFlag">

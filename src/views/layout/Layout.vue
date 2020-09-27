@@ -6,18 +6,21 @@
           <the-header></the-header>
         </div>
         <div class="main">
-          <div :class="this.isHide?'sideHiden':'side'">
+          <div :class="this.isHide ? 'sideHiden' : 'side'">
             <the-sidebar></the-sidebar>
           </div>
           <div class="content">
             <div class="tag">
-              <i :class="this.isHide?'el-icon-s-unfold':'el-icon-s-fold'" @click="hide"></i>
-              <template v-for="(item,index) in this.path">
-                <span :key="item.id" v-if="(index==0)">{{item}}</span>
-                <span :key="item.id" v-else>{{" > "+item}}</span>
+              <i
+                :class="this.isHide ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
+                @click="hide"
+              ></i>
+              <template v-for="(item, index) in this.path">
+                <span :key="item.id" v-if="index == 0">{{ item }}</span>
+                <span :key="item.id" v-else>{{ " > " + item }}</span>
               </template>
             </div>
-            <div class="mainContent">
+            <div id="mainContent" class="mainContent">
               <div class="xLimit">
                 <router-view />
               </div>
@@ -27,16 +30,18 @@
       </div>
     </div>
 
-    <div :class="noticHide?'notice noticeUnhide':'notice noticeHide'">
+    <div :class="noticHide ? 'notice noticeUnhide' : 'notice noticeHide'">
       <div>
         <the-msgBox></the-msgBox>
       </div>
     </div>
     <div
-      :class="noticHide?'noticebtn noticebtnHide':'noticebtn noticebtnUnhide'"
+      :class="
+        noticHide ? 'noticebtn noticebtnHide' : 'noticebtn noticebtnUnhide'
+      "
       @click="noticChange"
     >
-      <i :class="noticHide?'el-icon-caret-left':'el-icon-caret-right'"></i>
+      <i :class="noticHide ? 'el-icon-caret-left' : 'el-icon-caret-right'"></i>
     </div>
   </div>
 </template>

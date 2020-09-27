@@ -9,7 +9,7 @@
       <p>{{newLog.API_treatment.join('，')||"暂无"}}</p>
     </div>
     <div>
-      <prescription-edit @input="prescription($event)"></prescription-edit>
+      <!-- <prescription-edit @input="prescription($event)"></prescription-edit> -->
     </div>
   </div>
 </template>

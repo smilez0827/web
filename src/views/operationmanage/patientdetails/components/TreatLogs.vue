@@ -11,30 +11,10 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"
       ></el-date-picker>
-
-      <!-- <div style="float:right">
-        <el-button
-          @click="pages.newLogFlag=true"
-          size="small"
-          style="margin-left:30px"
-          type="success"
-        >添加治疗记录</el-button>
-      </div> -->
     </div>
-    <!-- <div>
-      <div v-if="pages.newLogFlag" class="newTreatLog">
-        <div class="header">
-          <span class="title">新治疗记录</span>
-          <span @click="pages.newLogFlag=false" class="close">X</span>
-        </div>
-        <NewTreatmentLog></NewTreatmentLog>
-        <div class="footer clearfix">
-          <el-button style="float:right" size="small" type="primary">保存</el-button>
-        </div>
-      </div>
-    </div> -->
+
     <div class="treatmentLog">
-      <div v-show="TreatLogs.length==0" class="tips">暂无治疗记录</div>
+      <div v-show="showTable.length==0" class="tips">暂无治疗记录</div>
       <div
         v-for="item in showTable.slice((pages.currentPage-1)*pages.pageSize,(pages.currentPage-1)*pages.pageSize+pages.pageSize)"
         :key="item.id"
@@ -69,7 +49,6 @@
 </template>
 
 <script>
-// import NewTreatmentLog from "./components/NewTreatmentLog.vue";
 
 export default {
   name: "TreatLogs",
@@ -163,7 +142,7 @@ export default {
         if (this.pages.timeRange) {
           let time1 = new Date(this.pages.timeRange[0]).getTime();
           let time2 = new Date(this.pages.timeRange[1]).getTime();
-          let time = new Date(element.date).getTime();
+          let time = new Date(element.API_date).getTime();
           if (time > time1 && time < time2) {
             arr.push(element);
           }

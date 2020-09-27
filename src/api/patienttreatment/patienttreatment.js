@@ -3,12 +3,6 @@ import store from '../../store/index.js';
 import { Message } from 'element-ui';
 import router from '../../router/index.js'
 // 获取今日患者列表
-export function getPatientsList() {
-    return Get("http://132.232.18.227:3000/patienttreatment/patientlist").then((res) => {
-        return res.data.API_patientsList
-    })
-
-}
 
 // 获取患者详情
 export function getPatientsDetails(pid) {
@@ -68,38 +62,9 @@ export function getPatientsNursingDetails(pid) {
 
 // 住院申请列表
 export function getApplyList() {
-    return new Promise(resolve => {
-        let obj = [
-            {
-                API_date: "2020-09-18 10:06:28",
-                API_expert: "专家2",
-                API_name: "zhangxiao",
-                API_pid: 426,
-                API_state: "已处理",
-                API_toHospitalID: "202009188426",
-            },
-            {
-                API_date: "2020-09-18 10:06:28",
-                API_expert: "专家2",
-                API_name: "jbh",
-                API_pid: 426,
-                API_state: "已处理",
-                API_toHospitalID: "202009188425",
-            },
-            {
-                API_date: "2020-09-18 10:06:28",
-                API_expert: "专家1",
-                API_name: "zhangxiao",
-                API_pid: 426,
-                API_state: "已处理",
-                API_toHospitalID: "202009188426",
-            }
-        ]
-        resolve(obj)
+    return Get("/api/patienttreatment/applylist").then((res) => {
+        return res.data.patientsList
     })
-    // return Get("/api/operationmanage/applylist").then((res) => {
-    //     return res.data.applyList;
-    // })
 }
 
 
@@ -151,9 +116,41 @@ export function getApplyDetails() {
 
 // 确认入院申请
 export function confirmApply(pid, data) {
-    console.log(pid, data)
-    // return Get("/api/operationmanage/applylist").then((res) => {
-    //     return res.data.applyList;
-    // })
+    return Post("/api/patienttreatment/applydetails/confirm/" + pid, data).then((res) => {
+        console.log(res)
+        return new Promise(resolve => {
+            resolve(true)
+        })
+    })
+}
+
+// 获取住院患者列表
+export function getPatientsList() {
+    return Get("/api/patienttreatment/applylist").then((res) => {
+           let arr = [
+        {
+            API_state: "已处理",
+            API_toHospitalID: "202009188426",
+            API_expert: "专家2",
+            API_date: "2020-09-18 10:06:28",
+            API_pid: 426,
+            API_name: "zhangxiao"
+        }
+    ]
+    return arr
+        return res.data.patientsList
+    })
+    console.log('123')
+    let arr = [
+        {
+            API_state: "已处理",
+            API_toHospitalID: "202009188426",
+            API_expert: "专家2",
+            API_date: "2020-09-18 10:06:28",
+            API_pid: 426,
+            API_name: "zhangxiao"
+        }
+    ]
+    return arr
 }
 

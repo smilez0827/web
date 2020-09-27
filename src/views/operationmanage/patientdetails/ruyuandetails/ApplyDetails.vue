@@ -7,10 +7,12 @@
             <h3 class="title">入院患者评估</h3>
           </template>
           <div class="container">
-            <div v-for="(item,index) in pinggu" :key="item.id" class="pinggu">
+            <div v-for="(item, index) in pinggu" :key="item.id" class="pinggu">
               <div>
                 <span style="margin-right:40px">吞咽风险评估</span>
-                <el-link @click="jinxingpinggu(item,index)" type="success">进行评估</el-link>
+                <el-link @click="jinxingpinggu(item, index)" type="success"
+                  >进行评估</el-link
+                >
               </div>
               <div v-show="item.isOpen" class="pinggubiao">
                 <TUNYAN></TUNYAN>
@@ -23,14 +25,11 @@
             <h3 class="title">入院治疗安排</h3>
           </template>
           <div class="container">
-            <NewTreatmentLog></NewTreatmentLog>
+            <NewTreatmentLog :readonly="readonly"></NewTreatmentLog>
           </div>
         </el-collapse-item>
       </el-collapse>
 
-      <!-- 聊天 -->
-      <chatBox></chatBox>
-      <!-- 查看问卷对话框 -->
     </div>
   </div>
 </template>

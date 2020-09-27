@@ -6,36 +6,34 @@
           <template slot="title">
             <h3 class="title">基本信息</h3>
           </template>
-          <PersonalInfo :prsonalInfo="patientInfo.API_basicInfo"></PersonalInfo>
-        </el-collapse-item>
-        <el-collapse-item name="2">
-          <template slot="title">
-            <h3 class="title">诊断记录</h3>
-          </template>
-          <div class="container">
-            <DiagHistory></DiagHistory>
-          </div>
+          <PersonalInfo
+            @addReference="addTabs($event)"
+            :prsonalInfo="patientInfo.API_basicInfo"
+          ></PersonalInfo>
         </el-collapse-item>
         <el-collapse-item name="3">
           <template slot="title">
             <h3 class="title">患者评估</h3>
           </template>
           <div class="container">
-            <div v-for="(item,index) in pinggu" :key="item.id" class="pinggu">
+            <div v-for="(item, index) in pinggu" :key="item.id" class="pinggu">
               <div>
-                <span style="margin-right:40px">{{item.name}}{{'('+item.state+')'}}</span>
+                <span style="margin-right:40px"
+                  >{{ item.name }}{{ "(" + item.state + ")" }}</span
+                >
                 <el-link
-                  @click="jinxingpinggu(item,index)"
-                  :type="item.state=='已完成'?'primary':'success'"
-                >{{item.state=='已完成'?'查看':'进行评估'}}</el-link>
+                  @click="jinxingpinggu(item, index)"
+                  :type="item.state == '已完成' ? 'primary' : 'success'"
+                  >{{ item.state == "已完成" ? "查看" : "进行评估" }}</el-link
+                >
               </div>
               <div v-show="item.isOpen" class="pinggubiao">
                 <div style="margin:20px 0;">
                   <components
-                    @commit="pingguCommit(index,$event)"
-                    @cancel="pingguCancel(item,index)"
+                    @commit="pingguCommit(index, $event)"
+                    @cancel="pingguCancel(item, index)"
                     :preData="item.data"
-                    :readonly="item.state=='已完成'?true:false"
+                    :readonly="item.state == '已完成' ? true : false"
                     :is="item.type"
                   ></components>
                 </div>
@@ -43,7 +41,12 @@
             </div>
           </div>
         </el-collapse-item>
-        <el-button @click="save" size="medium" type="primary" class="btn">确认</el-button>
+        <div>
+          <Reference ref="Reference"></Reference>
+        </div>
+        <el-button @click="save" size="medium" type="primary" class="btn"
+          >确认</el-button
+        >
       </el-collapse>
 
       <!-- 聊天 -->
@@ -58,6 +61,7 @@ import chatBox from "@components/chatBox/chatBox.vue";
 
 import PersonalInfo from "./components/PersonalInfo.vue";
 import DiagHistory from "./components/PatientDiagResult.vue";
+import Reference from "./components/Reference.vue";
 
 import questionnaire from "../questionnaires/mixin.js";
 
@@ -65,7 +69,8 @@ import {
   getPatientsDetails,
   newQuestionnaire,
   getApplyDetails,
-  postApplyDetails
+  postRuyuanPinggu,
+  pingguConfirm
 } from "@api/operationmanage/operationmanage.js";
 export default {
   mixins: [questionnaire],
@@ -73,10 +78,20 @@ export default {
     PrescriptionTable: Prescription,
     PersonalInfo: PersonalInfo,
     chatBox,
-    DiagHistory
+    DiagHistory,
+    Reference
   },
   data() {
     return {
+      moveTest(type) {
+        let height = this.$refs[type].offsetTop;
+        console.log(height);
+        let el = document.getElementById("mainContent");
+        el.scroll({
+          top: height, //向上移动的距离，如果有fixede布局， 直接减去对应距离即可
+          behavior: "smooth" // 平滑移动
+        });
+      },
       pages: {
         pageSize: 5,
         currentPage: 1,
@@ -140,7 +155,6 @@ export default {
       for (let i = 0, len = this.showTable.length; i < len; i++) {
         this.showTable[i].API_questionnaire.forEach(item => {
           if (item.name == this.pages.questionnaire.target) {
-            console.log(item);
             this.pages.questionnaire.lastData = item.data;
             this.pages.questionnaire.importFlag = true;
             flag = true;
@@ -156,7 +170,24 @@ export default {
       this.pages.questionnaire.importFlag = false;
     },
     save() {
-      this.$router.push("/operationmanage/applylist");
+      let flag = true;
+      this.pinggu.forEach((item, index) => {
+        if (item.state == "未完成") {
+          flag = false;
+        }
+      });
+
+      if (flag) {
+        let pid = localStorage.getItem("pid");
+        pingguConfirm(pid).then(res => {
+          if (res) {
+            this.$message.success("入院评估完成");
+            this.$router.push("/operationmanage/applylist");
+          }
+        });
+      } else {
+        this.$message.error("请完善入院评估");
+      }
     },
     jinxingpinggu(item, index) {
       let obj = JSON.parse(JSON.stringify(item));
@@ -178,16 +209,34 @@ export default {
     },
     pingguCommit(index, data) {
       let pid = localStorage.getItem("pid");
-      postApplyDetails(pid, data);
-      // console.log(index, data);
+      postRuyuanPinggu(pid, data).then(res => {
+        if (res) {
+          this.pinggu.forEach((item, index) => {
+            if (item.name == data.name) {
+              data.state = "已完成";
+              switch (data.name) {
+                case "跌倒风险评定":
+                  data.type = "DIEDAO";
+                  break;
+                case "吞咽功能评定":
+                  data.type = "TUNYAN";
+                  break;
+              }
+              this.pinggu.splice(index, 1, data);
+            }
+          });
+        }
+      });
+      this.$message.success("提交成功");
+    },
+    addTabs(name) {
+      this.$refs["Reference"].addTab(name);
     }
   },
   mounted() {
     let pid = localStorage.getItem("pid");
-    // getPatientsDetails(pid).then(res => {
-    //   this.patientInfo.API_basicInfo = res.API_basicInfo;
-    // });
-    getApplyDetails().then(res => {
+    getApplyDetails(pid).then(res => {
+      console.log(res);
       this.patientInfo.API_basicInfo = res.API_basicInfo;
       this.pinggu = res.API_questionnaire;
     });

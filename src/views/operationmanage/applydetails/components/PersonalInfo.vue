@@ -8,21 +8,26 @@
     </div>
     <div class="info">
       <el-row>
-        <el-col :span="8">姓名：{{prsonalInfo.API_name||"无"}}</el-col>
-        <el-col :span="8">性别：{{prsonalInfo.API_gender||"无"}}</el-col>
-        <el-col
-          :xs="24"
-          :sm="24"
-          :md="24"
-          :lg="8"
-          :xl="8"
-        >出生日期：{{new Date(prsonalInfo.API_birthday).toLocaleDateString() ||"无"}}</el-col>
+        <el-col :span="8">姓名：{{ prsonalInfo.API_name || "无" }}</el-col>
+        <el-col :span="8">性别：{{ prsonalInfo.API_gender || "无" }}</el-col>
+        <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8"
+          >出生日期：{{
+            new Date(prsonalInfo.API_birthday).toLocaleDateString() || "无"
+          }}</el-col
+        >
       </el-row>
       <el-row>
-        <el-col :span="24">家庭住址：{{prsonalInfo.API_address||"无"}}</el-col>
+        <el-col :span="24"
+          >家庭住址：{{ prsonalInfo.API_address || "无" }}</el-col
+        >
       </el-row>
       <el-row>
-        <el-col :span="10">联系方式：{{prsonalInfo.API_tel||"无"}}</el-col>
+        <el-col :span="10">联系方式：{{ prsonalInfo.API_tel || "无" }}</el-col>
+        <el-col :span="3"
+          ><el-link @click="addReference('诊断记录')" type="success"
+            >诊断记录</el-link
+          ></el-col
+        >
       </el-row>
     </div>
   </div>
@@ -76,6 +81,10 @@ export default {
         );
       }
       this.$router.push("/instantinfo/message");
+    },
+    addReference(name) {
+      // console.log(name);
+      this.$emit("addReference", name);
     }
   }
 };

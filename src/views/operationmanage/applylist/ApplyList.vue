@@ -141,7 +141,6 @@ export default {
   mounted() {
     getApplyList().then(res => {
       this.tableData = res;
-      console.log(res);
     });
   }
 };

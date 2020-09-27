@@ -6,7 +6,10 @@
           <template slot="title">
             <h3 class="title">基本信息</h3>
           </template>
-          <PersonalInfo @otherInfo="addTab($event)" :prsonalInfo="patientInfo.API_basicInfo"></PersonalInfo>
+          <PersonalInfo
+            @otherInfo="addTab($event)"
+            :prsonalInfo="patientInfo.API_basicInfo"
+          ></PersonalInfo>
         </el-collapse-item>
 
         <el-collapse-item name="2">
@@ -15,7 +18,11 @@
           </template>
           <div class="container">
             <div>
-              <NursingLogs :NursingLogs="nursingLogs" @commit="commitNursingLog($event)"></NursingLogs>
+              <NursingLogs
+                ref="NursingLlogs"
+                :NursingLogs="nursingLogs"
+                @commit="commitNursingLog($event)"
+              ></NursingLogs>
             </div>
           </div>
         </el-collapse-item>
@@ -26,7 +33,7 @@
           </template>
           <div class="container">
             <div>
-              <PingguLogs></PingguLogs>
+              <PingguLogs :PingguLogs="pinggu"></PingguLogs>
             </div>
           </div>
         </el-collapse-item>
@@ -37,7 +44,7 @@
           </template>
           <div class="container">
             <div>
-              <NursingLogs ></NursingLogs>
+              <TreatLogs></TreatLogs>
             </div>
           </div>
         </el-collapse-item>
@@ -59,7 +66,7 @@
           </template>
           <div class="container">
             <div>
-              <ApplyDetails></ApplyDetails>
+              <ApplyDetails :readonly="true"></ApplyDetails>
             </div>
           </div>
         </el-collapse-item>
@@ -80,6 +87,7 @@ import PersonalInfo from "./components/PersonalInfo.vue";
 import DiagHistory from "./components/PatientDiagResult.vue";
 import NursingLogs from "./components/NursingLogs.vue";
 import PingguLogs from "./components/PingguLogs.vue";
+import TreatLogs from "./components/TreatLogs.vue";
 import ApplyDetails from "./ruyuandetails/ApplyDetails.vue";
 
 import questionnaire from "../questionnaires/mixin.js";
@@ -87,7 +95,10 @@ import questionnaire from "../questionnaires/mixin.js";
 import {
   getPatientsDetails,
   newQuestionnaire,
-  getNursingLogs
+  getNursingLogs,
+  postNursingLogs,
+  getPingguLogs,
+  getRuyuanLogs
 } from "@api/operationmanage/operationmanage.js";
 export default {
   mixins: [questionnaire],
@@ -98,7 +109,8 @@ export default {
     DiagHistory,
     NursingLogs,
     PingguLogs,
-    ApplyDetails
+    ApplyDetails,
+    TreatLogs
   },
   data() {
     return {
@@ -126,29 +138,14 @@ export default {
           editableTabsValue: "1",
           editableTabs: [],
           tabIndex: 1
-        }
+        },
+        newNursingFlag: true
       },
       patientInfo: {
         API_basicInfo: {}
       },
       nursingLogs: [],
-      pinggu: [
-        {
-          name: "吞咽功能评估",
-          state: "已完成",
-          data: {}
-        },
-        {
-          name: "患者护理首页",
-          state: "已完成",
-          data: {}
-        },
-        {
-          name: "跌倒风险评估",
-          state: "已完成",
-          data: {}
-        }
-      ]
+      pinggu: []
     };
   },
   methods: {
@@ -234,18 +231,29 @@ export default {
       });
     },
     commitNursingLog(data) {
-      console.log(data);
+      let pid = localStorage.getItem("pid");
+      postNursingLogs(pid, data).then(res => {
+        if (res) {
+          getNursingLogs(pid).then(res => {
+            this.nursingLogs = res;
+            this.$refs["NursingLlogs"].pages.newLogFlag = false;
+          });
+        }
+      });
     }
   },
   mounted() {
     let pid = localStorage.getItem("pid");
     getPatientsDetails(pid).then(res => {
-      this.patientInfo.API_basicInfo = res.API_basicInfo;
+      this.patientInfo.API_basicInfo = res;
     });
     getNursingLogs(pid).then(res => {
       this.nursingLogs = res;
-      // console.log(res);
     });
+    // getPingguLogs(pid).then(res => {
+    //   this.pinggu = res;
+    // });
+    getRuyuanLogs(pid).then(res => {});
   }
 };
 </script>

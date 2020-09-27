@@ -10,12 +10,6 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"
       ></el-date-picker>
-      {{pages.timeRange}}
-      <el-button
-        @click="pages.newLogFlag=!pages.newLogFlag"
-        type="success"
-        style="float:right"
-      >添加护理记录</el-button>
     </div>
     <div>
       <div v-if="pages.newLogFlag">
@@ -25,36 +19,113 @@
     <div class="treatmentLog">
       <div>
         <el-table
-          :cell-style="{'text-align':'center'}"
-          :header-cell-style="{background:'#EFF3F4',color:'#1c7e7c','text-align':'center', 'font-weight':'500', }"
-          :data="showTable.slice((pages.currentPage-1)*pages.pageSize,(pages.currentPage-1)*pages.pageSize+pages.pageSize)"
+          :cell-style="{ 'text-align': 'center' }"
+          :header-cell-style="{
+            background: '#EFF3F4',
+            color: '#1c7e7c',
+            'text-align': 'center',
+            'font-weight': '500'
+          }"
+          :data="
+            showTable.slice(
+              (pages.currentPage - 1) * pages.pageSize,
+              (pages.currentPage - 1) * pages.pageSize + pages.pageSize
+            )
+          "
           style="width: 100%"
         >
-          <el-table-column fixed prop="date" label="时间" width="100px"></el-table-column>
-          <el-table-column prop="tizheng.T" width="50px" label="T(℃)"></el-table-column>
+          <el-table-column
+            fixed
+            prop="date"
+            label="时间"
+            width="100px"
+          ></el-table-column>
+          <el-table-column prop="tizheng.yishi" width="50px" label="意识">
+            清醒
+          </el-table-column>
 
           <el-table-column label="生命体征">
-            <el-table-column prop="tizheng.T" width="50px" label="T(℃)"></el-table-column>
-            <el-table-column prop="tizheng.P" width="50px" label="P(次/分)"></el-table-column>
-            <el-table-column prop="tizheng.HR" width="50px" label="HR(次/分)"></el-table-column>
-            <el-table-column prop="tizheng.R" width="50px" label="R(次/分)"></el-table-column>
+            <el-table-column
+              prop="tizheng.T"
+              width="50px"
+              label="T(℃)"
+            ></el-table-column>
+            <el-table-column
+              prop="tizheng.P"
+              width="50px"
+              label="P(次/分)"
+            ></el-table-column>
+            <el-table-column
+              prop="tizheng.HR"
+              width="50px"
+              label="HR(次/分)"
+            ></el-table-column>
+            <el-table-column
+              prop="tizheng.R"
+              width="50px"
+              label="R(次/分)"
+            ></el-table-column>
           </el-table-column>
-          <el-table-column prop="SPO2" width="60px" label="SPO2(%)"></el-table-column>
+          <el-table-column
+            prop="SPO2"
+            width="60px"
+            label="SPO2(%)"
+          ></el-table-column>
           <el-table-column label="入量">
-            <el-table-column prop="ruliang.mingcheng" width="50px" label="名称"></el-table-column>
-            <el-table-column prop="ruliang.fenglei" width="50px" label="分类"></el-table-column>
-            <el-table-column prop="ruliang.tujing" width="50px" label="途径"></el-table-column>
-            <el-table-column prop="ruliang.liang" width="50px" label="量(ml)"></el-table-column>
+            <el-table-column
+              prop="ruliang.mingcheng"
+              width="50px"
+              label="名称"
+            ></el-table-column>
+            <el-table-column
+              prop="ruliang.fenglei"
+              width="50px"
+              label="分类"
+            ></el-table-column>
+            <el-table-column
+              prop="ruliang.tujing"
+              width="50px"
+              label="途径"
+            ></el-table-column>
+            <el-table-column
+              prop="ruliang.liang"
+              width="50px"
+              label="量(ml)"
+            ></el-table-column>
           </el-table-column>
           <el-table-column label="出量">
-            <el-table-column prop="chuliang.mingcheng" width="50px" label="名称"></el-table-column>
-            <el-table-column prop="chuliang.liang" width="50px" label="量(ml)"></el-table-column>
+            <el-table-column
+              prop="chuliang.mingcheng"
+              width="50px"
+              label="名称"
+            ></el-table-column>
+            <el-table-column
+              prop="chuliang.liang"
+              width="50px"
+              label="量(ml)"
+            ></el-table-column>
           </el-table-column>
-          <el-table-column prop="jili" width="80px" label="肌力"></el-table-column>
+          <el-table-column
+            prop="jili"
+            width="80px"
+            label="肌力"
+          ></el-table-column>
 
-          <el-table-column prop="fanshenwowei" width="50px" label="翻身卧位"></el-table-column>
-          <el-table-column prop="shifouyueshu" width="50px" label="是否约束"></el-table-column>
-          <el-table-column prop="yijian" fixed="right" label="护理意见"></el-table-column>
+          <el-table-column
+            prop="fanshenwowei"
+            width="50px"
+            label="翻身卧位"
+          ></el-table-column>
+          <el-table-column
+            prop="shifouyueshu"
+            width="50px"
+            label="是否约束"
+          ></el-table-column>
+          <el-table-column
+            prop="yijian"
+            fixed="right"
+            label="护理意见"
+          ></el-table-column>
         </el-table>
       </div>
     </div>

@@ -229,7 +229,6 @@ export default {
       this.patientInfo = res.patientInfo;
       this.API_diagInfo = res.API_diagInfo;
       this.API_state = res.API_state;
-      console.log(res);
     });
   }
 };

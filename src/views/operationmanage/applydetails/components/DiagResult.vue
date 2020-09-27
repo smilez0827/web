@@ -1,65 +1,92 @@
 <template>
   <div>
     <div class="mainContent">
-      <el-collapse-item name="2-1">
-        <template slot="title">
-          <h3 class="title">病情概况</h3>
-        </template>
-        <ill-state
-          :illState="this.patientInfo.API_illState"
-          :state="this.API_state"
-          @vedio="videoPlay($event)"
-        ></ill-state>
-        <!--  -->
-      </el-collapse-item>
-      <el-collapse-item name="3-1">
-        <template slot="title">
-          <h3 class="title">患者病史</h3>
-        </template>
-        <div class="history">
-          <p>既往史：{{this.patientInfo.API_history.API_patientHistory||"无"}}</p>
-          <p>家族史：{{this.patientInfo.API_history.API_familyHistory||"无"}}</p>
-          <p>过敏史：{{this.patientInfo.API_history.API_allergyHistory||"无"}}</p>
-        </div>
-      </el-collapse-item>
-      <el-collapse-item name="4-1">
-        <template slot="title">
-          <h3 class="title">检查结果</h3>
-        </template>
-        <examing-result :examInfo="this.patientInfo.API_examResult"></examing-result>
-      </el-collapse-item>
-      <el-collapse-item name="5-1">
-        <template slot="title">
-          <h3 class="title">诊断结论</h3>
-        </template>
-        <div class="diagResult">
-          <div class="text">
-            <div class="box">
-              <p>{{API_diagInfo.API_diagResult.join("，")}}</p>
+      <el-collapse>
+        <el-collapse-item name="2-1">
+          <template slot="title">
+            <h3 class="title">病情概况</h3>
+          </template>
+          <ill-state
+            :illState="this.patientInfo.API_illState"
+            :state="this.API_state"
+            @vedio="videoPlay($event)"
+          ></ill-state>
+          <!--  -->
+        </el-collapse-item>
+        <el-collapse-item name="3-1">
+          <template slot="title">
+            <h3 class="title">患者病史</h3>
+          </template>
+          <div class="history">
+            <p>
+              既往史：{{
+                this.patientInfo.API_history.API_patientHistory || "无"
+              }}
+            </p>
+            <p>
+              家族史：{{
+                this.patientInfo.API_history.API_familyHistory || "无"
+              }}
+            </p>
+            <p>
+              过敏史：{{
+                this.patientInfo.API_history.API_allergyHistory || "无"
+              }}
+            </p>
+          </div>
+        </el-collapse-item>
+        <el-collapse-item name="4-1">
+          <template slot="title">
+            <h3 class="title">检查结果</h3>
+          </template>
+          <examing-result
+            :examInfo="this.patientInfo.API_examResult"
+          ></examing-result>
+        </el-collapse-item>
+        <el-collapse-item name="5-1">
+          <template slot="title">
+            <h3 class="title">诊断结论</h3>
+          </template>
+          <div class="diagResult">
+            <div class="text">
+              <div class="box">
+                <p>{{ API_diagInfo.API_diagResult.join("，") }}</p>
+              </div>
             </div>
           </div>
-        </div>
-      </el-collapse-item>
-      <el-collapse-item name="6-1">
-        <template slot="title">
-          <h3 class="title">治疗方案</h3>
-        </template>
-        <div class="diagResult">
-          <div class="text">
-            <div class="box">
-              <p>{{API_diagInfo.API_treatment.API_description.join("，")}}</p>
+        </el-collapse-item>
+        <el-collapse-item name="6-1">
+          <template slot="title">
+            <h3 class="title">治疗方案</h3>
+          </template>
+          <div class="diagResult">
+            <div class="text">
+              <div class="box">
+                <p>
+                  {{ API_diagInfo.API_treatment.API_description.join("，") }}
+                </p>
+              </div>
+            </div>
+            <div
+              v-show="API_diagInfo.API_treatment.API_prescription.length > 0"
+              class="prescription"
+            >
+              <span class="label">处方</span>
+              <PrescriptionTable
+                :prescription="API_diagInfo.API_treatment.API_prescription"
+              ></PrescriptionTable>
             </div>
           </div>
-          <div v-show="API_diagInfo.API_treatment.API_prescription.length>0" class="prescription">
-            <span class="label">处方</span>
-            <PrescriptionTable :prescription="API_diagInfo.API_treatment.API_prescription"></PrescriptionTable>
-          </div>
+        </el-collapse-item>
+        <div v-show="pages.videoDialogVisible" v-drag class="drag">
+          <span @click="videoDialogClose">X</span>
+          <video
+            :src="pages.videoDialogSrc"
+            controls="controls"
+            style="width:100%"
+          ></video>
         </div>
-      </el-collapse-item>
-      <div v-show="pages.videoDialogVisible" v-drag class="drag">
-        <span @click="videoDialogClose">X</span>
-        <video :src="pages.videoDialogSrc" controls="controls" style="width:100%"></video>
-      </div>
+      </el-collapse>
     </div>
   </div>
 </template>
@@ -178,7 +205,6 @@ export default {
     searchHistory() {
       console.log("查看病历");
     },
-
     prescriptionModify() {
       this.pages.prescriptionDialogVisible = true;
       let obj = JSON.parse(
@@ -196,7 +222,6 @@ export default {
   },
   directives: {
     drag: {
-      // 指令的定义
       bind: function(el) {
         let odiv = el; //获取当前元素
         el.onmousedown = e => {

@@ -9,7 +9,6 @@ export function getMessageRecord(pid) {
         }
     ).then(res => {
         let obj = res.data.chat;
-        console.log(obj)
         obj.forEach((element, index) => {
             element.messages.forEach(msg => {
                 if (msg.fromid != element.id) {

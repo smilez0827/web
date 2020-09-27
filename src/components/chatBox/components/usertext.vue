@@ -27,7 +27,7 @@
           <i class="iconfont icon-shipin"></i>
         </el-upload>
       </span>
-      <span @mousedown="startRecorder" @mouseup="stopRecorder" class="file">
+      <!-- <span @mousedown="startRecorder" @mouseup="stopRecorder" class="file">
         <i
           :class="
             this.audio.pressFlag
@@ -35,7 +35,7 @@
               : 'iconfont icon-huatong'
           "
         ></i>
-      </span>
+      </span> -->
     </div>
     <textarea
       placeholder="按 Enter 发送"

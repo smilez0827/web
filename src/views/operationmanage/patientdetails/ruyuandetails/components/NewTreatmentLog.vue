@@ -2,14 +2,18 @@
   <div class="newLog">
     <span class="label">患者状况：</span>
     <div class="box" @click="inputBoxShow('state')">
-      <p>{{newLog.API_patientState.join('，')||"暂无"}}</p>
+      <p>{{ newLog.API_patientState.join("，") || "暂无" }}</p>
     </div>
     <span class="label">治疗建议：</span>
     <div class="box" @click="inputBoxShow('treatment')">
-      <p>{{newLog.API_treatment.join('，')||"暂无"}}</p>
+      <p>{{ newLog.API_treatment.join("，") || "暂无" }}</p>
     </div>
     <div>
-      <prescription-edit @input="prescription($event)"></prescription-edit>
+      <!-- <prescription-edit
+        :readonly="true"
+        @input="prescription($event)"
+      ></prescription-edit> -->
+      <Prescription :prescription="[]"></Prescription>
     </div>
   </div>
 </template>

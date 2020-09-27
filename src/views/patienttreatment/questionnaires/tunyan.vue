@@ -37,7 +37,10 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="有困难处理口水及分泌物">
-            <el-radio-group :disabled="readonly" v-model="questionnaire.fenmiwu">
+            <el-radio-group
+              :disabled="readonly"
+              v-model="questionnaire.fenmiwu"
+            >
               <el-radio label="是"></el-radio>
               <el-radio label="否"></el-radio>
             </el-radio-group>
@@ -49,13 +52,19 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="不合作">
-            <el-radio-group :disabled="readonly" v-model="questionnaire.buhezuo">
+            <el-radio-group
+              :disabled="readonly"
+              v-model="questionnaire.buhezuo"
+            >
               <el-radio label="是"></el-radio>
               <el-radio label="否"></el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="有不正常等口部反射动作例如:咬紧牙关">
-            <el-radio-group :disabled="readonly" v-model="questionnaire.fanshedongzuo">
+            <el-radio-group
+              :disabled="readonly"
+              v-model="questionnaire.fanshedongzuo"
+            >
               <el-radio label="是"></el-radio>
               <el-radio label="否"></el-radio>
             </el-radio-group>
@@ -67,7 +76,10 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="不能坐起">
-            <el-radio-group :disabled="readonly" v-model="questionnaire.bunengzuoqi">
+            <el-radio-group
+              :disabled="readonly"
+              v-model="questionnaire.bunengzuoqi"
+            >
               <el-radio label="是"></el-radio>
               <el-radio label="否"></el-radio>
             </el-radio-group>
@@ -79,7 +91,9 @@
         </div>
         <div>
           <span class="label">二、操作方法</span>
-          <p v-for="(item,index) in table.partTwo" :key="item.id">{{'（'+(index+1)+'）'+item}}</p>
+          <p v-for="(item, index) in table.partTwo" :key="item.id">
+            {{ "（" + (index + 1) + "）" + item }}
+          </p>
         </div>
 
         <div>
@@ -91,7 +105,11 @@
               v-model="questionnaire.jieguo"
               placeholder="请选择吞咽情况结果判定"
             >
-              <el-option v-for="item in table.result.options" :key="item.id" :value="item"></el-option>
+              <el-option
+                v-for="item in table.result.options"
+                :key="item.id"
+                :value="item"
+              ></el-option>
             </el-select>
           </el-form-item>
           <span class="label">四、建议指导</span>
@@ -102,14 +120,22 @@
               v-model="questionnaire.jianyi"
               placeholder="请选择建议指导"
             >
-              <el-option v-for="item in table.advice.options" :key="item.id" :value="item"></el-option>
+              <el-option
+                v-for="item in table.advice.options"
+                :key="item.id"
+                :value="item"
+              ></el-option>
             </el-select>
           </el-form-item>
         </div>
       </div>
       <div class="btn">
-        <el-button v-show="!readonly" @click="save" size="small " type="primary">确认</el-button>
-        <el-link style="margin-left:20px" @click="cancel">{{readonly?'关闭':'取消'}}</el-link>
+        <el-button v-show="!readonly" @click="save" size="small " type="primary"
+          >确认</el-button
+        >
+        <el-link style="margin-left:20px" @click="cancel">{{
+          readonly ? "关闭" : "取消"
+        }}</el-link>
       </div>
     </el-form>
   </div>
@@ -248,7 +274,7 @@ export default {
       this.$emit("cancel");
     },
     save() {
-      this.$emit("commit", { data: this.questionnaire, name: "跌倒风险评定" });
+      this.$emit("commit", { data: this.questionnaire, name: "吞咽功能评定" });
     }
   },
   mounted() {
