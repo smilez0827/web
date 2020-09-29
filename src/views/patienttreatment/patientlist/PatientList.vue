@@ -8,72 +8,39 @@
         >
       </div>
       <div>
-        <el-form
-          size="mini"
-          :inline="true"
-          :model="formInline"
-          class="demo-form-inline"
-          label-width="150px"
-        >
-          <el-row>
-            <el-col :span="8">
-              <el-form-item>
-                <template slot="label">
-                  <span class="formLabel">姓名：</span>
-                </template>
-                <el-input
-                  v-model="formInline.API_name"
-                  placeholder="请输入患者姓名"
-                  style="width:150px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item>
-                <template slot="label">
-                  <span class="formLabel">住院号：</span>
-                </template>
-                <el-input
-                  v-model="formInline.API_number"
-                  placeholder="请输入患者住院号"
-                  style="width:150px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item>
-                <template slot="label">
-                  <span class="formLabel">主诊专家：</span>
-                </template>
-                <el-input
-                  v-model="formInline.API_expert"
-                  placeholder="请输入专家姓名"
-                  style="width:150px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="8">
-              <el-form-item>
-                <template slot="label">
-                  <span class="formLabel">今日护理状态：</span>
-                </template>
-
-                <el-select
-                  style="width:150px"
-                  clearable
-                  v-model="formInline.API_state"
-                  placeholder="请选择"
-                >
-                  <el-option value="已处理"></el-option>
-                  <el-option value="未处理"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
+        <el-row :gutter="20">
+          <el-col :span="5">
+            <el-select
+              @change="searchRuleChange"
+              class="searchRule"
+              size="small"
+              v-model="searchRule.rule"
+              placeholder="选择查询条件"
+            >
+              <el-option label="姓名" value="API_name"></el-option>
+              <el-option label="住院号" value="API_number"></el-option>
+              <el-option label="主诊专家" value="API_expert"></el-option>
+              <el-option label="今天治疗状态" value="API_state"></el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="5">
+            <el-input
+              v-show="searchRule.rule != 'API_state'"
+              size="small"
+              v-model="formInline[searchRule.rule]"
+            ></el-input>
+            <el-select
+              v-show="searchRule.rule == 'API_state'"
+              size="small"
+              v-model="formInline.API_state"
+              placeholder="请选择"
+              clearable
+            >
+              <el-option label="已处理" value="已处理"></el-option>
+              <el-option label="未处理" value="未处理"></el-option>
+            </el-select>
+          </el-col>
+        </el-row>
       </div>
     </div>
     <div class="eltable">
@@ -156,6 +123,10 @@ import {
 export default {
   data() {
     return {
+      searchRule: {
+        rule: "API_name",
+        value: ""
+      },
       formInline: {
         API_name: "",
         API_number: "",
@@ -188,6 +159,15 @@ export default {
       } else {
         return "";
       }
+    },
+    searchRuleChange() {
+      this.searchRule.value = "";
+      this.formInline = {
+        API_name: "",
+        API_number: "",
+        API_expert: "",
+        API_state: ""
+      };
     }
   },
   computed: {
@@ -230,7 +210,6 @@ export default {
   mounted() {
     getPatientsList().then(res => {
       this.tableData = res;
-      // console.log(res);
     });
     // this.tableData=getPatientsList()
   }
@@ -264,5 +243,17 @@ export default {
 <style>
 .el-table .highlight {
   background: oldlace;
+}
+</style>
+<style lang="scss">
+.searchRule {
+  .el-input__inner {
+    border: 0px;
+    color: #1c7e7c;
+    font-size: 16px;
+  }
+  :hover {
+    background-color: #eff3f4;
+  }
 }
 </style>

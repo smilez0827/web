@@ -7,10 +7,12 @@
             <h3 class="title">入院患者评估</h3>
           </template>
           <div class="container">
-            <div v-for="(item,index) in pinggu" :key="item.id" class="pinggu">
+            <div v-for="(item, index) in pinggu" :key="item.id" class="pinggu">
               <div>
                 <span style="margin-right:40px">吞咽风险评估</span>
-                <el-link @click="jinxingpinggu(item,index)" type="success">进行评估</el-link>
+                <el-link @click="jinxingpinggu(item, index)" type="success"
+                  >进行评估</el-link
+                >
               </div>
               <div v-show="item.isOpen" class="pinggubiao">
                 <TUNYAN></TUNYAN>
@@ -43,7 +45,7 @@ import PersonalInfo from "./components/PersonalInfo.vue";
 import DiagHistory from "./components/PatientDiagResult.vue";
 import NewTreatmentLog from "./components/NewTreatmentLog.vue";
 
-import questionnaire from "../../questionnaires/mixin.js";
+import questionnaire from "../../../questionnaires/mixin.js";
 
 import {
   getPatientsDetails,

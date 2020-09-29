@@ -5,19 +5,13 @@ import router from '../../router/index.js'
 
 
 
-// 提交新的护理记录
-export function newQuestionnaire(pid, name, data) {
-    let obj = {
-        time: new Date(),
-        name: name,
-        data: data
-    }
-    return Post("/api/operationmanage/newquestionnaire/" + pid, obj).then((res) => {
-        Message.success("成功")
-        return true
-    })
-}
 
+
+/* 
+    住院申请：
+        住院申请列表
+        住院申请详情
+*/
 
 // 住院申请列表 
 export function getApplyList() {
@@ -65,6 +59,28 @@ export function getApplyDetails(pid) {
         return res.data;
     })
 }
+
+
+
+
+
+
+// 提交新的护理记录
+export function newQuestionnaire(pid, name, data) {
+    let obj = {
+        time: new Date(),
+        name: name,
+        data: data
+    }
+    return Post("/api/operationmanage/newquestionnaire/" + pid, obj).then((res) => {
+        Message.success("成功")
+        return true
+    })
+}
+
+
+
+
 
 
 // 提交入院评估

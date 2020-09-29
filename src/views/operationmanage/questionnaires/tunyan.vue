@@ -285,11 +285,8 @@ export default {
 
 <style lang="scss" scoped>
 .questionnaire {
-  max-height: 500px;
-  max-width: 800px;
-  overflow-y: auto;
+  width: 80%;
   padding: 10px;
-  box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.3);
   background-color: #fff;
   .header {
     text-align: center;

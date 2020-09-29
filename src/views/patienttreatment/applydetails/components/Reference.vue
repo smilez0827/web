@@ -3,7 +3,11 @@
 参考信息
   -->
   <div class="reference">
-    <el-tabs tab-position="left" v-model="editableTabsValue">
+    <el-tabs
+      tab-position="left"
+      v-model="editableTabsValue"
+      @tab-remove="removeTab"
+    >
       <el-tab-pane
         v-for="item in tabComponents"
         :key="item.name"
@@ -21,10 +25,12 @@
 </template>
 
 <script>
-import DiagResult from "./DiagResult.vue";
+import DiagResult from "./PatientDiagResult.vue";
+import Pinggu from "./Pinggu.vue";
 export default {
   components: {
-    DiagResult
+    DiagResult,
+    Pinggu
   },
   data() {
     return {
@@ -34,12 +40,48 @@ export default {
           title: "就诊记录",
           name: "1",
           type: "DiagResult"
+        },
+        {
+          title: "入院评估",
+          name: "2",
+          type: "Pinggu"
         }
       ],
       tabIndex: 1
     };
   },
-  methods: {}
+  methods: {
+    addTab(name) {
+      let flag = true;
+      this.tabComponents.forEach(item => {
+        if (item.title == name) flag = false;
+      });
+      if (flag) {
+        switch (name) {
+          case "诊断记录":
+            this.tabComponents.push({
+              title: "诊断记录",
+              name: "2",
+              type: "DiagResult"
+            });
+            this.editableTabsValue = "2";
+            break;
+        }
+      }
+    },
+    removeTab(targetName) {
+      this.tabComponents.forEach((item, index) => {
+        if (item.name == targetName) {
+          let nextTab =
+            this.tabComponents[index + 1] || this.tabComponents[index - 1];
+          if (nextTab) {
+            this.editableTabsValue = nextTab.name;
+          }
+          this.tabComponents.splice(index, 1);
+        }
+      });
+    }
+  }
 };
 </script>
 

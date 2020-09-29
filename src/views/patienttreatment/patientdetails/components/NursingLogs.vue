@@ -11,13 +11,8 @@
         end-placeholder="结束日期"
       ></el-date-picker>
     </div>
-    <div>
-      <div v-if="pages.newLogFlag">
-        <Jilubiao></Jilubiao>
-      </div>
-    </div>
     <div class="treatmentLog">
-      <div>
+      <div class="table">
         <el-table
           :cell-style="{ 'text-align': 'center' }"
           :header-cell-style="{
@@ -35,7 +30,6 @@
           style="width: 100%"
         >
           <el-table-column
-            fixed
             prop="date"
             label="时间"
             width="100px"
@@ -121,16 +115,12 @@
             width="50px"
             label="是否约束"
           ></el-table-column>
-          <el-table-column
-            prop="yijian"
-            fixed="right"
-            label="护理意见"
-          ></el-table-column>
+          <el-table-column prop="yijian" label="护理意见"></el-table-column>
         </el-table>
       </div>
     </div>
     <div class="page clearfix">
-      <div class="block">
+      <div style="float:right;margin:20px" class="block">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -455,6 +445,11 @@ export default {
   }
 }
 .treatmentLog {
+  .table {
+    width: 90%;
+    margin: auto;
+    overflow: auto;
+  }
   .card {
     width: 95%;
     margin: auto;

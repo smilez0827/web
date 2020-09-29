@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mainContent">
+    <div class="pageContent">
       <el-collapse v-model="pages.collapse_activeNames">
         <el-collapse-item name="1">
           <template slot="title">
@@ -17,44 +17,10 @@
             <TreatLogs></TreatLogs>
           </div>
         </el-collapse-item>
-
-        <el-collapse-item name="3">
-          <template slot="title">
-            <h3 class="title">护理记录</h3>
-          </template>
-          <div class="container">
-            <NursingLogs></NursingLogs>
-          </div>
-        </el-collapse-item>
-
-        <el-collapse-item name="4">
-          <template slot="title">
-            <h3 class="title">评估记录</h3>
-          </template>
-          <div class="container">
-            <PingguLogs></PingguLogs>
-          </div>
-        </el-collapse-item>
-
-        <el-collapse-item name="5">
-          <template slot="title">
-            <h3 class="title">入院记录</h3>
-          </template>
-          <div class="container">
-            <ApplyDetails></ApplyDetails>
-          </div>
-        </el-collapse-item>
-
-        <el-collapse-item name="6">
-          <template slot="title">
-            <h3 class="title">诊断记录</h3>
-          </template>
-          <div class="container">
-            <DiagHistory></DiagHistory>
-          </div>
-        </el-collapse-item>
       </el-collapse>
 
+      <!-- 参考 -->
+      <Reference></Reference>
       <!-- 聊天 -->
       <chatBox></chatBox>
       <!-- 查看问卷对话框 -->
@@ -71,7 +37,7 @@ import DiagHistory from "./components/PatientDiagResult.vue";
 import TreatLogs from "./components/TreatLogs.vue";
 import NursingLogs from "./components/NursingLogs.vue";
 import PingguLogs from "./components/PingguLogs.vue";
-import ApplyDetails from "./ruyuandetails/ApplyDetails.vue";
+import Reference from "./components/Reference.vue";
 
 import questionnaire from "../questionnaires/mixin.js";
 
@@ -82,22 +48,21 @@ import {
 export default {
   mixins: [questionnaire],
   components: {
-    PrescriptionTable: Prescription,
-    PersonalInfo: PersonalInfo,
+    Prescription,
+    PersonalInfo,
     chatBox,
     DiagHistory,
-    // NewTreatmentLog,
     TreatLogs,
     NursingLogs,
     PingguLogs,
-    ApplyDetails
+    Reference
   },
   data() {
     return {
       pages: {
         pageSize: 5,
         currentPage: 1,
-        collapse_activeNames: ["1"],
+        collapse_activeNames: ["1", "2"],
         search: {
           API_name: "",
           API_state: "",
@@ -212,7 +177,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.mainContent {
+.pageContent {
   width: 95%;
   height: 100%;
   margin: 20px auto;
@@ -294,5 +259,9 @@ export default {
 .tips {
   margin-top: 20px;
   font-size: 18px;
+}
+.reference {
+  max-height: 500px;
+  overflow: auto;
 }
 </style>

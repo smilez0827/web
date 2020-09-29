@@ -38,38 +38,7 @@
           </div>
         </el-collapse-item>
 
-        <el-collapse-item name="4">
-          <template slot="title">
-            <h3 class="title">治疗记录</h3>
-          </template>
-          <div class="container">
-            <div>
-              <TreatLogs></TreatLogs>
-            </div>
-          </div>
-        </el-collapse-item>
-
-        <el-collapse-item name="5">
-          <template slot="title">
-            <h3 class="title">诊断记录</h3>
-          </template>
-          <div class="container">
-            <div>
-              <DiagHistory></DiagHistory>
-            </div>
-          </div>
-        </el-collapse-item>
-
-        <el-collapse-item name="6">
-          <template slot="title">
-            <h3 class="title">入院记录</h3>
-          </template>
-          <div class="container">
-            <div>
-              <ApplyDetails :readonly="true"></ApplyDetails>
-            </div>
-          </div>
-        </el-collapse-item>
+        <Reference></Reference>
       </el-collapse>
 
       <!-- 聊天 -->
@@ -88,7 +57,7 @@ import DiagHistory from "./components/PatientDiagResult.vue";
 import NursingLogs from "./components/NursingLogs.vue";
 import PingguLogs from "./components/PingguLogs.vue";
 import TreatLogs from "./components/TreatLogs.vue";
-import ApplyDetails from "./ruyuandetails/ApplyDetails.vue";
+import Reference from "./components/Reference.vue";
 
 import questionnaire from "../questionnaires/mixin.js";
 
@@ -109,15 +78,15 @@ export default {
     DiagHistory,
     NursingLogs,
     PingguLogs,
-    ApplyDetails,
-    TreatLogs
+    TreatLogs,
+    Reference
   },
   data() {
     return {
       pages: {
         pageSize: 5,
         currentPage: 1,
-        collapse_activeNames: ["1"],
+        collapse_activeNames: ["1", "2", "3"],
         search: {
           API_name: "",
           API_state: "",

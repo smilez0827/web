@@ -23,11 +23,6 @@
       </el-row>
       <el-row>
         <el-col :span="10">联系方式：{{ prsonalInfo.API_tel || "无" }}</el-col>
-        <el-col :span="3"
-          ><el-link @click="addReference('诊断记录')" type="success"
-            >诊断记录</el-link
-          ></el-col
-        >
       </el-row>
     </div>
   </div>

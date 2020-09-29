@@ -21,9 +21,7 @@
               </template>
             </div>
             <div id="mainContent" class="mainContent">
-              <div class="xLimit">
-                <router-view />
-              </div>
+              <router-view />
             </div>
           </div>
         </div>
@@ -120,8 +118,7 @@ export default {
     height: 100%;
     width: 90%;
     margin: auto;
-    overflow: auto;
-    overflow-y: hidden;
+    overflow: hidden;
     .header {
       width: 100%;
       height: 80px;
@@ -159,7 +156,8 @@ export default {
         .mainContent {
           width: 100%;
           height: calc(100% - 50px);
-          overflow: auto;
+          overflow-y: auto;
+          overflow-x: hidden;
           margin: auto;
         }
         i {

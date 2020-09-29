@@ -29,7 +29,6 @@
           </div>
         </el-collapse-item>
       </el-collapse>
-
     </div>
   </div>
 </template>
@@ -42,7 +41,7 @@ import PersonalInfo from "./components/PersonalInfo.vue";
 import DiagHistory from "./components/PatientDiagResult.vue";
 import NewTreatmentLog from "./components/NewTreatmentLog.vue";
 
-import questionnaire from "../../questionnaires/mixin.js";
+import questionnaire from "../../../questionnaires/mixin.js";
 
 import {
   getPatientsDetails,
@@ -187,7 +186,6 @@ export default {
 <style scoped lang="scss">
 .mainContent {
   width: 95%;
-  height: 100%;
   margin: 20px auto;
   .title {
     font-size: 17px;

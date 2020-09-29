@@ -17,16 +17,28 @@
           <h3 class="title">患者病史</h3>
         </template>
         <div class="history">
-          <p>既往史：{{this.patientInfo.API_history.API_patientHistory||"无"}}</p>
-          <p>家族史：{{this.patientInfo.API_history.API_familyHistory||"无"}}</p>
-          <p>过敏史：{{this.patientInfo.API_history.API_allergyHistory||"无"}}</p>
+          <p>
+            既往史：{{
+              this.patientInfo.API_history.API_patientHistory || "无"
+            }}
+          </p>
+          <p>
+            家族史：{{ this.patientInfo.API_history.API_familyHistory || "无" }}
+          </p>
+          <p>
+            过敏史：{{
+              this.patientInfo.API_history.API_allergyHistory || "无"
+            }}
+          </p>
         </div>
       </el-collapse-item>
       <el-collapse-item name="4-1">
         <template slot="title">
           <h3 class="title">检查结果</h3>
         </template>
-        <examing-result :examInfo="this.patientInfo.API_examResult"></examing-result>
+        <examing-result
+          :examInfo="this.patientInfo.API_examResult"
+        ></examing-result>
       </el-collapse-item>
       <el-collapse-item name="5-1">
         <template slot="title">
@@ -35,7 +47,7 @@
         <div class="diagResult">
           <div class="text">
             <div class="box">
-              <p>{{API_diagInfo.API_diagResult.join("，")}}</p>
+              <p>{{ API_diagInfo.API_diagResult.join("，") }}</p>
             </div>
           </div>
         </div>
@@ -47,18 +59,27 @@
         <div class="diagResult">
           <div class="text">
             <div class="box">
-              <p>{{API_diagInfo.API_treatment.API_description.join("，")}}</p>
+              <p>{{ API_diagInfo.API_treatment.API_description.join("，") }}</p>
             </div>
           </div>
-          <div v-show="API_diagInfo.API_treatment.API_prescription.length>0" class="prescription">
+          <div
+            v-show="API_diagInfo.API_treatment.API_prescription.length > 0"
+            class="prescription"
+          >
             <span class="label">处方</span>
-            <PrescriptionTable :prescription="API_diagInfo.API_treatment.API_prescription"></PrescriptionTable>
+            <PrescriptionTable
+              :prescription="API_diagInfo.API_treatment.API_prescription"
+            ></PrescriptionTable>
           </div>
         </div>
       </el-collapse-item>
       <div v-show="pages.videoDialogVisible" v-drag class="drag">
         <span @click="videoDialogClose">X</span>
-        <video :src="pages.videoDialogSrc" controls="controls" style="width:100%"></video>
+        <video
+          :src="pages.videoDialogSrc"
+          controls="controls"
+          style="width:100%"
+        ></video>
       </div>
     </div>
   </div>
@@ -236,7 +257,7 @@ export default {
 
 <style scoped lang="scss">
 .mainContent {
-  width: 100%;
+  width: 95%;
   height: 100%;
   margin: 20px auto;
   .title {

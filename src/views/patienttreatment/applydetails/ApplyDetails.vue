@@ -8,19 +8,33 @@
           </template>
           <PersonalInfo :prsonalInfo="patientInfo.API_basicInfo"></PersonalInfo>
         </el-collapse-item>
+
         <el-collapse-item name="2">
+          <template slot="title">
+            <h3 class="title">入院治疗安排</h3>
+          </template>
+          <div class="container">
+            <NewTreatmentLog
+              :newLog="newTreatLog"
+              @inputBox="inputBoxShow($event)"
+              @prescription="prescription($event)"
+            ></NewTreatmentLog>
+            <!-- <NewTreatmentLog></NewTreatmentLog> -->
+          </div>
+        </el-collapse-item>
+        <!-- <el-collapse-item name="3">
           <template slot="title">
             <h3 class="title">诊断记录</h3>
           </template>
-          <div class="container">
+          <div class="container reference">
             <DiagHistory></DiagHistory>
           </div>
         </el-collapse-item>
-        <el-collapse-item name="3">
+        <el-collapse-item name="4">
           <template slot="title">
             <h3 class="title">患者评估</h3>
           </template>
-          <div class="container">
+          <div class="container reference">
             <div v-for="(item, index) in pinggu" :key="item.id" class="pinggu">
               <div>
                 <span style="margin-right:40px"
@@ -44,21 +58,8 @@
               </div>
             </div>
           </div>
-        </el-collapse-item>
-        {{ newTreatLog.API_description }}
-        <el-collapse-item name="4">
-          <template slot="title">
-            <h3 class="title">入院治疗安排</h3>
-          </template>
-          <div class="container">
-            <NewTreatmentLog
-              :newLog="newTreatLog"
-              @inputBox="inputBoxShow($event)"
-              @prescription="prescription($event)"
-            ></NewTreatmentLog>
-            <!-- <NewTreatmentLog></NewTreatmentLog> -->
-          </div>
-        </el-collapse-item>
+        </el-collapse-item> -->
+        <Reference></Reference>
         <el-button @click="save" size="medium" type="primary" class="btn"
           >确认</el-button
         >
@@ -99,6 +100,7 @@ import SpecialInput from "@components/common/SpecialInput.vue";
 import PersonalInfo from "./components/PersonalInfo.vue";
 import DiagHistory from "./components/PatientDiagResult.vue";
 import NewTreatmentLog from "./components/NewTreatmentLog.vue";
+import Reference from "./components/Reference.vue";
 
 import questionnaire from "../questionnaires/mixin.js";
 
@@ -120,7 +122,8 @@ export default {
     chatBox,
     DiagHistory,
     NewTreatmentLog,
-    SpecialInput
+    SpecialInput,
+    Reference
   },
   props: {
     readonly: {
@@ -146,7 +149,7 @@ export default {
 
         pageSize: 5,
         currentPage: 1,
-        collapse_activeNames: ["1"],
+        collapse_activeNames: ["1", "2"],
         search: {
           API_name: "",
           API_state: "",

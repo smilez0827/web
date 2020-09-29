@@ -14,16 +14,28 @@
     <div class="header">
       <span class="title">跌倒风险评定</span>
     </div>
-    <el-form size="mini" ref="form" label-position="left" :model="form" label-width="0px">
+    <el-form
+      size="mini"
+      ref="form"
+      label-position="left"
+      :model="form"
+      label-width="0px"
+    >
       <div @input="formInput">
         <div>
           <span class="label">一、评估</span>
           <div class="selectItem">
             <div>
-              <span class="subLabel">{{"近3月有无跌倒/视觉障碍"+"："}}</span>
+              <span class="subLabel">{{
+                "近3月有无跌倒/视觉障碍" + "："
+              }}</span>
             </div>
             <el-form-item>
-              <el-radio-group :disabled="readonly" disable v-model="questionnaire.youwudiedao">
+              <el-radio-group
+                :disabled="readonly"
+                disable
+                v-model="questionnaire.youwudiedao"
+              >
                 <el-radio disable class="radioItem" label="无=0"></el-radio>
                 <el-radio class="radioItem" label="有=25"></el-radio>
               </el-radio-group>
@@ -31,10 +43,13 @@
           </div>
           <div class="selectItem">
             <div>
-              <span class="subLabel">{{"多于一个疾病判断"+"："}}</span>
+              <span class="subLabel">{{ "多于一个疾病判断" + "：" }}</span>
             </div>
             <el-form-item>
-              <el-radio-group :disabled="readonly" v-model="questionnaire.duobing">
+              <el-radio-group
+                :disabled="readonly"
+                v-model="questionnaire.duobing"
+              >
                 <el-radio class="radioItem" label="无=0"></el-radio>
                 <el-radio class="radioItem" label="有=15"></el-radio>
               </el-radio-group>
@@ -42,22 +57,34 @@
           </div>
           <div class="selectItem">
             <div>
-              <span class="subLabel">{{"使用行走辅助用具"+"："}}</span>
+              <span class="subLabel">{{ "使用行走辅助用具" + "：" }}</span>
             </div>
             <el-form-item>
-              <el-radio-group :disabled="readonly" v-model="questionnaire.xingzou">
-                <el-radio class="radioItem" label="不需要/卧床休息/护士辅助=0"></el-radio>
-                <el-radio class="radioItem" label="拐杖、助步器、手杖=15"></el-radio>
+              <el-radio-group
+                :disabled="readonly"
+                v-model="questionnaire.xingzou"
+              >
+                <el-radio
+                  class="radioItem"
+                  label="不需要/卧床休息/护士辅助=0"
+                ></el-radio>
+                <el-radio
+                  class="radioItem"
+                  label="拐杖、助步器、手杖=15"
+                ></el-radio>
                 <el-radio class="radioItem" label="依扶家具行走=30"></el-radio>
               </el-radio-group>
             </el-form-item>
           </div>
           <div class="selectItem">
             <div>
-              <span class="subLabel">{{"静脉输液/使用药物治疗"+"："}}</span>
+              <span class="subLabel">{{ "静脉输液/使用药物治疗" + "：" }}</span>
             </div>
             <el-form-item>
-              <el-radio-group :disabled="readonly" v-model="questionnaire.yongyao">
+              <el-radio-group
+                :disabled="readonly"
+                v-model="questionnaire.yongyao"
+              >
                 <el-radio class="radioItem" label="否=0"></el-radio>
                 <el-radio class="radioItem" label="是=25"></el-radio>
               </el-radio-group>
@@ -65,24 +92,39 @@
           </div>
           <div class="selectItem">
             <div>
-              <span class="subLabel">{{"步态/移动"+"："}}</span>
+              <span class="subLabel">{{ "步态/移动" + "：" }}</span>
             </div>
             <el-form-item>
-              <el-radio-group :disabled="readonly" v-model="questionnaire.yidong">
-                <el-radio class="radioItem" label="正常、卧床不能移动、轮椅代步=0"></el-radio>
-                <el-radio class="radioItem" label="虚弱乏力/≥65岁/体位性低血压=10"></el-radio>
+              <el-radio-group
+                :disabled="readonly"
+                v-model="questionnaire.yidong"
+              >
+                <el-radio
+                  class="radioItem"
+                  label="正常、卧床不能移动、轮椅代步=0"
+                ></el-radio>
+                <el-radio
+                  class="radioItem"
+                  label="虚弱乏力/≥65岁/体位性低血压=10"
+                ></el-radio>
                 <el-radio class="radioItem" label="失调不平衡=20"></el-radio>
               </el-radio-group>
             </el-form-item>
           </div>
           <div class="selectItem">
             <div>
-              <span class="subLabel">{{"精神状态"+"："}}</span>
+              <span class="subLabel">{{ "精神状态" + "：" }}</span>
             </div>
             <el-form-item>
-              <el-radio-group :disabled="readonly" v-model="questionnaire.jingshen">
+              <el-radio-group
+                :disabled="readonly"
+                v-model="questionnaire.jingshen"
+              >
                 <el-radio class="radioItem" label="了解自己能力=0"></el-radio>
-                <el-radio class="radioItem" label="忘记自己受限制/意识障碍/躁动不安/沟通障碍/睡眠障碍=15"></el-radio>
+                <el-radio
+                  class="radioItem"
+                  label="忘记自己受限制/意识障碍/躁动不安/沟通障碍/睡眠障碍=15"
+                ></el-radio>
               </el-radio-group>
             </el-form-item>
           </div>
@@ -90,20 +132,25 @@
 
         <div>
           <span class="label">二、评估总分</span>
-          <p>总得分：{{totalScore}}</p>
+          <p>总得分：{{ totalScore }}</p>
         </div>
         <div>
           <span class="label">三、常规预防措施</span>
-          <p
-            v-for="(item,index) in table.prevention.normal"
-            :key="item.id"
-          >{{'（'+(index+1)+'）'+item}}</p>
+          <p v-for="(item, index) in table.prevention.normal" :key="item.id">
+            {{ "（" + (index + 1) + "）" + item }}
+          </p>
         </div>
         <div>
           <span class="label">四、选择预防措施</span>
           <el-form-item label-width="0px" prop="region">
-            <el-checkbox-group :disabled="readonly" v-model="questionnaire.xuanzeyufang">
-              <div v-for="item in table.prevention.selectable.options" :key="item.od">
+            <el-checkbox-group
+              :disabled="readonly"
+              v-model="questionnaire.xuanzeyufang"
+            >
+              <div
+                v-for="item in table.prevention.selectable.options"
+                :key="item.od"
+              >
                 <el-checkbox :label="item"></el-checkbox>
               </div>
             </el-checkbox-group>
@@ -111,8 +158,12 @@
         </div>
       </div>
       <div class="btn">
-        <el-button v-show="!readonly" @click="save" size="small " type="primary">确认</el-button>
-        <el-link style="margin-left:20px" @click="cancel">{{readonly?'关闭':'取消'}}</el-link>
+        <el-button v-show="!readonly" @click="save" size="small " type="primary"
+          >确认</el-button
+        >
+        <el-link style="margin-left:20px" @click="cancel">{{
+          readonly ? "关闭" : "取消"
+        }}</el-link>
       </div>
     </el-form>
   </div>
@@ -354,11 +405,8 @@ export default {
 
 <style lang="scss" scoped>
 .questionnaire {
-  max-height: 500px;
-  max-width: 800px;
-  overflow-y: auto;
+  width: 80%;
   padding: 10px;
-  box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.3);
   background-color: #fff;
 
   .header {

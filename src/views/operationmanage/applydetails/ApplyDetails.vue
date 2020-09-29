@@ -6,10 +6,7 @@
           <template slot="title">
             <h3 class="title">基本信息</h3>
           </template>
-          <PersonalInfo
-            @addReference="addTabs($event)"
-            :prsonalInfo="patientInfo.API_basicInfo"
-          ></PersonalInfo>
+          <PersonalInfo :prsonalInfo="patientInfo.API_basicInfo"></PersonalInfo>
         </el-collapse-item>
         <el-collapse-item name="3">
           <template slot="title">
@@ -30,6 +27,7 @@
               <div v-show="item.isOpen" class="pinggubiao">
                 <div style="margin:20px 0;">
                   <components
+                    class="quesComponent"
                     @commit="pingguCommit(index, $event)"
                     @cancel="pingguCancel(item, index)"
                     :preData="item.data"
@@ -236,7 +234,6 @@ export default {
   mounted() {
     let pid = localStorage.getItem("pid");
     getApplyDetails(pid).then(res => {
-      console.log(res);
       this.patientInfo.API_basicInfo = res.API_basicInfo;
       this.pinggu = res.API_questionnaire;
     });
@@ -308,6 +305,9 @@ export default {
     .pinggubiao {
       transition: 1s;
     }
+  }
+  .quesComponent {
+    margin: 20px auto;
   }
 }
 .addprescription {

@@ -633,8 +633,6 @@ export default {
 
 <style lang="scss" scoped>
 .questionnaire {
-  max-height: 300px;
-  overflow-y: auto;
   .label {
     font-size: 16px;
     color: #1e7e7c;
